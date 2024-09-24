@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { Accordion, Card, Button } from "react-bootstrap";
-import NavBar from "./NavBar";
+import React, { useEffect } from "react";
 import Footer from "./Footer";
+import NavBar from "./NavBar";
 
 const FAQs = [
   {

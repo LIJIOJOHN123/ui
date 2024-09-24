@@ -9,14 +9,7 @@ import logo7 from "../../assets/logo7.png";
 import logo8 from "../../assets/logo8.png";
 import logo9 from "../../assets/logo9.png";
 import NavBar from "../../components/NavBar";
-import { Helmet } from "react-helmet-async";
-
-import img1 from "../../assets/logo1.png";
-import img2 from "../../assets/logo2.png";
-import img3 from "../../assets/logo3.png";
-import img4 from "../../assets/logo4.png";
-import img5 from "../../assets/logo5.png";
-import img6 from "../../assets/logo6.png";
+import SEO from "../../components/SEO";
 
 import logo1 from "../../assets/law-enforcement/logo1.png";
 import logo2 from "../../assets/law-enforcement/logo2.png";
@@ -199,38 +192,6 @@ const data = [
   },
 ];
 
-const data3 = [
-  {
-    img: img1,
-    title: "Website Data",
-    des: "Review key data points from the merchant’s website readiness, transparency, policy pages, compliance, pricing, cyber risk, etc.",
-  },
-  {
-    img: img2,
-    title: "Industry Classification",
-    des: "Validate industry based on website content and indicators from third parties.",
-  },
-  {
-    img: img3,
-    title: "Social Media Analysis",
-    des: "Analyze local and industry-level profiles to assess sentiments and activity.",
-  },
-  {
-    img: img4,
-    title: "Incorporation Verification",
-    des: "Validate the business against the registry and verify key documents.",
-  },
-  {
-    img: img5,
-    title: "Review Page Analysis",
-    des: "Assess sentiments of third-party reviews.",
-  },
-  {
-    img: img6,
-    title: "Blacklisted Companies",
-    des: "Search our proprietary database of known fraudulent companies.",
-  },
-];
 const Body = () => {
   return (
     <div className="h-25 ">
@@ -295,37 +256,28 @@ const Body = () => {
     </div>
   );
 };
+
+const seoData = {
+  title: "ValidX - Law Enforcement",
+  description:
+    "Explore ValidX's solutions for law enforcement, enhancing cybersecurity efforts with data enrichment and analysis.",
+  keywords:
+    "law enforcement, cybersecurity, data enrichment, analysis, cybercrime, ValidX",
+  author: "ValidX Team", // Add if needed
+  image: headerSec, // Relative image path
+  url: "https://www.validx.chargebackzero.com/use-cases/data-enrichment-analysis",
+};
 function LawEnforcement() {
   return (
     <div>
-      <Helmet>
-        <title>ValidX -Law Enforcement</title>
-        <meta
-          name="description"
-          content="Explore ValidX's solutions for law enforcement, enhancing cybersecurity efforts with data enrichment and analysis."
-        />
-        <meta
-          name="keywords"
-          content="law enforcement, cybersecurity, data enrichment, analysis, cybercrime, ValidX"
-        />
-        <meta property="og:title" content="Law Enforcement | ValidX" />
-        <meta
-          property="og:description"
-          content="Enhance your cybersecurity strategies with ValidX's data enrichment services for law enforcement."
-        />
-        <meta property="og:image" content={headerSec} />
-        <meta
-          property="og:url"
-          content="https://www.validx.chargebackzero.com/use-cases/data-enrichment-analysis"
-        />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Law Enforcement | ValidX" />
-        <meta
-          name="twitter:description"
-          content="ValidX offers advanced data solutions to support law enforcement efforts against cybercrime."
-        />
-        <meta name="twitter:image" content={headerSec} />
-      </Helmet>
+      <SEO
+        title={seoData.title}
+        description={seoData.description}
+        keywords={seoData.keywords}
+        author={seoData.author}
+        image={seoData.image}
+        url={seoData.url}
+      />
       <Header />
       <section>
         <Body />

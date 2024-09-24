@@ -12,9 +12,9 @@ import logo1 from "../../assets/salesintelligence/logo1.png";
 import logo2 from "../../assets/salesintelligence/logo2.png";
 import logo3 from "../../assets/salesintelligence/logo3.png";
 import logo4 from "../../assets/salesintelligence/logo4.png";
-import NavBar from "../../components/NavBar";
 import Footer from "../../components/Footer";
-import { Helmet } from "react-helmet-async";
+import NavBar from "../../components/NavBar";
+import SEO from "../../components/SEO";
 
 function Header() {
   const gradientTextStyle = {
@@ -252,38 +252,26 @@ const Body = () => {
     </div>
   );
 };
+
+const seoData = {
+  title: "ValidX - Sales Intelligence",
+  description: "Stop wasting time doing lead enrichment. Discover how ValidX's sales intelligence solutions can help you identify potential clients and analyze the market.",
+  keywords: "sales intelligence, lead enrichment, market analysis, ValidX, customer research, business relationships",
+  author: "ValidX Team", // Optional
+  image: heroSec, // Relative image path
+  url: "https://www.validx.chargebackzero.com/use-cases/sales-intelligence"
+};
 function SALESINTELLIGENCE() {
   return (
     <div>
-      import {Helmet} from "react-helmet";
-      <Helmet>
-        <title>ValidX -Sales Intelligence</title>
-        <meta
-          name="description"
-          content="Stop wasting time doing lead enrichment. Discover how ValidX's sales intelligence solutions can help you identify potential clients and analyze the market."
-        />
-        <meta
-          name="keywords"
-          content="sales intelligence, lead enrichment, market analysis, ValidX, customer research, business relationships"
-        />
-        <meta property="og:title" content="Sales Intelligence | ValidX" />
-        <meta
-          property="og:description"
-          content="Utilize ValidX to enhance your sales strategy with data-driven insights and intelligent lead enrichment."
-        />
-        <meta property="og:image" content={heroSec} />
-        <meta
-          property="og:url"
-          content="https://www.validx.chargebackzero.com/use-cases/sales-intelligence"
-        />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Sales Intelligence | ValidX" />
-        <meta
-          name="twitter:description"
-          content="Stop wasting time on lead enrichment with ValidX's comprehensive sales intelligence solutions."
-        />
-        <meta name="twitter:image" content={heroSec} />
-      </Helmet>
+      <SEO
+        title={seoData.title}
+        description={seoData.description}
+        keywords={seoData.keywords}
+        author={seoData.author}
+        image={seoData.image} // Pass the imported image path
+        url={seoData.url}
+      />
       <Header />
       <section>
         <Body />

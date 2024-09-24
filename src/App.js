@@ -1,33 +1,30 @@
 // src/App.js
 import React from "react";
 import { Route, Routes } from "react-router-dom";
+import CalendlyDemo from "./components/CalendlyDemo";
+import ContactUs from "./components/ContactUs";
+import FAQ from "./components/FAQ";
+import RefundPolicy from "./components/RefundPolicy";
+import BlogPage from "./pages/BlogPage";
 import HomePage from "./pages/HomePage";
-import MerchantRisk from "./pages/UseCase/MerchantRisk";
+import Report from "./pages/Repoter";
+import Cybersecurity from "./pages/UseCase/Cybersecurity";
+import DataEnrichment from "./pages/UseCase/DataEnrichment";
+import InternetTelecommunication from "./pages/UseCase/Internet-Telecommunication";
+import LawEnforcement from "./pages/UseCase/LawEnforcement";
+import Marketing from "./pages/UseCase/Marketing";
 import MerchantIndustryClassification from "./pages/UseCase/MerchantInduClassify";
-import SALESINTELLIGENCE from "./pages/UseCase/SALESINTELLIGENCE";
+import MerchantRisk from "./pages/UseCase/MerchantRisk";
 import OnlineReputation from "./pages/UseCase/OnlineReputation";
+import Publishing_Advertising from "./pages/UseCase/Publishing&Advertising";
+import SALESINTELLIGENCE from "./pages/UseCase/SALESINTELLIGENCE";
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
-import Home from "./pages/dashboard/Dashboard";
-import LawEnforcement from "./pages/UseCase/LawEnforcement";
-import NavBar from "./pages/dashboard/NavBar";
-import Dashboard from "./pages/dashboard/Dashboard";
 import BatchEnrichment from "./pages/dashboard/BatchEnrichment";
+import Dashboard from "./pages/dashboard/Dashboard";
 import Documentation from "./pages/dashboard/Documentation";
 import Plans from "./pages/dashboard/Plans";
 import Settings from "./pages/dashboard/Settings";
-import RefundPolicy from "./components/RefundPolicy";
-import FAQ from "./components/FAQ";
-import ContactUs from "./components/ContactUs";
-import DataEnrichment from "./pages/UseCase/DataEnrichment";
-import Publishing_Advertising from "./pages/UseCase/Publishing&Advertising";
-import Cybersecurity from "./pages/UseCase/Cybersecurity";
-import InternetTelecommunication from "./pages/UseCase/Internet-Telecommunication";
-import Marketing from "./pages/UseCase/Marketing";
-import CalendlyDemo from "./components/CalendlyDemo";
-import Pricing from "./components/Pricing";
-import Report from "./pages/Repoter";
-import BlogPage from "./pages/BlogPage";
 
 function App() {
   return (

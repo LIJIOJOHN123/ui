@@ -1,6 +1,5 @@
 import React from "react";
 import { Col, Container, Row } from "react-bootstrap";
-import { Helmet } from "react-helmet-async";
 import logo1 from "../../assets/Cybersecurity/logo1.png";
 import logo2 from "../../assets/Cybersecurity/logo2.png";
 import logo3 from "../../assets/Cybersecurity/logo3.png";
@@ -10,6 +9,7 @@ import Features from "../../components/Features";
 import Footer from "../../components/Footer";
 import NavBar from "../../components/NavBar";
 import Pricing from "../../components/Pricing";
+import SEO from "../../components/SEO";
 function Header() {
   const gradientTextStyle = {
     fontWeight: "bold",
@@ -186,43 +186,28 @@ const Body = () => {
   );
 };
 
+const seoData = {
+  title: "ValidX - Internet & Telecommunication",
+  description:
+    "Unlock customer insights, enhance marketing, and ensure compliance with domain categorization through ValidX's internet and telecommunication solutions.",
+  keywords:
+    "internet, telecommunication, domain categorization, customer insights, marketing campaigns, compliance, ValidX",
+  author: "ValidX Team", // Add if needed
+  image: headerSec, // Relative image path
+  url: "https://www.validx.chargebackzero.com/use-cases/internet-telecommunication",
+};
+
 function InternetTelecommunication() {
   return (
     <div>
-      <Helmet>
-        <title>ValidX -Internet & Telecommunication</title>
-        <meta
-          name="description"
-          content="Unlock customer insights, enhance marketing, and ensure compliance with domain categorization through ValidX's internet and telecommunication solutions."
-        />
-        <meta
-          name="keywords"
-          content="internet, telecommunication, domain categorization, customer insights, marketing campaigns, compliance, ValidX"
-        />
-        <meta
-          property="og:title"
-          content="Internet & Telecommunication | ValidX"
-        />
-        <meta
-          property="og:description"
-          content="Explore ValidX's solutions for categorizing domains to enhance customer insights and marketing effectiveness."
-        />
-        <meta property="og:image" content={headerSec} />
-        <meta
-          property="og:url"
-          content="https://www.validx.chargebackzero.com/use-cases/internet-telecommunication"
-        />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta
-          name="twitter:title"
-          content="Internet & Telecommunication | ValidX"
-        />
-        <meta
-          name="twitter:description"
-          content="ValidX offers solutions for enhancing marketing and compliance in the telecommunication sector."
-        />
-        <meta name="twitter:image" content={headerSec} />
-      </Helmet>
+      <SEO
+        title={seoData.title}
+        description={seoData.description}
+        keywords={seoData.keywords}
+        author={seoData.author}
+        image={seoData.image} // Pass the imported image path
+        url={seoData.url}
+      />
 
       <Header />
       <Body />

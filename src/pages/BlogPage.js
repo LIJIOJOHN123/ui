@@ -22,7 +22,7 @@ function BlogPage() {
           <img
             className="img-fluid w-25 d-flex align-items-center justify-content-center"
             src={img}
-            alt="Blog Image"
+            alt="Blog"
           />
           <Link to={"/"} className="text-decoration-none btn btn-dark mt-3">
             Home Page

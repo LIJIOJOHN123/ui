@@ -16,7 +16,7 @@ import logo8 from "../../assets/logo8.png";
 import logo9 from "../../assets/logo9.png";
 import Footer from "../../components/Footer";
 import NavBar from "../../components/NavBar";
-import { Helmet } from "react-helmet-async";
+import SEO from "../../components/SEO";
 
 function Header() {
   const gradientTextStyle = {
@@ -213,8 +213,9 @@ const Body = () => {
         <Row className="mt-5  ">
           {data.map((item, index) => (
             <Col className=" g-0 " key={index} md={4}>
-              <Card className="  h-100 text-center border-0  justify-content-evenly">
+              <Card className="h-100 text-center border-0  justify-content-evenly">
                 <img
+                alt="khj"
                   src={item.img}
                   className="d-block mx-auto"
                   style={{ objectFit: "contain", width: "75px" }}
@@ -236,6 +237,7 @@ const Body = () => {
       <Container>
         <h1 className="text-center ">How It Works</h1>
         <img
+        alt="lk"
           src={bodySec}
           className=" "
           style={{ objectFit: "contain", width: "99%" }}
@@ -247,6 +249,7 @@ const Body = () => {
             <Col className=" g-0 " key={index} md={4}>
               <Card className=" h-100 text-center border-0  justify-content-evenly">
                 <img
+                alt="kp"
                   src={item.img}
                   className="d-block mx-auto"
                   style={{ objectFit: "contain", width: "75px" }}
@@ -267,42 +270,28 @@ const Body = () => {
     </div>
   );
 };
+
+const seoData = {
+  title: "ValidX - Merchant Risk Assessment",
+  description: "Simplifying merchant risk assessment with a powerful API that analyzes 100+ risk signals across merchant websites in under 4 minutes.",
+  keywords: "merchant risk assessment, risk signals, API, fraud detection, website analysis, ValidX",
+  author: "ValidX Team", // Add if needed
+  image: customerOnbroadingImg, // Relative image path
+  url: "https://www.validx.chargebackzero.com/use-cases/merchant-risk-assessment"
+};
 function MerchantRisk() {
   return (
     <div>
-      <Helmet>
-        <title>ValidX -Merchant Risk Assessment</title>
-        <meta
-          name="description"
-          content="Simplifying merchant risk assessment with a powerful API that analyzes 100+ risk signals across merchant websites in under 4 minutes."
-        />
-        <meta
-          name="keywords"
-          content="merchant risk assessment, risk signals, API, fraud detection, website analysis, ValidX"
-        />
-        <meta property="og:title" content="Merchant Risk Assessment | ValidX" />
-        <meta
-          property="og:description"
-          content="Discover how ValidX's API simplifies risk assessment and enhances business decision-making."
-        />
-        <meta property="og:image" content={customerOnbroadingImg} />
-        <meta
-          property="og:url"
-          content="https://www.validx.chargebackzero.com/use-cases/merchant-risk-assessment"
-        />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta
-          name="twitter:title"
-          content="Merchant Risk Assessment | ValidX"
-        />
-        <meta
-          name="twitter:description"
-          content="Leverage ValidX to assess merchant risk with advanced analysis tools."
-        />
-        <meta name="twitter:image" content={customerOnbroadingImg} />
-      </Helmet>
+     
+      <SEO
+        title={seoData.title}
+        description={seoData.description}
+        keywords={seoData.keywords}
+        author={seoData.author}
+        image={seoData.image} // Pass the imported image path
+        url={seoData.url}
+      />
       <Header />
-
       <Body />
       <Footer />
     </div>

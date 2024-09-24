@@ -1,14 +1,14 @@
+import React from "react";
+import { Col, Container, Row } from "react-bootstrap";
 import headerSec from "../../assets/Marketing/headerSec.png";
 import logo1 from "../../assets/Marketing/logo1.png";
 import logo2 from "../../assets/Marketing/logo2.png";
 import bodySec from "../../assets/bodySec.png";
-import { Card, Col, Container, Row } from "react-bootstrap";
-import React from "react";
-import NavBar from "../../components/NavBar";
 import Features from "../../components/Features";
-import Pricing from "../../components/Pricing";
 import Footer from "../../components/Footer";
-import { Helmet } from "react-helmet-async";
+import NavBar from "../../components/NavBar";
+import Pricing from "../../components/Pricing";
+import SEO from "../../components/SEO";
 
 function Header() {
   const gradientTextStyle = {
@@ -164,37 +164,26 @@ const Body = () => {
   );
 };
 
+const seoData = {
+  title: "ValidX - Marketing Solutions",
+  description: "Discover ValidX's marketing solutions, including lead generation and market segmentation, to enhance your business strategy.",
+  keywords: "marketing, lead generation, market segmentation, business strategy, ValidX",
+  author: "ValidX Team", // Add if needed
+  image: headerSec, // Relative image path
+  url: "https://www.validx.chargebackzero.com/use-cases/marketing"
+};
+
 function Marketing() {
   return (
     <div>
-      <Helmet>
-        <title>ValidX -Marketing Solutions</title>
-        <meta
-          name="description"
-          content="Discover ValidX's marketing solutions, including lead generation and market segmentation, to enhance your business strategy."
-        />
-        <meta
-          name="keywords"
-          content="marketing, lead generation, market segmentation, business strategy, ValidX"
-        />
-        <meta property="og:title" content="Marketing Solutions | ValidX" />
-        <meta
-          property="og:description"
-          content="Explore innovative marketing solutions offered by ValidX to optimize your lead generation and market segmentation."
-        />
-        <meta property="og:image" content={headerSec} />
-        <meta
-          property="og:url"
-          content="https://www.validx.chargebackzero.com/use-cases/marketing"
-        />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Marketing Solutions | ValidX" />
-        <meta
-          name="twitter:description"
-          content="ValidX provides comprehensive marketing solutions for effective lead generation and market segmentation."
-        />
-        <meta name="twitter:image" content={headerSec} />
-      </Helmet>
+      <SEO
+        title={seoData.title}
+        description={seoData.description}
+        keywords={seoData.keywords}
+        author={seoData.author}
+        image={seoData.image} // Pass the imported image path
+        url={seoData.url}
+      />
       <Header />
       <Body />
       <Container className="">

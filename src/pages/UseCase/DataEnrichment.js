@@ -1,6 +1,5 @@
 import React from "react";
 import { Col, Container, Row } from "react-bootstrap";
-import { Helmet } from "react-helmet-async";
 import headerSec from "../../assets/DataEnrichment/headerSec.png";
 import logo1 from "../../assets/DataEnrichment/logo1.png";
 import logo2 from "../../assets/DataEnrichment/logo3.png";
@@ -9,6 +8,7 @@ import Features from "../../components/Features";
 import Footer from "../../components/Footer";
 import NavBar from "../../components/NavBar";
 import Pricing from "../../components/Pricing";
+import SEO from "../../components/SEO";
 
 function Header() {
   const gradientTextStyle = {
@@ -165,44 +165,27 @@ const Body = () => {
     </div>
   );
 };
-
+const seoData = {
+  title: "ValidX - Data Enrichment & Analysis",
+  description:
+    "Transforming raw data into actionable insights for smarter business decisions with ValidX's powerful data enrichment and analysis solutions.",
+  keywords:
+    "data enrichment, data analysis, actionable insights, business decisions, ValidX, customer data, domain analysis",
+  author: "ValidX Team", // Add if needed
+  image: headerSec, // Relative image path
+  url: "https://www.validx.chargebackzero.com/use-cases/data-enrichment-analysis",
+};
 function DataEnrichment() {
   return (
     <div>
-      <Helmet>
-        <title>ValidX -Data Enrichment & Analysis</title>
-        <meta
-          name="description"
-          content="Transforming raw data into actionable insights for smarter business decisions with ValidX's powerful data enrichment and analysis solutions."
-        />
-        <meta
-          name="keywords"
-          content="data enrichment, data analysis, actionable insights, business decisions, ValidX, customer data, domain analysis"
-        />
-        <meta
-          property="og:title"
-          content="Data Enrichment & Analysis | ValidX"
-        />
-        <meta
-          property="og:description"
-          content="Explore ValidX's data enrichment services that turn raw data into valuable insights for informed business decisions."
-        />
-        <meta property="og:image" content={headerSec} />
-        <meta
-          property="og:url"
-          content="https://www.validx.chargebackzero.com/use-cases/data-enrichment-analysis"
-        />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta
-          name="twitter:title"
-          content="Data Enrichment & Analysis | ValidX"
-        />
-        <meta
-          name="twitter:description"
-          content="ValidX offers solutions for transforming raw data into actionable insights."
-        />
-        <meta name="twitter:image" content={headerSec} />
-      </Helmet>
+      <SEO
+        title={seoData.title}
+        description={seoData.description}
+        keywords={seoData.keywords}
+        author={seoData.author}
+        image={seoData.image} // Just pass the relative image path
+        url={seoData.url}
+      />
 
       <Header />
       <Body />

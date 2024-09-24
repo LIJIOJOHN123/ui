@@ -9,9 +9,9 @@ import logo8 from "../../assets/logo8.png";
 import logo9 from "../../assets/logo9.png";
 import useCase2 from "../../assets/useCase2.png";
 import useCase2BodySec from "../../assets/useCase2BodySec.png";
-import NavBar from "../../components/NavBar";
 import Footer from "../../components/Footer";
-import { Helmet } from "react-helmet-async";
+import NavBar from "../../components/NavBar";
+import SEO from "../../components/SEO";
 
 function Header() {
   const gradientTextStyle = {
@@ -237,43 +237,27 @@ const Body = () => {
     </div>
   );
 };
+
+const seoData = {
+  title: "ValidX - Merchant Industry Classification",
+  description: "Accurate merchant industry classification for risk management, helping teams identify prohibited and high-risk merchants using Merchant Category Codes (MCCs).",
+  keywords: "merchant classification, risk management, Merchant Category Codes, fraud prevention, ValidX",
+  author: "ValidX Team", // Add if needed
+  image: useCase2, // Relative image path
+  url: "https://www.validx.chargebackzero.com/use-cases/merchant-industry-classification"
+};
 function MerchantIndustryClassification() {
   return (
     <section>
-      <Helmet>
-        <title>ValidX -Merchant Industry Classification </title>
-        <meta
-          name="description"
-          content="Accurate merchant industry classification for risk management, helping teams identify prohibited and high-risk merchants using Merchant Category Codes (MCCs)."
-        />
-        <meta
-          name="keywords"
-          content="merchant classification, risk management, Merchant Category Codes, fraud prevention, ValidX"
-        />
-        <meta
-          property="og:title"
-          content="Merchant Industry Classification | ValidX"
-        />
-        <meta
-          property="og:description"
-          content="Enhance risk management with ValidX's merchant industry classification solutions to prevent fraud and ensure compliance."
-        />
-        <meta property="og:image" content={useCase2} />
-        <meta
-          property="og:url"
-          content="https://www.validx.chargebackzero.com/use-cases/merchant-industry-classification"
-        />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta
-          name="twitter:title"
-          content="Merchant Industry Classification | ValidX"
-        />
-        <meta
-          name="twitter:description"
-          content="Discover how ValidX helps in merchant industry classification for improved risk management."
-        />
-        <meta name="twitter:image" content={useCase2} />
-      </Helmet>
+      
+      <SEO
+        title={seoData.title}
+        description={seoData.description}
+        keywords={seoData.keywords}
+        author={seoData.author}
+        image={seoData.image} // Pass the imported image path
+        url={seoData.url}
+      />
       <Header />
 
       <Body />

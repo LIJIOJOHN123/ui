@@ -1,13 +1,12 @@
 import React, { useState } from "react";
-import { Container, Form, Button } from "react-bootstrap";
-import NavBar from "../components/NavBar"; // Ensure this path is correct
+import { Button, Container, Form } from "react-bootstrap";
 import img1 from "../assets/Report/img1.png"; // Replace this with your actual image path
-import { useNavigate } from "react-router-dom";
 import Footer from "../components/Footer";
+import NavBar from "../components/NavBar"; // Ensure this path is correct
 
 const Report = () => {
   const [submited, setSubmited] = useState(false);
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const handleSubmit = () => {
     setSubmited(!submited); // Toggle the submitted state
     console.log(`Form submitted: ${!submited}`); // Optional: log the state
@@ -36,14 +35,7 @@ const Report = () => {
       </div>
 
       {/* Main Form Section */}
-      <div
-        className="d-flex justify-content-center align-items-center my-5 "
-        style={
-          {
-            // Full height to center the form
-          }
-        }
-      >
+      <div className="d-flex justify-content-center align-items-center my-5 ">
         <Container
           className="border border-danger rounded-5 p-4 "
           style={{

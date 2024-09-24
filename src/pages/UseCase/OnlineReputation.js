@@ -1,6 +1,5 @@
 import React from "react";
 import { Card, Col, Container, Row } from "react-bootstrap";
-import { Helmet } from "react-helmet-async";
 import bodySec from "../../assets/bodySec.png";
 import logo10 from "../../assets/logo10.png";
 import logo11 from "../../assets/logo11.png";
@@ -12,6 +11,7 @@ import bodeSec from "../../assets/onlinereputation/bodeSec.png";
 import heroSec from "../../assets/onlinereputation/heroSec.png";
 import Footer from "../../components/Footer";
 import NavBar from "../../components/NavBar";
+import SEO from "../../components/SEO";
 
 function Header() {
   const gradientTextStyle = {
@@ -190,7 +190,11 @@ const Body = () => {
 
       <Container>
         <h1 className="text-center ">How It Works</h1>
-        <img src={bodySec} alt="img" style={{ objectFit: "contain", width: "99%" }} />
+        <img
+          src={bodySec}
+          alt="img"
+          style={{ objectFit: "contain", width: "99%" }}
+        />
 
         <h1 className="text-center mt-5">Benefits</h1>
         <Row className="mt-5 mx-auto align-content-center">
@@ -198,7 +202,7 @@ const Body = () => {
             <Col className=" g-0 " key={index} md={4}>
               <Card className="  h-100 text-center border-0  justify-content-evenly ">
                 <img
-                alt="img"
+                  alt="img"
                   src={item.img}
                   className="d-block mx-auto"
                   style={{ objectFit: "contain", width: "75px" }}
@@ -219,43 +223,28 @@ const Body = () => {
     </div>
   );
 };
+
+const seoData = {
+  title: "ValidX - Online Reputation Management",
+  description:
+    "Enhance your online presence and protect your business with ValidX's online reputation management strategies and tools.",
+  keywords:
+    "online reputation, business protection, risk management, ValidX, background checks, sales intelligence",
+  author: "ValidX Team", // Optional
+  image: heroSec, // Relative image path
+  url: "https://www.validx.chargebackzero.com/use-cases/online-reputation",
+};
 function OnlineReputation() {
   return (
     <div>
-      <Helmet>
-        <title>ValidX -Online Reputation Management</title>
-        <meta
-          name="description"
-          content="Enhance your online presence and protect your business with ValidX's online reputation management strategies and tools."
-        />
-        <meta
-          name="keywords"
-          content="online reputation, business protection, risk management, ValidX, background checks, sales intelligence"
-        />
-        <meta
-          property="og:title"
-          content="Online Reputation Management | ValidX"
-        />
-        <meta
-          property="og:description"
-          content="Explore how ValidX helps you manage and enhance your online reputation to ensure safer transactions."
-        />
-        <meta property="og:image" content={heroSec} />
-        <meta
-          property="og:url"
-          content="https://www.validx.chargebackzero.com/use-cases/online-reputation"
-        />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta
-          name="twitter:title"
-          content="Online Reputation Management | ValidX"
-        />
-        <meta
-          name="twitter:description"
-          content="ValidX provides solutions for managing your online reputation effectively."
-        />
-        <meta name="twitter:image" content={heroSec} />
-      </Helmet>
+      <SEO
+        title={seoData.title}
+        description={seoData.description}
+        keywords={seoData.keywords}
+        author={seoData.author}
+        image={seoData.image} // Pass the imported image path
+        url={seoData.url}
+      />
       <Header />
       <section>
         <Body />
