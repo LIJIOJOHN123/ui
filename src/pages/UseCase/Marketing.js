@@ -6,13 +6,9 @@ import logo2 from "../../assets/Marketing/logo2.png";
 import bodySec from "../../assets/bodySec.png";
 import Features from "../../components/Features";
 import Footer from "../../components/Footer";
-<<<<<<< HEAD
 import NavBar from "../../components/NavBar";
 import Pricing from "../../components/Pricing";
 import SEO from "../../components/SEO";
-=======
-import { Helmet } from "react-helmet-async";
->>>>>>> f1105a609d908cc793054156e4f0793328504333
 
 function Header() {
   const gradientTextStyle = {
@@ -180,7 +176,6 @@ const seoData = {
 function Marketing() {
   return (
     <div>
-<<<<<<< HEAD
       <SEO
         title={seoData.title}
         description={seoData.description}
@@ -189,36 +184,6 @@ function Marketing() {
         image={seoData.image} // Pass the imported image path
         url={seoData.url}
       />
-=======
-      <Helmet>
-        <title>ValidX -Marketing Solutions</title>
-        <meta
-          name="description"
-          content="Discover ValidX's marketing solutions, including lead generation and market segmentation, to enhance your business strategy."
-        />
-        <meta
-          name="keywords"
-          content="marketing, lead generation, market segmentation, business strategy, ValidX"
-        />
-        <meta property="og:title" content="Marketing Solutions | ValidX" />
-        <meta
-          property="og:description"
-          content="Explore innovative marketing solutions offered by ValidX to optimize your lead generation and market segmentation."
-        />
-        <meta property="og:image" content={headerSec} />
-        <meta
-          property="og:url"
-          content="https://www.validx.chargebackzero.com/use-cases/marketing"
-        />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Marketing Solutions | ValidX" />
-        <meta
-          name="twitter:description"
-          content="ValidX provides comprehensive marketing solutions for effective lead generation and market segmentation."
-        />
-        <meta name="twitter:image" content={headerSec} />
-      </Helmet>
->>>>>>> f1105a609d908cc793054156e4f0793328504333
       <Header />
       <Body />
       <Container className="">

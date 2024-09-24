@@ -7,8 +7,7 @@ import Header from "../components/Header";
 import Pricing from "../components/Pricing";
 import SEO from "../components/SEO";
 import WhyValidX from "../components/WhyValidX";
-import { Helmet } from "react-helmet-async";
-import icon from "../assets/icon.png";
+
 
 function HomePage() {
   useEffect(() => {
