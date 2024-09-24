@@ -8,6 +8,7 @@ import NavBar from "../../components/NavBar";
 import Features from "../../components/Features";
 import Pricing from "../../components/Pricing";
 import Footer from "../../components/Footer";
+import { Helmet } from "react-helmet-async";
 
 function Header() {
   const gradientTextStyle = {
@@ -151,7 +152,9 @@ const Body = () => {
               />
               <div>
                 <h5 className="mt-2">{item.title}</h5>
-                <p className="d-none d-md-block" style={{ fontSize: "14px" }}>{item.des}</p>
+                <p className="d-none d-md-block" style={{ fontSize: "14px" }}>
+                  {item.des}
+                </p>
               </div>
             </Col>
           ))}
@@ -164,6 +167,34 @@ const Body = () => {
 function Marketing() {
   return (
     <div>
+      <Helmet>
+        <title>ValidX -Marketing Solutions</title>
+        <meta
+          name="description"
+          content="Discover ValidX's marketing solutions, including lead generation and market segmentation, to enhance your business strategy."
+        />
+        <meta
+          name="keywords"
+          content="marketing, lead generation, market segmentation, business strategy, ValidX"
+        />
+        <meta property="og:title" content="Marketing Solutions | ValidX" />
+        <meta
+          property="og:description"
+          content="Explore innovative marketing solutions offered by ValidX to optimize your lead generation and market segmentation."
+        />
+        <meta property="og:image" content={headerSec} />
+        <meta
+          property="og:url"
+          content="https://www.validx.chargebackzero.com/use-cases/marketing"
+        />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Marketing Solutions | ValidX" />
+        <meta
+          name="twitter:description"
+          content="ValidX provides comprehensive marketing solutions for effective lead generation and market segmentation."
+        />
+        <meta name="twitter:image" content={headerSec} />
+      </Helmet>
       <Header />
       <Body />
       <Container className="">

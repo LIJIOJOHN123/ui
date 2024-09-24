@@ -26,6 +26,8 @@ import InternetTelecommunication from "./pages/UseCase/Internet-Telecommunicatio
 import Marketing from "./pages/UseCase/Marketing";
 import CalendlyDemo from "./components/CalendlyDemo";
 import Pricing from "./components/Pricing";
+import Report from "./pages/Repoter";
+import BlogPage from "./pages/BlogPage";
 
 function App() {
   return (
@@ -56,6 +58,8 @@ function App() {
           path="/use-cases/publishing-advertising"
           element={<Publishing_Advertising />}
         />
+
+        <Route path="/report" element={<Report />} />
         <Route path="/use-cases/cybersecurity" element={<Cybersecurity />} />
         <Route
           path="/use-cases/salesintelligence"
@@ -69,6 +73,7 @@ function App() {
         <Route path="/use-cases/law-enforcement" element={<LawEnforcement />} />
         <Route path="/refund-policy" element={<RefundPolicy />} />
         <Route path="/faqs" element={<FAQ />} />
+        <Route path="/blog" element={<BlogPage />} />
         <Route path="/contact-us" element={<ContactUs />} />
 
         <Route path="/auth">

@@ -9,6 +9,7 @@ import NavBar from "../../components/NavBar";
 import Features from "../../components/Features";
 import Pricing from "../../components/Pricing";
 import Footer from "../../components/Footer";
+import { Helmet } from "react-helmet-async";
 
 function Header() {
   const gradientTextStyle = {
@@ -185,6 +186,19 @@ const Body = () => {
 function Publishing_Advertising() {
   return (
     <div>
+    <Helmet>
+  <title>ValidX -Publishing & Advertising</title>
+  <meta name="description" content="Ensuring brand safety with smart content moderation and targeted advertising solutions." />
+  <meta name="keywords" content="publishing, advertising, brand safety, content moderation, targeted advertising, ValidX" />
+  <meta property="og:title" content="Publishing & Advertising | ValidX" />
+  <meta property="og:description" content="Explore ValidX's innovative solutions for content moderation and effective advertising strategies." />
+  <meta property="og:image" content={headerSec} />
+  <meta property="og:url" content="https://www.validx.chargebackzero.com/use-cases/publishing-advertising" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Publishing & Advertising | ValidX" />
+  <meta name="twitter:description" content="ValidX offers solutions for smart content moderation and targeted advertising." />
+  <meta name="twitter:image" content={headerSec} />
+</Helmet>
       <Header />
       <Body />
       <Container className="">

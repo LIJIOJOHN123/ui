@@ -20,7 +20,10 @@ const Footer = () => {
   ];
 
   const legal = [
-    { name: "Terms & conditions", link: "https://chargebackzero.com/terms-and-conditions" },
+    {
+      name: "Terms & conditions",
+      link: "https://chargebackzero.com/terms-conditions",
+    },
     { name: "Privacy policy", link: "https://chargebackzero.com/privacy" },
     { name: "Refund policy", link: "/refund-policy" },
     { name: "Contact Us", link: "https://chargebackzero.com/contact-us" },

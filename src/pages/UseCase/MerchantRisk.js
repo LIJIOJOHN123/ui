@@ -16,6 +16,7 @@ import logo8 from "../../assets/logo8.png";
 import logo9 from "../../assets/logo9.png";
 import Footer from "../../components/Footer";
 import NavBar from "../../components/NavBar";
+import { Helmet } from "react-helmet-async";
 
 function Header() {
   const gradientTextStyle = {
@@ -269,6 +270,37 @@ const Body = () => {
 function MerchantRisk() {
   return (
     <div>
+      <Helmet>
+        <title>ValidX -Merchant Risk Assessment</title>
+        <meta
+          name="description"
+          content="Simplifying merchant risk assessment with a powerful API that analyzes 100+ risk signals across merchant websites in under 4 minutes."
+        />
+        <meta
+          name="keywords"
+          content="merchant risk assessment, risk signals, API, fraud detection, website analysis, ValidX"
+        />
+        <meta property="og:title" content="Merchant Risk Assessment | ValidX" />
+        <meta
+          property="og:description"
+          content="Discover how ValidX's API simplifies risk assessment and enhances business decision-making."
+        />
+        <meta property="og:image" content={customerOnbroadingImg} />
+        <meta
+          property="og:url"
+          content="https://www.validx.chargebackzero.com/use-cases/merchant-risk-assessment"
+        />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta
+          name="twitter:title"
+          content="Merchant Risk Assessment | ValidX"
+        />
+        <meta
+          name="twitter:description"
+          content="Leverage ValidX to assess merchant risk with advanced analysis tools."
+        />
+        <meta name="twitter:image" content={customerOnbroadingImg} />
+      </Helmet>
       <Header />
 
       <Body />

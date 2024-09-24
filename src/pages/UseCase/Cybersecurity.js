@@ -1,3 +1,4 @@
+import { Helmet } from "react-helmet-async"; // Import Helmet
 import React from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import headerSec from "../../assets/Cybersecurity/headerSec.png";
@@ -145,8 +146,6 @@ const data = [
   },
 ];
 
-
-
 const Body = () => {
   return (
     <Container>
@@ -161,7 +160,9 @@ const Body = () => {
               />
               <div>
                 <h5 className="mt-2">{item.title}</h5>
-                <p className="d-none d-md-block" style={{ fontSize: "14px" }}>{item.des}</p>
+                <p className="d-none d-md-block" style={{ fontSize: "14px" }}>
+                  {item.des}
+                </p>
               </div>
             </Col>
           ))}
@@ -175,7 +176,9 @@ const Body = () => {
             />
             <div>
               <h5 className="mt-2">{data[2].title}</h5>
-              <p className="d-none d-md-block"  style={{ fontSize: "14px" }}>{data[2].des}</p>
+              <p className="d-none d-md-block" style={{ fontSize: "14px" }}>
+                {data[2].des}
+              </p>
             </div>
           </Col>
         </Row>
@@ -183,10 +186,40 @@ const Body = () => {
     </Container>
   );
 };
-
 function Cybersecurity() {
   return (
     <div>
+      <Helmet>
+        <title>ValidX - Cybersecurity</title>
+        <meta
+          name="description"
+          content="Enhance cybersecurity with ValidX. Explore domain categorization to detect threats, manage risks, and filter content."
+        />
+        <meta
+          name="keywords"
+          content="cybersecurity, domain categorization, risk management, threat detection, content filtering"
+        />
+        <meta name="author" content="ValidX Team" />
+        <meta property="og:title" content="ValidX - Cybersecurity" />
+        <meta
+          property="og:description"
+          content="ValidX offers tools for domain categorization to enhance cybersecurity, detect threats, manage risks, and filter content."
+        />
+        <meta property="og:image" content={headerSec} />
+        <meta
+          property="og:url"
+          content="https://www.validx.chargebackzero.com/use-cases/cybersecurity"
+        />
+        <meta property="og:type" content="website" />
+        <meta name="twitter:card" content={headerSec} />
+        <meta name="twitter:title" content="ValidX - Cybersecurity" />
+        <meta
+          name="twitter:description"
+          content="Discover ValidX's tools for enhancing cybersecurity and domain categorization."
+        />
+        <meta name="twitter:image" content={headerSec} />
+        <link rel="canonical" href="https://www.validx.cybersecurity.com/" />
+      </Helmet>
       <Header />
       <Body />
       <Container className="">

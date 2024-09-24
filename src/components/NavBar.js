@@ -224,9 +224,9 @@ function NavBar() {
         bg="dark"
         expand="lg"
       >
-        <Container fluid  >
+        <Container fluid>
           <Navbar.Brand className="text-white " as={Link} to="/">
-            <img src={logo} className="img-fluid" alt="logo" width={100} />
+            <img src={logo} className="img-fluid" alt="logo" width={90} />
           </Navbar.Brand>
 
           <Navbar.Toggle
@@ -294,6 +294,9 @@ function NavBar() {
             </Link>
 
             <Button
+              onClick={() => {
+                navigate("/report");
+              }}
               style={{ backgroundColor: "#F0E68C" }}
               className="text-black  border-0 "
             >

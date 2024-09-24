@@ -9,6 +9,7 @@ import logo7 from "../../assets/logo7.png";
 import logo8 from "../../assets/logo8.png";
 import logo9 from "../../assets/logo9.png";
 import NavBar from "../../components/NavBar";
+import { Helmet } from "react-helmet-async";
 
 import img1 from "../../assets/logo1.png";
 import img2 from "../../assets/logo2.png";
@@ -297,6 +298,34 @@ const Body = () => {
 function LawEnforcement() {
   return (
     <div>
+      <Helmet>
+        <title>ValidX -Law Enforcement</title>
+        <meta
+          name="description"
+          content="Explore ValidX's solutions for law enforcement, enhancing cybersecurity efforts with data enrichment and analysis."
+        />
+        <meta
+          name="keywords"
+          content="law enforcement, cybersecurity, data enrichment, analysis, cybercrime, ValidX"
+        />
+        <meta property="og:title" content="Law Enforcement | ValidX" />
+        <meta
+          property="og:description"
+          content="Enhance your cybersecurity strategies with ValidX's data enrichment services for law enforcement."
+        />
+        <meta property="og:image" content={headerSec} />
+        <meta
+          property="og:url"
+          content="https://www.validx.chargebackzero.com/use-cases/data-enrichment-analysis"
+        />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Law Enforcement | ValidX" />
+        <meta
+          name="twitter:description"
+          content="ValidX offers advanced data solutions to support law enforcement efforts against cybercrime."
+        />
+        <meta name="twitter:image" content={headerSec} />
+      </Helmet>
       <Header />
       <section>
         <Body />

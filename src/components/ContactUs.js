@@ -6,6 +6,7 @@ import NavBar from "./NavBar";
 const Body = () => {
   const [formData, setFormData] = useState({
     firstName: "",
+    
     secondName: "",
     email: "",
     phone: "",
