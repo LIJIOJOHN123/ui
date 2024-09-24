@@ -13,8 +13,12 @@ import logo2 from "../../assets/salesintelligence/logo2.png";
 import logo3 from "../../assets/salesintelligence/logo3.png";
 import logo4 from "../../assets/salesintelligence/logo4.png";
 import Footer from "../../components/Footer";
+<<<<<<< HEAD
 import NavBar from "../../components/NavBar";
 import SEO from "../../components/SEO";
+=======
+import { Helmet } from "react-helmet-async";
+>>>>>>> f1105a609d908cc793054156e4f0793328504333
 
 function Header() {
   const gradientTextStyle = {
@@ -264,6 +268,7 @@ const seoData = {
 function SALESINTELLIGENCE() {
   return (
     <div>
+<<<<<<< HEAD
       <SEO
         title={seoData.title}
         description={seoData.description}
@@ -272,6 +277,37 @@ function SALESINTELLIGENCE() {
         image={seoData.image} // Pass the imported image path
         url={seoData.url}
       />
+=======
+      import {Helmet} from "react-helmet";
+      <Helmet>
+        <title>ValidX -Sales Intelligence</title>
+        <meta
+          name="description"
+          content="Stop wasting time doing lead enrichment. Discover how ValidX's sales intelligence solutions can help you identify potential clients and analyze the market."
+        />
+        <meta
+          name="keywords"
+          content="sales intelligence, lead enrichment, market analysis, ValidX, customer research, business relationships"
+        />
+        <meta property="og:title" content="Sales Intelligence | ValidX" />
+        <meta
+          property="og:description"
+          content="Utilize ValidX to enhance your sales strategy with data-driven insights and intelligent lead enrichment."
+        />
+        <meta property="og:image" content={heroSec} />
+        <meta
+          property="og:url"
+          content="https://www.validx.chargebackzero.com/use-cases/sales-intelligence"
+        />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Sales Intelligence | ValidX" />
+        <meta
+          name="twitter:description"
+          content="Stop wasting time on lead enrichment with ValidX's comprehensive sales intelligence solutions."
+        />
+        <meta name="twitter:image" content={heroSec} />
+      </Helmet>
+>>>>>>> f1105a609d908cc793054156e4f0793328504333
       <Header />
       <section>
         <Body />

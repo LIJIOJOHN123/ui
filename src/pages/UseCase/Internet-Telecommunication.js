@@ -9,7 +9,8 @@ import Features from "../../components/Features";
 import Footer from "../../components/Footer";
 import NavBar from "../../components/NavBar";
 import Pricing from "../../components/Pricing";
-import SEO from "../../components/SEO";
+import Footer from "../../components/Footer";
+
 function Header() {
   const gradientTextStyle = {
     fontWeight: "bold",

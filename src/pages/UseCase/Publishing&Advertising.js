@@ -7,9 +7,13 @@ import logo3 from "../../assets/Publishing_Advertising/logo5.png";
 import bodySec from "../../assets/bodySec.png";
 import Features from "../../components/Features";
 import Footer from "../../components/Footer";
+<<<<<<< HEAD
 import NavBar from "../../components/NavBar";
 import Pricing from "../../components/Pricing";
 import SEO from "../../components/SEO";
+=======
+import { Helmet } from "react-helmet-async";
+>>>>>>> f1105a609d908cc793054156e4f0793328504333
 
 function Header() {
   const gradientTextStyle = {
@@ -200,6 +204,7 @@ const seoData = {
 function Publishing_Advertising() {
   return (
     <div>
+<<<<<<< HEAD
       <SEO
         title={seoData.title}
         description={seoData.description}
@@ -208,6 +213,21 @@ function Publishing_Advertising() {
         image={seoData.image} // Pass the imported image path
         url={seoData.url}
       />
+=======
+    <Helmet>
+  <title>ValidX -Publishing & Advertising</title>
+  <meta name="description" content="Ensuring brand safety with smart content moderation and targeted advertising solutions." />
+  <meta name="keywords" content="publishing, advertising, brand safety, content moderation, targeted advertising, ValidX" />
+  <meta property="og:title" content="Publishing & Advertising | ValidX" />
+  <meta property="og:description" content="Explore ValidX's innovative solutions for content moderation and effective advertising strategies." />
+  <meta property="og:image" content={headerSec} />
+  <meta property="og:url" content="https://www.validx.chargebackzero.com/use-cases/publishing-advertising" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Publishing & Advertising | ValidX" />
+  <meta name="twitter:description" content="ValidX offers solutions for smart content moderation and targeted advertising." />
+  <meta name="twitter:image" content={headerSec} />
+</Helmet>
+>>>>>>> f1105a609d908cc793054156e4f0793328504333
       <Header />
       <Body />
       <Container className="">
