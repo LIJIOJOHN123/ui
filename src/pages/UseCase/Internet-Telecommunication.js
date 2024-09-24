@@ -1,15 +1,15 @@
-import headerSec from "../../assets/InternetTelecommunication/headerSec.png";
+import React from "react";
+import { Col, Container, Row } from "react-bootstrap";
+import { Helmet } from "react-helmet-async";
 import logo1 from "../../assets/Cybersecurity/logo1.png";
 import logo2 from "../../assets/Cybersecurity/logo2.png";
 import logo3 from "../../assets/Cybersecurity/logo3.png";
+import headerSec from "../../assets/InternetTelecommunication/headerSec.png";
 import bodySec from "../../assets/bodySec.png";
-import { Card, Col, Container, Row } from "react-bootstrap";
-import React from "react";
-import NavBar from "../../components/NavBar";
 import Features from "../../components/Features";
-import Pricing from "../../components/Pricing";
 import Footer from "../../components/Footer";
-
+import NavBar from "../../components/NavBar";
+import Pricing from "../../components/Pricing";
 function Header() {
   const gradientTextStyle = {
     fontWeight: "bold",
@@ -159,7 +159,9 @@ const Body = () => {
               />
               <div>
                 <h5 className="mt-2">{item.title}</h5>
-                <p className="d-none d-md-block" style={{ fontSize: "14px" }}>{item.des}</p>
+                <p className="d-none d-md-block" style={{ fontSize: "14px" }}>
+                  {item.des}
+                </p>
               </div>
             </Col>
           ))}
@@ -173,7 +175,9 @@ const Body = () => {
             />
             <div>
               <h5 className="mt-2">{data[2].title}</h5>
-              <p className="d-none d-md-block" style={{ fontSize: "14px" }}>{data[2].des}</p>
+              <p className="d-none d-md-block" style={{ fontSize: "14px" }}>
+                {data[2].des}
+              </p>
             </div>
           </Col>
         </Row>
@@ -185,6 +189,41 @@ const Body = () => {
 function InternetTelecommunication() {
   return (
     <div>
+      <Helmet>
+        <title>ValidX -Internet & Telecommunication</title>
+        <meta
+          name="description"
+          content="Unlock customer insights, enhance marketing, and ensure compliance with domain categorization through ValidX's internet and telecommunication solutions."
+        />
+        <meta
+          name="keywords"
+          content="internet, telecommunication, domain categorization, customer insights, marketing campaigns, compliance, ValidX"
+        />
+        <meta
+          property="og:title"
+          content="Internet & Telecommunication | ValidX"
+        />
+        <meta
+          property="og:description"
+          content="Explore ValidX's solutions for categorizing domains to enhance customer insights and marketing effectiveness."
+        />
+        <meta property="og:image" content={headerSec} />
+        <meta
+          property="og:url"
+          content="https://www.validx.chargebackzero.com/use-cases/internet-telecommunication"
+        />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta
+          name="twitter:title"
+          content="Internet & Telecommunication | ValidX"
+        />
+        <meta
+          name="twitter:description"
+          content="ValidX offers solutions for enhancing marketing and compliance in the telecommunication sector."
+        />
+        <meta name="twitter:image" content={headerSec} />
+      </Helmet>
+
       <Header />
       <Body />
       <Container className="">

@@ -11,6 +11,7 @@ import useCase2 from "../../assets/useCase2.png";
 import useCase2BodySec from "../../assets/useCase2BodySec.png";
 import NavBar from "../../components/NavBar";
 import Footer from "../../components/Footer";
+import { Helmet } from "react-helmet-async";
 
 function Header() {
   const gradientTextStyle = {
@@ -96,8 +97,12 @@ function Header() {
 
               <p
                 className="mt-5 w-100  fw-lighter text-white lead overflow-y-auto "
-                style={{ width: "539px", fontSize: "22px",  scrollbarWidth: "none", // Firefox
-                  msOverflowStyle: "none", }}
+                style={{
+                  width: "539px",
+                  fontSize: "22px",
+                  scrollbarWidth: "none", // Firefox
+                  msOverflowStyle: "none",
+                }}
               >
                 Accurate merchant industry classification is essential for risk
                 teams, as it allows them to identify prohibited, restricted, or
@@ -180,7 +185,7 @@ const Body = () => {
         </p>
       </Container>
       <div
-      className="d-none d-xl-flex"
+        className="d-none d-xl-flex"
         style={{
           display: "flex",
           justifyContent: "center",
@@ -234,7 +239,41 @@ const Body = () => {
 };
 function MerchantIndustryClassification() {
   return (
-    <section >
+    <section>
+      <Helmet>
+        <title>ValidX -Merchant Industry Classification </title>
+        <meta
+          name="description"
+          content="Accurate merchant industry classification for risk management, helping teams identify prohibited and high-risk merchants using Merchant Category Codes (MCCs)."
+        />
+        <meta
+          name="keywords"
+          content="merchant classification, risk management, Merchant Category Codes, fraud prevention, ValidX"
+        />
+        <meta
+          property="og:title"
+          content="Merchant Industry Classification | ValidX"
+        />
+        <meta
+          property="og:description"
+          content="Enhance risk management with ValidX's merchant industry classification solutions to prevent fraud and ensure compliance."
+        />
+        <meta property="og:image" content={useCase2} />
+        <meta
+          property="og:url"
+          content="https://www.validx.chargebackzero.com/use-cases/merchant-industry-classification"
+        />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta
+          name="twitter:title"
+          content="Merchant Industry Classification | ValidX"
+        />
+        <meta
+          name="twitter:description"
+          content="Discover how ValidX helps in merchant industry classification for improved risk management."
+        />
+        <meta name="twitter:image" content={useCase2} />
+      </Helmet>
       <Header />
 
       <Body />

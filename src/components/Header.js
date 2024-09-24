@@ -450,6 +450,9 @@ function Header() {
               style={{ position: "relative", zIndex: 3 }} // Set the highest z-index for the buttons
             >
               <button
+                onClick={() => {
+                  navigate("/report");
+                }}
                 style={{
                   marginRight: "10px",
                   background: "linear-gradient(90deg, #8A2BE2, purple, gold)",
