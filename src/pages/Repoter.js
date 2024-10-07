@@ -16,7 +16,7 @@ const Report = () => {
     merchantUrl: "",
     emailAddress: "",
   });
-  const [loading, setLoading]=useState(false)
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     if (submittedUrl) {
@@ -35,7 +35,8 @@ const Report = () => {
     }));
   };
 
-  console.log(formData);
+  console.log(process.env.REACT_APP_TEMPLATE_ID, "ServiceId");
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -43,9 +44,8 @@ const Report = () => {
     emailjs
       .send(
         "service_oydgqi1", // Your Service ID
-        "template_0snqpgj", // Your Template ID
+        "template_ova20rc", // Your Template ID
         {
-         
           message: formData.merchantUrl,
           from_email: formData.emailAddress, // The user's email
         },
@@ -65,7 +65,7 @@ const Report = () => {
         }
       );
 
-      setLoading(false)
+    setLoading(false)
   };
 
   return (
@@ -163,7 +163,7 @@ const Report = () => {
 
                 <div className="text-end">
                   <Button variant="dark" type="submit">
-                  {loading ? "Loading..." : (submited ? "Submitted" : "Submit")}
+                    {loading ? "Loading..." : "Submit"}
                   </Button>
                 </div>
               </Form>
