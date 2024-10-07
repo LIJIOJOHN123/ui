@@ -1,5 +1,5 @@
-import React from "react";
-import { Col, Container, Row } from "react-bootstrap";
+import React, { useState } from "react";
+import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import headerSec from "../../assets/Publishing_Advertising/logo2.png";
 import logo1 from "../../assets/Publishing_Advertising/logo3.png";
 import logo2 from "../../assets/Publishing_Advertising/logo4.png";
@@ -10,8 +10,17 @@ import Footer from "../../components/Footer";
 import NavBar from "../../components/NavBar";
 import Pricing from "../../components/Pricing";
 import SEO from "../../components/SEO";
+import { useNavigate } from "react-router-dom";
 
 function Header() {
+  const [url, setUrl] = useState("");
+
+  const navigate = useNavigate();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    navigate(`/report?submittedUrl=${encodeURIComponent(url)}`);
+  };
   const gradientTextStyle = {
     fontWeight: "bold",
     background: "linear-gradient(90deg, white 0%, pink 50%, gold 100%)",
@@ -102,16 +111,27 @@ function Header() {
               </p>
             </div>
             <div>
-              <div className="bg-white rounded p-2 d-flex justify-content-center align-items-center mt-2 shadow-sm">
-                <input
-                  type="text"
-                  className="form-control border-0 me-2 w-75"
-                  placeholder="Paste URL, domain or email to check"
-                />
-                <button className="btn btn-dark btn-lg rounded w-25 h-100 larger-button">
-                  Submit
-                </button>
-              </div>
+              <Form onSubmit={handleSubmit}>
+                <div className="bg-white rounded  p-2 d-flex justify-content-center align-items-center mt-4 shadow-sm">
+                  <Form.Control
+                    type="url"
+                    className="me-2  border-0"
+                    placeholder="Paste URL, domain or email to check"
+                    value={url}
+                    onChange={(e) => setUrl(e.target.value)}
+                    required
+                    style={{ maxWidth: "400px" }}
+                  />
+
+                  <Button
+                    type="submit"
+                    variant="dark"
+                    className="btn-lg rounded larger-button"
+                  >
+                    Submit
+                  </Button>
+                </div>
+              </Form>
             </div>
           </Col>
           <Col md={6} className="my-auto d-none d-md-flex">

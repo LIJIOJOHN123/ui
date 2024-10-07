@@ -1,5 +1,5 @@
-import React from "react";
-import { Card, Col, Container, Row } from "react-bootstrap";
+import React, { useState } from "react";
+import { Button, Card, Col, Container, Form, Row } from "react-bootstrap";
 import bodySec from "../../assets/bodySec.png";
 import customerOnbroadingImg from "../../assets/customer-onbroading.png";
 import logo1 from "../../assets/logo1.png";
@@ -17,8 +17,17 @@ import logo9 from "../../assets/logo9.png";
 import Footer from "../../components/Footer";
 import NavBar from "../../components/NavBar";
 import SEO from "../../components/SEO";
+import { useNavigate } from "react-router-dom";
 
 function Header() {
+  const [url, setUrl] = useState("");
+
+  const navigate = useNavigate();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    navigate(`/report?submittedUrl=${encodeURIComponent(url)}`);
+  };
   const gradientTextStyle = {
     fontWeight: "bold",
     background: "linear-gradient(90deg, white 0%, pink 50%, gold 100%)",
@@ -108,17 +117,28 @@ function Header() {
                 Websites and Online Reputation in Under 4 Minutes{" "}
               </p>
             </div>
-            <div className="">
-              <div className="bg-white rounded p-2 d-flex justify-content-center align-items-center mt-2 shadow-sm">
-                <input
-                  type="text"
-                  className="form-control border-0 me-2 w-75"
-                  placeholder="Paste URL, domain or email to check"
-                />
-                <button className="btn btn-dark btn-lg rounded w-25 h-100 larger-button">
-                  Submit
-                </button>
-              </div>
+            <div>
+              <Form onSubmit={handleSubmit}>
+                <div className="bg-white rounded  p-2 d-flex justify-content-center align-items-center mt-4 shadow-sm">
+                  <Form.Control
+                    type="url"
+                    className="me-2  border-0"
+                    placeholder="Paste URL, domain or email to check"
+                    value={url}
+                    onChange={(e) => setUrl(e.target.value)}
+                    required
+                    style={{ maxWidth: "400px" }}
+                  />
+
+                  <Button
+                    type="submit"
+                    variant="dark"
+                    className="btn-lg rounded larger-button"
+                  >
+                    Submit
+                  </Button>
+                </div>
+              </Form>
             </div>
           </Col>
           <Col md={6} className="d-none d-md-block">
@@ -215,7 +235,7 @@ const Body = () => {
             <Col className=" g-0 " key={index} md={4}>
               <Card className="h-100 text-center border-0  justify-content-evenly">
                 <img
-                alt="khj"
+                  alt="khj"
                   src={item.img}
                   className="d-block mx-auto"
                   style={{ objectFit: "contain", width: "75px" }}
@@ -237,7 +257,7 @@ const Body = () => {
       <Container>
         <h1 className="text-center ">How It Works</h1>
         <img
-        alt="lk"
+          alt="lk"
           src={bodySec}
           className=" "
           style={{ objectFit: "contain", width: "99%" }}
@@ -249,7 +269,7 @@ const Body = () => {
             <Col className=" g-0 " key={index} md={4}>
               <Card className=" h-100 text-center border-0  justify-content-evenly">
                 <img
-                alt="kp"
+                  alt="kp"
                   src={item.img}
                   className="d-block mx-auto"
                   style={{ objectFit: "contain", width: "75px" }}
@@ -273,16 +293,17 @@ const Body = () => {
 
 const seoData = {
   title: "ValidX - Merchant Risk Assessment",
-  description: "Simplifying merchant risk assessment with a powerful API that analyzes 100+ risk signals across merchant websites in under 4 minutes.",
-  keywords: "merchant risk assessment, risk signals, API, fraud detection, website analysis, ValidX",
+  description:
+    "Simplifying merchant risk assessment with a powerful API that analyzes 100+ risk signals across merchant websites in under 4 minutes.",
+  keywords:
+    "merchant risk assessment, risk signals, API, fraud detection, website analysis, ValidX",
   author: "ValidX Team", // Add if needed
   image: customerOnbroadingImg, // Relative image path
-  url: "https://www.validx.chargebackzero.com/use-cases/merchant-risk-assessment"
+  url: "https://www.validx.chargebackzero.com/use-cases/merchant-risk-assessment",
 };
 function MerchantRisk() {
   return (
     <div>
-     
       <SEO
         title={seoData.title}
         description={seoData.description}

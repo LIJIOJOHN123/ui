@@ -1,5 +1,6 @@
-import React from "react";
-import { Col, Container, Row } from "react-bootstrap";
+import React, { useEffect, useState } from "react";
+import { Button, Col, Container, Form, Row } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 import headerSec from "../../assets/Cybersecurity/headerSec.png";
 import logo1 from "../../assets/Cybersecurity/logo1.png";
 import logo2 from "../../assets/Cybersecurity/logo2.png";
@@ -10,7 +11,6 @@ import Footer from "../../components/Footer";
 import NavBar from "../../components/NavBar";
 import Pricing from "../../components/Pricing";
 import SEO from "../../components/SEO";
-
 function Header() {
   const gradientTextStyle = {
     fontWeight: "bold",
@@ -22,6 +22,18 @@ function Header() {
     display: "inline-block",
   };
 
+  const [url, setUrl] = useState("");
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    navigate(`/report?submittedUrl=${encodeURIComponent(url)}`);
+  };
   return (
     <div
       id="/"
@@ -101,17 +113,28 @@ function Header() {
                 Threats, Manage Risks, and Filter Content
               </p>
             </div>
-            <div>
-              <div className="bg-white rounded p-2 d-flex justify-content-center align-items-center mt-2 shadow-sm">
-                <input
-                  type="text"
-                  className="form-control border-0 me-2 w-75"
-                  placeholder="Paste URL, domain or email to check"
-                />
-                <button className="btn btn-dark btn-lg rounded w-25 h-100 larger-button">
-                  Submit
-                </button>
-              </div>
+            <div >
+              <Form onSubmit={handleSubmit}>
+                <div className="bg-white rounded  p-2 d-flex justify-content-center align-items-center mt-4 shadow-sm">
+                  <Form.Control
+                    type="url"
+                    className="me-2  border-0"
+                    placeholder="Paste URL, domain or email to check"
+                    value={url}
+                    onChange={(e) => setUrl(e.target.value)}
+                    required
+                    style={{ maxWidth: "400px" }}
+                  />
+
+                  <Button
+                    type="submit"
+                    variant="dark"
+                    className="btn-lg rounded larger-button"
+                  >
+                    Submit
+                  </Button>
+                </div>
+              </Form>
             </div>
           </Col>
           <Col md={6} className="my-auto d-none d-md-block">

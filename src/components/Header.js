@@ -1,6 +1,6 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
-import { Col, Container, Row } from "react-bootstrap";
+import { Button, Col, Container, Form, Row } from "react-bootstrap";
 
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -15,12 +15,18 @@ import ellipse3 from "../assets/ellipse3.png";
 import NavBar from "./NavBar";
 
 function Header() {
+  const [url, setUrl] = useState("");  
   const location = useLocation().pathname;
+  const navigate = useNavigate();
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
-  const navigate = useNavigate();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    navigate(`/report?submittedUrl=${encodeURIComponent(url)}`);
+  };
 
   const API = [
     {
@@ -295,17 +301,27 @@ function Header() {
                 </div>
 
                 <div style={{ marginTop: "50px" }} className="">
-                  <div className="bg-white rounded  p-2 d-flex justify-content-center align-items-center mt-4 shadow-sm">
-                    <input
-                      type="text"
-                      className="form-control border-0 me-2"
-                      placeholder="Paste URL, domain or email to check"
-                    />
+                  <Form onSubmit={handleSubmit}>
+                    <div className="bg-white rounded  p-2 d-flex justify-content-center align-items-center mt-4 shadow-sm">
+                      <Form.Control
+                        type="url"
+                        className="me-2  border-0"
+                        placeholder="Paste URL, domain or email to check"
+                        value={url}
+                        onChange={(e) => setUrl(e.target.value)}
+                        required
+                        style={{ maxWidth: "400px" }}
+                      />
 
-                    <button className="btn btn-dark btn-lg rounded  h-100 larger-button">
-                      Submit
-                    </button>
-                  </div>
+                      <Button
+                        type="submit"
+                        variant="dark"
+                        className="btn-lg rounded larger-button"
+                      >
+                        Submit
+                      </Button>
+                    </div>
+                  </Form>
                 </div>
               </Container>
             ) : (
@@ -404,17 +420,28 @@ function Header() {
                 </p>
 
                 <div style={{ marginTop: "100px" }} className="text-white ">
-                  <div className="bg-white rounded  p-2 d-flex justify-content-center align-items-center mt-4 w-100 shadow-sm">
-                    <input
-                      type="text"
-                      className="form-control border-0 me-2 "
-                      placeholder="Paste URL, domain or email to check"
-                    />
+                  <Form onSubmit={handleSubmit}>
+                    <div className="bg-white rounded  p-2 d-flex justify-content-center align-items-center mt-4 shadow-sm">
+                      <Form.Control
+                        type="url"
+                        className="me-2  border-0"
+                        placeholder="Paste URL, domain or email to check"
+                        value={url}
+                        onChange={(e) => setUrl(e.target.value)}
+                        required
+                        style={{ maxWidth: "400px" }}
+                      />
 
-                    <button className="btn btn-dark btn-lg rounded  h-100 larger-button">
-                      Submit
-                    </button>
-                  </div>
+                      {/* Submit button */}
+                      <Button
+                        type="submit"
+                        variant="dark"
+                        className="btn-lg rounded larger-button"
+                      >
+                        Submit
+                      </Button>
+                    </div>
+                  </Form>
                 </div>
               </Container>
             )}
@@ -451,6 +478,7 @@ function Header() {
             >
               <button
                 onClick={() => {
+                  localStorage.removeItem("submittedUrl");
                   navigate("/report");
                 }}
                 style={{

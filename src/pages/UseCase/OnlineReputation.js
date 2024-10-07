@@ -1,5 +1,6 @@
-import React from "react";
-import { Card, Col, Container, Row } from "react-bootstrap";
+import React, { useState } from "react";
+import { Button, Card, Col, Container, Form, Row } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 import bodySec from "../../assets/bodySec.png";
 import logo10 from "../../assets/logo10.png";
 import logo11 from "../../assets/logo11.png";
@@ -14,6 +15,14 @@ import NavBar from "../../components/NavBar";
 import SEO from "../../components/SEO";
 
 function Header() {
+  const [url, setUrl] = useState("");
+
+  const navigate = useNavigate();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    navigate(`/report?submittedUrl=${encodeURIComponent(url)}`);
+  };
   const gradientTextStyle = {
     fontWeight: "bold",
     background: "linear-gradient(90deg, white 0%, pink 50%, gold 100%)",
@@ -108,17 +117,28 @@ function Header() {
                 online transactions.
               </p>
             </div>
-            <div className="mt-5">
-              <div className="bg-white w-75 rounded p-2 d-flex justify-content-center align-items-center mt-2 shadow-sm">
-                <input
-                  type="text"
-                  className="form-control border-0 me-2 w-75"
-                  placeholder="Paste URL, domain or email to check"
-                />
-                <button className="btn btn-dark btn-lg rounded w-25 h-100 larger-button">
-                  Submit
-                </button>
-              </div>
+            <div>
+              <Form onSubmit={handleSubmit}>
+                <div className="bg-white rounded  p-2 d-flex justify-content-center align-items-center mt-4 shadow-sm">
+                  <Form.Control
+                    type="url"
+                    className="me-2  border-0"
+                    placeholder="Paste URL, domain or email to check"
+                    value={url}
+                    onChange={(e) => setUrl(e.target.value)}
+                    required
+                    style={{ maxWidth: "400px" }}
+                  />
+
+                  <Button
+                    type="submit"
+                    variant="dark"
+                    className="btn-lg rounded larger-button"
+                  >
+                    Submit
+                  </Button>
+                </div>
+              </Form>
             </div>
           </Col>
           <Col md={6} className=" d-none d-md-flex">

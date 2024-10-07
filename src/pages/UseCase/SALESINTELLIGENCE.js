@@ -1,5 +1,5 @@
-import React from "react";
-import { Card, Col, Container, Row } from "react-bootstrap";
+import React, { useState } from "react";
+import { Button, Card, Col, Container, Form, Row } from "react-bootstrap";
 import bodySec from "../../assets/bodySec.png";
 import logo10 from "../../assets/logo10.png";
 import logo11 from "../../assets/logo11.png";
@@ -15,8 +15,17 @@ import logo4 from "../../assets/salesintelligence/logo4.png";
 import Footer from "../../components/Footer";
 import NavBar from "../../components/NavBar";
 import SEO from "../../components/SEO";
+import { useNavigate } from "react-router-dom";
 
 function Header() {
+  const [url, setUrl] = useState("");
+
+  const navigate = useNavigate();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    navigate(`/report?submittedUrl=${encodeURIComponent(url)}`);
+  };
   const gradientTextStyle = {
     fontWeight: "bold",
     background: "linear-gradient(90deg, white 0%, pink 50%, gold 100%)",
@@ -106,15 +115,28 @@ function Header() {
               </p>
             </div>
             <div className="">
-              <div className="bg-white rounded   p-2 d-flex justify-content-center align-items-center mt-2 shadow-sm">
-                <input
-                  type="text"
-                  className="form-control border-0 me-2 w-75"
-                  placeholder="Paste URL, domain or email to check"
-                />
-                <button className="btn btn-dark btn-lg rounded w-25 h-100 larger-button">
-                  Submit
-                </button>
+              <div>
+                <Form onSubmit={handleSubmit}>
+                  <div className="bg-white rounded  p-2 d-flex justify-content-center align-items-center mt-4 shadow-sm">
+                    <Form.Control
+                      type="url"
+                      className="me-2  border-0"
+                      placeholder="Paste URL, domain or email to check"
+                      value={url}
+                      onChange={(e) => setUrl(e.target.value)}
+                      required
+                      style={{ maxWidth: "400px" }}
+                    />
+
+                    <Button
+                      type="submit"
+                      variant="dark"
+                      className="btn-lg rounded larger-button"
+                    >
+                      Submit
+                    </Button>
+                  </div>
+                </Form>
               </div>
             </div>
           </Col>
@@ -255,11 +277,13 @@ const Body = () => {
 
 const seoData = {
   title: "ValidX - Sales Intelligence",
-  description: "Stop wasting time doing lead enrichment. Discover how ValidX's sales intelligence solutions can help you identify potential clients and analyze the market.",
-  keywords: "sales intelligence, lead enrichment, market analysis, ValidX, customer research, business relationships",
+  description:
+    "Stop wasting time doing lead enrichment. Discover how ValidX's sales intelligence solutions can help you identify potential clients and analyze the market.",
+  keywords:
+    "sales intelligence, lead enrichment, market analysis, ValidX, customer research, business relationships",
   author: "ValidX Team", // Optional
   image: heroSec, // Relative image path
-  url: "https://www.validx.chargebackzero.com/use-cases/sales-intelligence"
+  url: "https://www.validx.chargebackzero.com/use-cases/sales-intelligence",
 };
 function SALESINTELLIGENCE() {
   return (

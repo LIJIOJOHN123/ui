@@ -16,7 +16,7 @@ const Footer = () => {
     // { text: "API Hub", href: "/api-hub" },
     { text: "IP Lookup API", href: "/api/country-risk" },
     { text: "Blog", href: "/blog" },
-    { text: "Sitemap", href: "/sitemap" },
+    // { text: "Sitemap", href: "/sitemap" },
   ];
 
   const legal = [

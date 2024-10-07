@@ -1,29 +1,82 @@
-import React, { useState } from "react";
-import { Button, Container, Form } from "react-bootstrap";
-import img1 from "../assets/Report/img1.png"; // Replace this with your actual image path
+import React, { useEffect, useState } from "react";
+import { Alert, Button, Container, Form } from "react-bootstrap";
+import img1 from "../assets/Report/img1.png";
 import Footer from "../components/Footer";
-import NavBar from "../components/NavBar"; // Ensure this path is correct
-
+import NavBar from "../components/NavBar";
+import { useLocation, useNavigate } from "react-router-dom";
+import emailjs from "emailjs-com";
 const Report = () => {
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const submittedUrl = searchParams.get("submittedUrl");
+
+  const navigate = useNavigate();
   const [submited, setSubmited] = useState(false);
-  // const navigate = useNavigate();
-  const handleSubmit = () => {
-    setSubmited(!submited); // Toggle the submitted state
-    console.log(`Form submitted: ${!submited}`); // Optional: log the state
-    // setTimeout(() => {
-    //   navigate("/");
-    // }, [2000]);
+  const [formData, setFormData] = useState({
+    merchantUrl: "",
+    emailAddress: "",
+  });
+  const [loading, setLoading]=useState(false)
+
+  useEffect(() => {
+    if (submittedUrl) {
+      setFormData((prevData) => ({
+        ...prevData,
+        merchantUrl: submittedUrl,
+      }));
+    }
+  }, [submittedUrl]);
+
+  const handleChange = (e) => {
+    const { id, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [id]: value,
+    }));
   };
+
+  console.log(formData);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setLoading(true)
+    emailjs
+      .send(
+        "service_oydgqi1", // Your Service ID
+        "template_0snqpgj", // Your Template ID
+        {
+         
+          message: formData.merchantUrl,
+          from_email: formData.emailAddress, // The user's email
+        },
+        "nCO3AcICvW-hhC20K" // Your Public Key
+      )
+      .then(
+        (response) => {
+          console.log(response);
+          setSubmited(true);
+          setTimeout(() => {
+            navigate(-1);
+          }, 3000);
+        },
+        (error) => {
+          console.error("Failed to send email. Error:", error);
+          Alert("Failed to send email. Please try again.");
+        }
+      );
+
+      setLoading(false)
+  };
+
   return (
     <>
-      {/* NavBar at the top */}
       <div
         id="/"
         className="pb-sm-3"
         style={{
           display: "flex",
           background: "linear-gradient(to bottom, #420394, #000000)",
-          paddingBottom: "50px", // Padding below the NavBar to create spacing
+          paddingBottom: "50px",
         }}
       >
         <div
@@ -34,19 +87,16 @@ const Report = () => {
         </div>
       </div>
 
-      {/* Main Form Section */}
       <div className="d-flex justify-content-center align-items-center my-5 ">
         <Container
           className="border border-danger rounded-5 p-4 "
           style={{
-            maxWidth: "600px", // Restrict the form width
-            backgroundColor: "white", // White background for the form
-            textAlign: "center", // Center text inside the form
+            maxWidth: "600px",
+            textAlign: "center",
             backgroundColor: "#EEEFF5",
           }}
         >
-          <div className="border border-3 bg-white  p-3 rounded-4 ">
-            {/* Image */}
+          <div className="border border-3 bg-white p-3 rounded-4">
             <img
               src={img1}
               width={50}
@@ -55,14 +105,10 @@ const Report = () => {
               alt="Try it now"
             />
 
-            {/* Heading */}
             <h5 className="fw-light">Try it now</h5>
 
-            {/* Form Title */}
             <h3>Submit a Merchant</h3>
             <h3>Get an AI Risk Report</h3>
-
-            {/* Description */}
 
             {submited ? (
               <p>
@@ -75,6 +121,7 @@ const Report = () => {
                 activities.
               </p>
             )}
+
             {submited ? (
               <div
                 style={{ backgroundColor: "#EEEFF5" }}
@@ -82,24 +129,24 @@ const Report = () => {
               >
                 <p className="m-0">Thank you!</p>
                 <p className="m-0">Your submission has been received!</p>
-                <p className="m-0"> We will contact your via email shortly</p>
+                <p className="m-0"> We will contact you via email shortly.</p>
               </div>
             ) : (
-              <Form>
-                {/* Merchant URL Input */}
+              <Form onSubmit={handleSubmit}>
                 <Form.Group className="mb-3 text-start">
-                  <Form.Label htmlFor="merchantUrl" className="fw-bold ">
+                  <Form.Label htmlFor="merchantUrl" className="fw-bold">
                     Merchant’s URL (for the example report)
                   </Form.Label>
                   <Form.Control
                     id="merchantUrl"
                     type="url"
                     placeholder="www.chargebackZero.com"
+                    value={formData.merchantUrl}
+                    onChange={handleChange}
                     required
                   />
                 </Form.Group>
 
-                {/* Email Input */}
                 <Form.Group className="mb-3 text-start">
                   <Form.Label htmlFor="emailAddress" className="fw-bold">
                     Your Email Address
@@ -108,19 +155,15 @@ const Report = () => {
                     id="emailAddress"
                     type="email"
                     placeholder="yourname@company.com"
+                    value={formData.emailAddress}
+                    onChange={handleChange}
                     required
                   />
                 </Form.Group>
 
-                {/* Submit Button */}
                 <div className="text-end">
-                  <Button
-                    onClick={handleSubmit}
-                    variant="dark"
-                    type="submit"
-                    className=""
-                  >
-                    Submit
+                  <Button variant="dark" type="submit">
+                  {loading ? "Loading..." : (submited ? "Submitted" : "Submit")}
                   </Button>
                 </div>
               </Form>
