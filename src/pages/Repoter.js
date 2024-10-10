@@ -35,7 +35,6 @@ const Report = () => {
     }));
   };
 
-  console.log(process.env.REACT_APP_TEMPLATE_ID, "ServiceId");
 
 
   const handleSubmit = (e) => {
@@ -53,7 +52,7 @@ const Report = () => {
       )
       .then(
         (response) => {
-          console.log(response);
+          
           setSubmited(true);
           setTimeout(() => {
             navigate(-1);
