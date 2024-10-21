@@ -1,12 +1,95 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Col, Container, Form, InputGroup, Row } from "react-bootstrap";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from 'react-redux';
+import { googleOAuthLoginAction, loginAction, registerAction } from "../../store/authSlice"; // Should be loginAction for login
+import CryptoJS from "crypto-js";
 import logo from "../../assets/auth/icon.png";
 import logo6 from "../../assets/auth/logo6.png";
 import logo7 from "../../assets/auth/logo7.png";
-import { Link } from "react-router-dom";
-
+import { useGoogleLogin } from '@react-oauth/google';
 function Login() {
-  const data = [
+
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+  const [error, setError] = useState('');
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { loading, isAuthenticated, user, token } = useSelector((state) => state.auth);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      const tokenExist = localStorage.getItem("authToken")
+      const userExist = localStorage.getItem("user")
+      if (tokenExist || userExist) {
+        localStorage.clear("authToken")
+        localStorage.clear("user")
+      }
+      localStorage.setItem('authToken', token);
+      localStorage.setItem('user', JSON.stringify(user));
+      navigate("/dashboard");
+    }
+  }, [isAuthenticated, navigate]);
+
+  const googleLogin = useGoogleLogin({
+    onSuccess: async (res) => {
+      try {
+        if (res.code) {
+          console.log(res.code)
+          dispatch(googleOAuthLoginAction(res.code));
+        
+        } else {
+          console.log("No code ")
+        }
+      } catch (error) {
+        console.log('Error during Google login:', error);
+      }
+    },
+    onError: (error) => {
+      console.log('Login failed:', error);
+    },
+    flow: 'auth-code'
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (!formData.email || !formData.password) {
+      setError('Please fill in both email and password.');
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      setError('Please enter a valid email address.');
+      return;
+    }
+
+    setError(''); // Clear error before encrypting
+
+
+    const encryptedPassword = CryptoJS.AES.encrypt(formData.password, process.env.REACT_APP_SECRET_KEY).toString();
+
+    const encryptedFormData = {
+      ...formData,
+      password: encryptedPassword
+    };
+
+    // Dispatch login action here
+    dispatch(loginAction(encryptedFormData));
+  };
+
+  const data1 = [
     {
       img: logo6,
       title: "State-of-the-Art Accuracy",
@@ -42,52 +125,47 @@ function Login() {
             Log in to ValidX AI to continue to your dashboard.
           </p>
 
-          <Form>
+          <Form onSubmit={handleSubmit}>
+            {error && <p style={{ color: 'red' }}>{error}</p>}
             <InputGroup className="mb-3">
               <Form.Control
-                type="email"
+                type="text"
                 placeholder="E-Mail Address"
                 className="py-3 border-1 border-black"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                required
               />
             </InputGroup>
             <InputGroup className="mb-3">
               <Form.Control
                 type="password"
+                name="password"
                 placeholder="Password"
                 className="py-3 border-1 border-black"
+                value={formData.password}
+                onChange={handleChange}
+                required
               />
             </InputGroup>
-
             <div className="d-flex justify-content-between align-items-center">
-              <Link
-                to="/"
-                className="text-decoration-none fw-semibold"
-                style={{ color: "#420394" }}
-              >
+              <Link to="/" className="text-decoration-none fw-semibold" style={{ color: "#420394" }}>
                 Forgot password?
               </Link>
             </div>
-
             <Button
               variant="primary"
               style={{ backgroundColor: "#420394" }}
               className="w-100 py-3 mt-3"
+              type="submit"
+              disabled={loading}
             >
-              <Link
-                className="text-decoration-none text-white w-100 h-100 d-flex justify-content-center align-items-center"
-                to="/dashboard"
-                style={{ display: "block", color: "inherit" }}
-              >
-                Log In
-              </Link>
+              {loading ? "Loading" : "Log In"}
             </Button>
             <div className="mt-2 text-center">
               Don’t have an account?{" "}
-              <Link
-                to="/auth/register"
-                className="text-decoration-none"
-                style={{ color: "#420394" }}
-              >
+              <Link to="/auth/register" className="text-decoration-none" style={{ color: "#420394" }}>
                 Sign up
               </Link>
             </div>
@@ -99,7 +177,9 @@ function Login() {
             <hr className="flex-grow-1" />
           </div>
 
-          <Button className="w-100 py-3 bg-white  border-black text-start ">
+
+
+          <Button className="w-100 py-3 bg-white  border-black text-start " onClick={() => googleLogin()}>
             <div className="d-flex flex-row">
               <img
                 alt="hi"
@@ -112,6 +192,8 @@ function Login() {
               </h5>
             </div>
           </Button>
+
+
         </Col>
 
         <Col md={7} className="ms-auto mt-5">
@@ -120,7 +202,7 @@ function Login() {
             Categorization and much more from a URL or Email.
           </h6>
 
-          {data.map((item, i) => (
+          {data1.map((item, i) => (
             <div
               key={i}
               className="d-flex justify-content-start align-items-center mb-3"

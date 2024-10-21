@@ -1,16 +1,16 @@
-import React from "react";
-import NavBar from "./NavBar";
-import { Button, Col, Row } from "react-bootstrap";
-import { Bar } from "react-chartjs-2";
 import {
-  Chart as ChartJS,
-  Title,
-  Tooltip,
-  Legend,
   BarElement,
   CategoryScale,
+  Chart as ChartJS,
+  Legend,
   LinearScale,
+  Title,
+  Tooltip,
 } from "chart.js";
+import React from "react";
+import { Button, Col, Row } from "react-bootstrap";
+import { Bar } from "react-chartjs-2";
+import NavBar from "./NavBar";
 
 // Register the necessary components
 ChartJS.register(
@@ -23,6 +23,8 @@ ChartJS.register(
 );
 
 function Dashboard() {
+
+  
   const data = {
     labels: [
       "2024-08-04",

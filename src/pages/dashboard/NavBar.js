@@ -1,11 +1,25 @@
 import React from "react";
 import { Button, Col, Row } from "react-bootstrap";
 import logo from "../../assets/Background.png";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Bell, Mail, Search } from "lucide-react";
+import { useDispatch } from "react-redux";
+import { logOut } from "../../store/authSlice";
 
 function NavBar({ children }) {
+  const navigate = useNavigate();
   const location = useLocation();
+  const dispatch = useDispatch();
+  const handleNavigation = (path) => {
+
+    if (path === "/auth/login") {
+      localStorage.clear("authToken")
+      localStorage.clear("user")
+      dispatch(logOut())
+    }
+    navigate(path)
+
+  }
   const navItems = [
     { label: "Dashboard", path: "/dashboard" },
     { label: "Batch Enrichment (CSV)", path: "/batch-enrichment" },
@@ -22,12 +36,12 @@ function NavBar({ children }) {
         className="align-items-center justify-content-between mx-0"
         style={{ height: "50px" }}
       >
-        <Col className="d-flex align-items-center">
+        <Col className="d-flex align-items-center pt-1">
           <Link to="/dashboard">
             <img
               src={logo}
               alt="logo"
-              style={{ objectFit: "cover", width: "200px" }}
+              style={{ objectFit: "contain", width: "130px" }}
             />
           </Link>
         </Col>
@@ -66,6 +80,7 @@ function NavBar({ children }) {
               variant="danger"
               style={{ padding: "10px 25px", minWidth: "120px" }}
               className="fw-bold d-flex align-items-center justify-content-center border-0"
+              onClick={() => handleNavigation("/auth/login")}
             >
               Logout
             </Button>
@@ -88,14 +103,16 @@ function NavBar({ children }) {
           <h5 className="mt-3">Sudhir Sukrutharaj</h5>
           <div className="w-100 mt-4 d-flex flex-column">
             {navItems.map((item) => (
-              <Link key={item.label} to={item.path} className="w-100 mb-2">
-                <Button
-                  variant={location.pathname === item.path ? "warning" : "dark"}
-                  className="w-100"
-                >
-                  {item.label}
-                </Button>
-              </Link>
+
+              <Button
+                key={item.label}
+                variant={location.pathname === item.path ? "warning" : "dark"}
+                className="w-100 mb-2"
+                onClick={() => handleNavigation(item.path)}
+              >
+                {item.label}
+              </Button>
+
             ))}
           </div>
         </Col>

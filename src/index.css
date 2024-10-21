@@ -61,3 +61,20 @@ ul li {
 .custom-dropdown .dropdown-toggle::after {
   color: white !important; /* Changes the color of the caret to red */
 }
+
+
+@keyframes shake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  50% { transform: translateX(5px); }
+  75% { transform: translateX(-5px); }
+  100% { transform: translateX(0); }
+}
+
+.shake {
+  animation: shake 0.5s ease-in-out;
+}
+
+.is-invalid {
+  border-color: #dc3545; /* Red border for invalid input */
+}
