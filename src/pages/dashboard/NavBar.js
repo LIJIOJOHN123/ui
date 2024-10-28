@@ -1,24 +1,26 @@
+import { Bell, Mail, Search } from "lucide-react";
 import React from "react";
 import { Button, Col, Row } from "react-bootstrap";
-import logo from "../../assets/Background.png";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Bell, Mail, Search } from "lucide-react";
-import { useDispatch } from "react-redux";
+import logo from "../../assets/Background.png";
 import { logOut } from "../../store/authSlice";
+import { unsetLocalStorage } from "../../utils/LocalStorage";
 
 function NavBar({ children }) {
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
-  const handleNavigation = (path) => {
+  const { loading, user } = useSelector((state) => state.auth);
+console.log(loading, user?.name ,"Nav")
 
-    if (path === "/auth/login") {
-      localStorage.clear("authToken")
-      localStorage.clear("user")
+  const handleNavigation = (path) => {
+    if (path === "/") {
+      window.location.replace(path)
+      unsetLocalStorage()
       dispatch(logOut())
     }
     navigate(path)
-
   }
   const navItems = [
     { label: "Dashboard", path: "/dashboard" },
@@ -26,7 +28,7 @@ function NavBar({ children }) {
     { label: "Documentation", path: "/documentation" },
     { label: "Plans", path: "/plans" },
     { label: "Settings", path: "/settings" },
-    { label: "Logout", path: "/auth/login" },
+    { label: "Logout", path: "/" },
   ];
 
   return (
@@ -75,16 +77,16 @@ function NavBar({ children }) {
               Plan
             </Button>
           </Link>
-          <Link to="/auth/login" className="text-decoration-none">
-            <Button
-              variant="danger"
-              style={{ padding: "10px 25px", minWidth: "120px" }}
-              className="fw-bold d-flex align-items-center justify-content-center border-0"
-              onClick={() => handleNavigation("/auth/login")}
-            >
-              Logout
-            </Button>
-          </Link>
+
+          <Button
+            variant="danger"
+            style={{ padding: "10px 25px", minWidth: "120px" }}
+            className="fw-bold d-flex align-items-center justify-content-center border-0"
+            onClick={() => handleNavigation("/")}
+          >
+            Logout
+          </Button>
+
         </Col>
       </Row>
 
@@ -100,7 +102,10 @@ function NavBar({ children }) {
             src="https://img.freepik.com/free-vector/illustration-businessman_53876-5856.jpg?w=740&t=st=1723811714~exp=1723812314~hmac=264cf4b222d991caf3459db719571b65cb1f5d98d462e1cb3aebd0bf5a4d2334"
             alt="Profile"
           />
-          <h5 className="mt-3">Sudhir Sukrutharaj</h5>
+          {loading ? (<div className="spinner-border" />) : (
+            <h5 className="mt-3">{user?.name}</h5>
+          )}
+
           <div className="w-100 mt-4 d-flex flex-column">
             {navItems.map((item) => (
 

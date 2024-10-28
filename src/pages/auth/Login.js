@@ -1,13 +1,14 @@
+import { useGoogleLogin } from '@react-oauth/google';
+import CryptoJS from "crypto-js";
 import React, { useEffect, useState } from "react";
 import { Button, Col, Container, Form, InputGroup, Row } from "react-bootstrap";
-import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
-import { googleOAuthLoginAction, loginAction, registerAction } from "../../store/authSlice"; // Should be loginAction for login
-import CryptoJS from "crypto-js";
+import { Link, useNavigate } from "react-router-dom";
 import logo from "../../assets/auth/icon.png";
 import logo6 from "../../assets/auth/logo6.png";
 import logo7 from "../../assets/auth/logo7.png";
-import { useGoogleLogin } from '@react-oauth/google';
+import { googleOAuthLoginAction, loginAction } from "../../store/authSlice"; // Should be loginAction for login
+import { getLocalStorage, removeLocalStorage, setLocalStorage } from '../../utils/LocalStorage';
 function Login() {
 
   const [formData, setFormData] = useState({
@@ -18,17 +19,18 @@ function Login() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { loading, isAuthenticated, user, token } = useSelector((state) => state.auth);
-
+  
   useEffect(() => {
     if (isAuthenticated) {
-      const tokenExist = localStorage.getItem("authToken")
-      const userExist = localStorage.getItem("user")
+      const tokenExist = getLocalStorage("authToken")
+      const userExist = getLocalStorage("user")
       if (tokenExist || userExist) {
-        localStorage.clear("authToken")
-        localStorage.clear("user")
+        removeLocalStorage("authToken")
+        removeLocalStorage("user")
       }
-      localStorage.setItem('authToken', token);
-      localStorage.setItem('user', JSON.stringify(user));
+      setLocalStorage('authToken', token);
+      setLocalStorage('user', JSON.stringify(user));
+
       navigate("/dashboard");
     }
   }, [isAuthenticated, navigate]);
@@ -36,13 +38,9 @@ function Login() {
   const googleLogin = useGoogleLogin({
     onSuccess: async (res) => {
       try {
-        if (res.code) {
-          console.log(res.code)
-          dispatch(googleOAuthLoginAction(res.code));
-        
-        } else {
-          console.log("No code ")
-        }
+        console.log(res, ">>>>>>>>>>>>")
+        dispatch(googleOAuthLoginAction(res.access_token));
+
       } catch (error) {
         console.log('Error during Google login:', error);
       }
@@ -50,7 +48,6 @@ function Login() {
     onError: (error) => {
       console.log('Login failed:', error);
     },
-    flow: 'auth-code'
   });
 
   const handleChange = (e) => {
@@ -85,7 +82,6 @@ function Login() {
       password: encryptedPassword
     };
 
-    // Dispatch login action here
     dispatch(loginAction(encryptedFormData));
   };
 
@@ -150,7 +146,7 @@ function Login() {
               />
             </InputGroup>
             <div className="d-flex justify-content-between align-items-center">
-              <Link to="/" className="text-decoration-none fw-semibold" style={{ color: "#420394" }}>
+              <Link to="/auth/forgot-password" className="text-decoration-none fw-semibold" style={{ color: "#420394" }}>
                 Forgot password?
               </Link>
             </div>
@@ -161,7 +157,9 @@ function Login() {
               type="submit"
               disabled={loading}
             >
-              {loading ? "Loading" : "Log In"}
+              {loading ? <div className="spinner-border" /> : <div>
+                Log In
+              </div>}
             </Button>
             <div className="mt-2 text-center">
               Don’t have an account?{" "}

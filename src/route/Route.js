@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import CalendlyDemo from "../components/CalendlyDemo";
 import ContactUs from "../components/ContactUs";
@@ -17,32 +18,35 @@ import MerchantRisk from "../pages/UseCase/MerchantRisk";
 import OnlineReputation from "../pages/UseCase/OnlineReputation";
 import Publishing_Advertising from "../pages/UseCase/Publishing&Advertising";
 import SALESINTELLIGENCE from "../pages/UseCase/SALESINTELLIGENCE";
+import ForgotPassword from "../pages/auth/ForgotPassword";
 import Login from "../pages/auth/Login";
 import Register from "../pages/auth/Register";
+import RestePassword from "../pages/auth/RestePassword";
 import BatchEnrichment from "../pages/dashboard/BatchEnrichment";
 import Dashboard from "../pages/dashboard/Dashboard";
 import Documentation from "../pages/dashboard/Documentation";
 import Plans from "../pages/dashboard/Plans";
 import Settings from "../pages/dashboard/Settings";
-import { useDispatch, useSelector } from "react-redux";
 import { currentUserAction } from "../store/authSlice";
+import { getLocalStorage } from "../utils/LocalStorage";
+
 
 function RoutesPage() {
   const dispatch = useDispatch()
   const navigate = useNavigate();
 
   const { isAuthenticated } = useSelector((state) => state.auth);
-
+ 
   useEffect(() => {
-    const tokenExist = localStorage.getItem("authToken");
-    const userExist = localStorage.getItem("user")
+    const tokenExist = getLocalStorage("authToken");
+    const userExist = getLocalStorage("user")
     if (tokenExist || userExist) {
       dispatch(currentUserAction());
       if (!isAuthenticated) {
         navigate("/auth/login");
       }
     } else {
-      navigate("/auth/login");
+      // navigate("/");
     }
   }, [dispatch]);
 
@@ -100,6 +104,8 @@ function RoutesPage() {
         <Route path="/auth" >
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
+          <Route path="forgot-password" element={<ForgotPassword />} />
+          <Route path="reset-password" element={<RestePassword />} />
         </Route>
         <Route path="/">
           <Route path="dashboard" element={<Dashboard />} />

@@ -33,7 +33,7 @@ function Register() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { loading, message, status, user, token } = useSelector((state) => state.register);
-  const confirmPasswordRef = useRef(null);
+  
 
   useEffect(() => {
     if (status === "ok") {
@@ -41,8 +41,7 @@ function Register() {
       dispatch(resetRegister());
     }
   }, [loading, message, status, token, navigate, dispatch]);
-
-
+  
   const handleChange = (e) => {
     const { name, value } = e.target;
     const updatedFormData = { ...formData, [name]: value };
@@ -123,7 +122,6 @@ function Register() {
 
               <InputGroup className={`mb-3 ${!passwordIsMatch && isConfirmPasswordBlurred ? 'shake' : ''}`}>
                 <Form.Control
-                  ref={confirmPasswordRef}
                   type="password"
                   name="confirmpassword"
                   placeholder="Confirm Password"
