@@ -1,5 +1,15 @@
-import React, { useEffect, useState, useRef } from "react";
-import { Col, Container, InputGroup, Row, Form, Button, Alert } from "react-bootstrap";
+import CryptoJS from "crypto-js";
+import React, { useEffect, useState } from "react";
+import {
+  Alert,
+  Button,
+  Col,
+  Container,
+  Form,
+  InputGroup,
+  Row,
+} from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../../assets/auth/icon.png";
 import logo1 from "../../assets/auth/logo1.png";
@@ -7,9 +17,12 @@ import logo2 from "../../assets/auth/logo2.png";
 import logo3 from "../../assets/auth/logo3.png";
 import logo4 from "../../assets/auth/logo4.png";
 import logo6 from "../../assets/auth/logo6.png";
-import { registerAction, resetRegister } from "../../store/authSlice";
-import { useDispatch, useSelector } from "react-redux";
-import CryptoJS from "crypto-js";
+import { registerAction } from "../../store/authSlice";
+import {
+  getLocalStorage,
+  removeLocalStorage,
+  setLocalStorage,
+} from "../../utils/LocalStorage";
 
 const data = [
   { img: logo1, title: "Smart Categorization Technology" },
@@ -20,7 +33,6 @@ const data = [
 ];
 
 function Register() {
-
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -29,19 +41,29 @@ function Register() {
   });
 
   const [passwordIsMatch, setPasswordIsMatch] = useState(true);
-  const [isConfirmPasswordBlurred, setIsConfirmPasswordBlurred] = useState(false);
+  const [isConfirmPasswordBlurred, setIsConfirmPasswordBlurred] =
+    useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { loading, message, status, user, token } = useSelector((state) => state.register);
-  
-
+  const { loading, message, status, user, token, isAuthenticated } =
+    useSelector((state) => state.auth);
+  const data12 = useSelector((state) => state.auth);
+  console.log(data12);
   useEffect(() => {
-    if (status === "ok") {
-      navigate("/auth/login");
-      dispatch(resetRegister());
+    if (isAuthenticated) {
+      const tokenExist = getLocalStorage("authToken");
+      const userExist = getLocalStorage("user");
+      if (tokenExist || userExist) {
+        removeLocalStorage("authToken");
+        removeLocalStorage("user");
+      }
+      setLocalStorage("authToken", token);
+      setLocalStorage("user", JSON.stringify(user));
+
+      navigate("/dashboard");
     }
-  }, [loading, message, status, token, navigate, dispatch]);
-  
+  }, [isAuthenticated, navigate]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     const updatedFormData = { ...formData, [name]: value };
@@ -49,7 +71,9 @@ function Register() {
     setFormData(updatedFormData);
 
     if (updatedFormData.password && updatedFormData.confirmpassword) {
-      setPasswordIsMatch(updatedFormData.password === updatedFormData.confirmpassword);
+      setPasswordIsMatch(
+        updatedFormData.password === updatedFormData.confirmpassword
+      );
     } else {
       setPasswordIsMatch(false);
     }
@@ -63,11 +87,14 @@ function Register() {
     e.preventDefault();
     if (!passwordIsMatch) return;
 
-    const encryptedPassword = CryptoJS.AES.encrypt(formData.password, process.env.REACT_APP_SECRET_KEY).toString();
+    const encryptedPassword = CryptoJS.AES.encrypt(
+      formData.password,
+      process.env.REACT_APP_SECRET_KEY
+    ).toString();
     const encryptedFormData = {
       email: formData.email,
       password: encryptedPassword,
-      name: formData.name
+      name: formData.name,
     };
 
     dispatch(registerAction(encryptedFormData));
@@ -81,7 +108,10 @@ function Register() {
             <img src={logo} alt="ValidX Logo" className="mb-4" />
             <h2 className="fw-bold">ValidX</h2>
             <p className="mt-4 fw-medium">Get started with your account</p>
-            <p>All-in-one domain data source. Get Website Logos, Company Data, Categorization, and much more from a URL or Email.</p>
+            <p>
+              All-in-one domain data source. Get Website Logos, Company Data,
+              Categorization, and much more from a URL or Email.
+            </p>
 
             <Form className="w-100" onSubmit={handleSubmit}>
               <InputGroup className="mb-3">
@@ -120,12 +150,20 @@ function Register() {
                 />
               </InputGroup>
 
-              <InputGroup className={`mb-3 ${!passwordIsMatch && isConfirmPasswordBlurred ? 'shake' : ''}`}>
+              <InputGroup
+                className={`mb-3 ${
+                  !passwordIsMatch && isConfirmPasswordBlurred ? "shake" : ""
+                }`}
+              >
                 <Form.Control
                   type="password"
                   name="confirmpassword"
                   placeholder="Confirm Password"
-                  className={`py-2 input-focus ${!passwordIsMatch && isConfirmPasswordBlurred ? 'is-invalid' : ''}`}
+                  className={`py-2 input-focus ${
+                    !passwordIsMatch && isConfirmPasswordBlurred
+                      ? "is-invalid"
+                      : ""
+                  }`}
                   value={formData.confirmpassword}
                   onChange={handleChange}
                   onBlur={handleConfirmPasswordBlur}
@@ -141,7 +179,11 @@ function Register() {
 
               <div className="mb-3">
                 Already have an account?{" "}
-                <Link to="/auth/login" className="text-decoration-none" style={{ color: "#420394" }}>
+                <Link
+                  to="/auth/login"
+                  className="text-decoration-none"
+                  style={{ color: "#420394" }}
+                >
                   Sign in
                 </Link>
               </div>
@@ -159,12 +201,22 @@ function Register() {
           </div>
         </Col>
 
-        <Col md={6} className="d-flex flex-column justify-content-center align-items-center text-center">
-          <h5 style={{ marginTop: "180px" }}>The most accurate Content Classiﬁcation API</h5>
+        <Col
+          md={6}
+          className="d-flex flex-column justify-content-center align-items-center text-center"
+        >
+          <h5 style={{ marginTop: "180px" }}>
+            The most accurate Content Classiﬁcation API
+          </h5>
           <div className="text-start mt-1">
             {data.map((item, i) => (
               <div key={i} className="d-flex align-items-center mt-2">
-                <img src={item.img} alt={item.title} className="me-2" style={{ width: "25px" }} />
+                <img
+                  src={item.img}
+                  alt={item.title}
+                  className="me-2"
+                  style={{ width: "25px" }}
+                />
                 <p className="mb-0">{item.title}</p>
               </div>
             ))}

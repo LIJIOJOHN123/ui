@@ -26,21 +26,23 @@ import BatchEnrichment from "../pages/dashboard/BatchEnrichment";
 import Dashboard from "../pages/dashboard/Dashboard";
 import Documentation from "../pages/dashboard/Documentation";
 import Plans from "../pages/dashboard/Plans";
-import Settings from "../pages/dashboard/Settings";
+import Settings from "../pages/settings/Settings";
 import { currentUserAction } from "../store/authSlice";
 import { getLocalStorage } from "../utils/LocalStorage";
-
+import ApiGroup from "../pages/dashboard/ApiGroup";
+import ApiList from "../pages/apiList/List";
+import Form from "../pages/apiList/Form";
+import OutLet from "../pages/layout/OutLet";
 
 function RoutesPage() {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const { isAuthenticated } = useSelector((state) => state.auth);
- 
+
   useEffect(() => {
     const tokenExist = getLocalStorage("authToken");
-    const userExist = getLocalStorage("user")
-    if (tokenExist || userExist) {
+    if (tokenExist) {
       dispatch(currentUserAction());
       if (!isAuthenticated) {
         navigate("/auth/login");
@@ -101,22 +103,29 @@ function RoutesPage() {
         <Route path="/blog" element={<BlogPage />} />
         <Route path="/contact-us" element={<ContactUs />} />
 
-        <Route path="/auth" >
+        <Route path="/auth">
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
           <Route path="forgot-password" element={<ForgotPassword />} />
           <Route path="reset-password" element={<RestePassword />} />
         </Route>
-        <Route path="/">
+
+        <Route path="/" element={<OutLet />}>
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="batch-enrichment" element={<BatchEnrichment />} />
+          <Route path="api-group" element={<ApiGroup />} />
+
+          {/* //////// */}
+          <Route path="api-list" element={<ApiList />} />
+          <Route path="api-list/create" element={<Form />} />
+          {/* ////// */}
           <Route path="documentation" element={<Documentation />} />
           <Route path="plans" element={<Plans />} />
           <Route path="settings" element={<Settings />} />
         </Route>
       </Routes>
     </>
-  )
+  );
 }
 
-export default RoutesPage
+export default RoutesPage;

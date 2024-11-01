@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import NavBar from "./NavBar";
+import NavBar from "../layout/NavBar";
 import { Button, Card, Col, Row } from "react-bootstrap";
 
 function Plans() {
@@ -110,137 +110,131 @@ function Plans() {
   };
 
   return (
-    <NavBar>
-      <div className="m-4">
-        <h3 className="text-center">
-          The Most Accurate & Affordable Anti-Fraud Protection!
-        </h3>
-        <p className="text-center" style={{ fontSize: "18px" }}>
-          Loss Headaches and Greater ROI-Fight Fraud and save Money at the Same
-          Time!
+    <div>
+      <h3 className="text-center">
+        The Most Accurate & Affordable Anti-Fraud Protection!
+      </h3>
+      <p className="text-center" style={{ fontSize: "18px" }}>
+        Loss Headaches and Greater ROI-Fight Fraud and save Money at the Same
+        Time!
+      </p>
+      <p className="text-center" style={{ fontSize: "18px" }}>
+        No Contracts Cancel Anytime
+      </p>
+      <div className="mt-5">
+        <h2 className="text-center">Our Pricing Plans</h2>
+        <p className="text-center text-black">
+          No long term commitments. One click upgrade/downgrade or cancellation.
+          No questions asked.
         </p>
-        <p className="text-center" style={{ fontSize: "18px" }}>
-          No Contracts Cancel Anytime
+        <p className="d-flex align-items-center m-0 justify-content-center text-black align-content-center">
+          Monthly
+          <span className="form-check form-switch ms-2 me-2">
+            <input
+              className="form-check-input"
+              type="checkbox"
+              role="switch"
+              id="flexSwitchCheckDefault"
+              checked={isAnnual}
+              onChange={() => setIsAnnual(!isAnnual)}
+            />
+            <label
+              className="form-check-label"
+              htmlFor="flexSwitchCheckDefault"
+            >
+              Annually (2 months FREE)
+            </label>
+          </span>
         </p>
-        <div className="mt-5">
-          <h2 className="text-center">Our Pricing Plans</h2>
-          <p className="text-center text-black">
-            No long term commitments. One click upgrade/downgrade or
-            cancellation. No questions asked.
-          </p>
-          <p className="d-flex align-items-center m-0 justify-content-center text-black align-content-center">
-            Monthly
-            <span className="form-check form-switch ms-2 me-2">
-              <input
-                className="form-check-input"
-                type="checkbox"
-                role="switch"
-                id="flexSwitchCheckDefault"
-                checked={isAnnual}
-                onChange={() => setIsAnnual(!isAnnual)}
-              />
-              <label
-                className="form-check-label"
-                htmlFor="flexSwitchCheckDefault"
-              >
-                Annually (2 months FREE)
-              </label>
-            </span>
-          </p>
 
-          <Row className="justify-content-center mt-2">
-            {plans.map((plan, index) => (
-              <Col key={index} className="  ">
-                <Card className=" border-white">
-                  <Card.Body className="d-flex flex-column">
-                    <Card.Title
-                      className="text-center"
-                      style={{ color: "#8f53b2" }}
-                    >
-                      {plan.name}
-                    </Card.Title>
+        <Row className="justify-content-center mt-2">
+          {plans.map((plan, index) => (
+            <Col key={index} className="  ">
+              <Card className=" border-white">
+                <Card.Body className="d-flex flex-column">
+                  <Card.Title
+                    className="text-center"
+                    style={{ color: "#8f53b2" }}
+                  >
+                    {plan.name}
+                  </Card.Title>
 
-                    <Card.Subtitle className="text-center  ">
-                      <div className="h4 fw-semibold">
-                        {isAnnual ? plan.annualPrice : plan.monthlyPrice}
-                        {isAnnual && plan.monthlyPrice !== plan.annualPrice && (
-                          <div
-                            className="fw-normal"
-                            style={{ fontSize: "14px" }}
-                          >
-                            {plan.monthlyPrice &&
-                              ` (Monthly: ${plan.monthlyPrice})`}
-                          </div>
-                        )}
-                      </div>
-                    </Card.Subtitle>
-                    <Button
-                      className="text-center fw-medium border-0"
-                      style={{
-                        backgroundColor:
-                          selectedPlan === plan.name ? "green" : "indigo",
-                        color: "white",
-                      }}
-                      onClick={() => handleUpgradeClick(plan.name)}
-                    >
-                      {selectedPlan === plan.name
-                        ? "Current Plan"
-                        : "Upgrade Plan"}
-                    </Button>
-
-                    <div className="mt-3" style={{ fontSize: "12px" }}>
-                      {index !== 0 && index !== plans.length - 1
-                        ? isAnnual
-                          ? "Credits per year"
-                          : "Credits per month"
-                        : "\u00A0"}
+                  <Card.Subtitle className="text-center  ">
+                    <div className="h4 fw-semibold">
+                      {isAnnual ? plan.annualPrice : plan.monthlyPrice}
+                      {isAnnual && plan.monthlyPrice !== plan.annualPrice && (
+                        <div className="fw-normal" style={{ fontSize: "14px" }}>
+                          {plan.monthlyPrice &&
+                            ` (Monthly: ${plan.monthlyPrice})`}
+                        </div>
+                      )}
                     </div>
+                  </Card.Subtitle>
+                  <Button
+                    className="text-center fw-medium border-0"
+                    style={{
+                      backgroundColor:
+                        selectedPlan === plan.name ? "green" : "indigo",
+                      color: "white",
+                    }}
+                    onClick={() => handleUpgradeClick(plan.name)}
+                  >
+                    {selectedPlan === plan.name
+                      ? "Current Plan"
+                      : "Upgrade Plan"}
+                  </Button>
 
-                    <select
-                      className="w-100 bg-white border rounded border-2 border-black mb-3"
-                      style={{ height: "30px", border: "1px solid" }}
-                    >
-                      <option>{plan.credits}</option>
-                    </select>
+                  <div className="mt-3" style={{ fontSize: "12px" }}>
+                    {index !== 0 && index !== plans.length - 1
+                      ? isAnnual
+                        ? "Credits per year"
+                        : "Credits per month"
+                      : "\u00A0"}
+                  </div>
 
-                    <ul
-                      className="mt-2 "
-                      style={{ listStyleType: "none", paddingLeft: "0" }}
-                    >
-                      {plan.features.map((feature, idx) => (
-                        <li
-                          key={idx}
-                          
+                  <select
+                    className="w-100 bg-white border rounded border-2 border-black mb-3"
+                    style={{ height: "30px", border: "1px solid" }}
+                  >
+                    <option>{plan.credits}</option>
+                  </select>
+
+                  <ul
+                    className="mt-2 "
+                    style={{ listStyleType: "none", paddingLeft: "0" }}
+                  >
+                    {plan.features.map((feature, idx) => (
+                      <li
+                        key={idx}
+                        style={{
+                          position: "relative",
+                          fontSize: "12px",
+                          paddingLeft: "20px",
+                          color: idx === 2 ? "#bf54bd" : "inherit",
+                          fontWeight: idx < 3 ? "bolder" : "normal",
+                        }}
+                      >
+                        <span
                           style={{
-                            position: "relative",
-                            fontSize: "12px",
-                            paddingLeft: "20px",
-                            color: idx === 2 ? "#bf54bd" : "inherit",
-                            fontWeight: idx < 3 ? "bolder" : "normal",
+                            position: "absolute",
+                            left: "0",
+
+                            fontWeight: "bold",
                           }}
                         >
-                          <span
-                            style={{
-                              position: "absolute",
-                              left: "0",
-
-                              fontWeight: "bold",
-                            }}
-                          >
-                            {idx !== 2 && "✓"}
-                          </span>
-                          {feature}
-                        </li>
-                      ))}
-                    </ul>
-                  </Card.Body>
-                </Card>
-              </Col>
-            ))}
-          </Row>
-        </div>
+                          {idx !== 2 && "✓"}
+                        </span>
+                        {feature}
+                      </li>
+                    ))}
+                  </ul>
+                </Card.Body>
+              </Card>
+            </Col>
+          ))}
+        </Row>
       </div>
-    </NavBar>
+    </div>
   );
 }
 

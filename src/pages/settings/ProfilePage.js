@@ -1,24 +1,24 @@
-import React, { useEffect, useState } from 'react';
-import { Button, Col, Form, InputGroup, Nav, Row, Tab } from 'react-bootstrap';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useEffect, useState } from "react";
+import { Button, Col, Form, InputGroup, Nav, Row, Tab } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
 import CryptoJS from "crypto-js";
-import { currentUserAction, UpdateUserAction } from '../../store/authSlice';
+import { updateUserAction } from "../../store/authSlice";
 
 const ProfilePage = () => {
-  const [key, setKey] = useState('profile');
+  const [key, setKey] = useState("profile");
 
   const [activeTabContent, setActiveTabContent] = useState(<ProfileTab />);
 
   const handleSelect = (k) => {
     setKey(k);
     switch (k) {
-      case 'profile':
+      case "profile":
         setActiveTabContent(<ProfileTab />);
         break;
-      case 'changeEmail':
+      case "changeEmail":
         setActiveTabContent(<ChangeEmailTab />);
         break;
-      case 'changePassword':
+      case "changePassword":
         setActiveTabContent(<ChangePasswordTab />);
         break;
       default:
@@ -41,28 +41,25 @@ const ProfilePage = () => {
         </Nav.Item>
       </Nav>
       <Tab.Content>
-        <div className='mt-3'>
-          {activeTabContent}
-        </div>
+        <div className="mt-3">{activeTabContent}</div>
       </Tab.Content>
     </div>
   );
 };
 
-
 const ProfileTab = () => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const [formData, setFormData] = useState({
-    name: '',
+    name: "",
     email: "",
-    phone_number: '',
-    company: '',
-    country: '',
-    website: '',
-    oldpassword: ""
+    phone_number: "",
+    company: "",
+    country: "",
+    website: "",
+    oldpassword: "",
   });
 
-  const [error, setError] = useState("")
+  const [error, setError] = useState("");
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -83,31 +80,31 @@ const ProfileTab = () => {
     e.preventDefault();
     const changedFields = {};
     for (const key in formData) {
-      if (key !== 'oldpassword' && formData[key] !== user[key]) {
+      if (key !== "oldpassword" && formData[key] !== user[key]) {
         changedFields[key] = formData[key];
-        setError("")
+        setError("");
       }
     }
     if (Object.keys(changedFields).length === 0) {
       setError("No changes detected to submit.");
       return;
     }
-    const encryptedPassword = CryptoJS.AES.encrypt(formData.oldpassword, process.env.REACT_APP_SECRET_KEY).toString();
+    const encryptedPassword = CryptoJS.AES.encrypt(
+      formData.oldpassword,
+      process.env.REACT_APP_SECRET_KEY
+    ).toString();
 
     const encryptedFormData = {
       ...formData,
-      oldpassword: encryptedPassword
+      oldpassword: encryptedPassword,
     };
 
-    dispatch(UpdateUserAction(encryptedFormData));
-    setFormData({ oldpassword: "" })
-
+    dispatch(updateUserAction(encryptedFormData));
+    setFormData({ oldpassword: "" });
   };
 
-
-
   return (
-    <Form className='z-2' onSubmit={handleSubmit}>
+    <Form className="z-2" onSubmit={handleSubmit}>
       <Row>
         <Col md={8}>
           <Form.Group className="mb-2" controlId="formName">
@@ -120,7 +117,7 @@ const ProfileTab = () => {
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
-                required
+                
               />
             </InputGroup>
           </Form.Group>
@@ -135,7 +132,7 @@ const ProfileTab = () => {
                 name="phone_number"
                 value={formData.phone_number}
                 onChange={handleChange}
-                required
+                
               />
             </InputGroup>
           </Form.Group>
@@ -150,7 +147,7 @@ const ProfileTab = () => {
                 name="company"
                 value={formData.company}
                 onChange={handleChange}
-                required
+                
               />
             </InputGroup>
           </Form.Group>
@@ -165,7 +162,7 @@ const ProfileTab = () => {
                 name="country"
                 value={formData.country}
                 onChange={handleChange}
-                required
+                
               />
             </InputGroup>
           </Form.Group>
@@ -180,7 +177,7 @@ const ProfileTab = () => {
                 name="website"
                 value={formData.website}
                 onChange={handleChange}
-                required
+                
               />
             </InputGroup>
           </Form.Group>
@@ -199,21 +196,23 @@ const ProfileTab = () => {
             </InputGroup>
           </Form.Group>
         </Col>
-        {error && <p className='text-danger'>{error}</p>}
+        {error && <p className="text-danger">{error}</p>}
       </Row>
-      <Button type="submit">{loading ? (<div className='spinner-border ' />) : (<div>Submit</div>)}</Button>
+      <Button type="submit">
+        {loading ? <div className="spinner-border " /> : <div>Submit</div>}
+      </Button>
     </Form>
   );
 };
 
 const ChangeEmailTab = () => {
   const [formData, setFormData] = useState({
-    email: '',
-    newEmail: '',
-    oldpassword: ""
+    email: "",
+    newEmail: "",
+    oldpassword: "",
   });
-  const dispatch = useDispatch()
-  const [error, setError] = useState("")
+  const dispatch = useDispatch();
+  const [error, setError] = useState("");
   const { loading, isAuthenticated, user } = useSelector((state) => state.auth);
 
   useEffect(() => {
@@ -232,20 +231,22 @@ const ChangeEmailTab = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-
     if (formData.newEmail === "") {
       setError("No changes detected to submit.");
       return;
     }
-    const encryptedPassword = CryptoJS.AES.encrypt(formData.oldpassword, process.env.REACT_APP_SECRET_KEY).toString();
+    const encryptedPassword = CryptoJS.AES.encrypt(
+      formData.oldpassword,
+      process.env.REACT_APP_SECRET_KEY
+    ).toString();
 
     const encryptedFormData = {
       email: formData.newEmail,
-      oldpassword: encryptedPassword
+      oldpassword: encryptedPassword,
     };
 
-    dispatch(UpdateUserAction(encryptedFormData));
-    setFormData({ newEmail: "", oldpassword: "" })
+    dispatch(updateUserAction(encryptedFormData));
+    setFormData({ newEmail: "", oldpassword: "" });
   };
 
   return (
@@ -297,20 +298,20 @@ const ChangeEmailTab = () => {
           </Form.Group>
         </Col>
       </Row>
-      <Button type="submit" className='mt-3'>{loading ? (<div className='spinner-border ' />) : (<div>Submit</div>)}</Button>
+      <Button type="submit" className="mt-3">
+        {loading ? <div className="spinner-border " /> : <div>Submit</div>}
+      </Button>
     </Form>
   );
-}
-
+};
 
 const ChangePasswordTab = () => {
-  const dispatch = useDispatch()
-  const [error, setError] = useState("")
+  const dispatch = useDispatch();
+  const [error, setError] = useState("");
   const [formData, setFormData] = useState({
-    password: '',
-    oldPassword: '',
+    password: "",
+    oldPassword: "",
   });
-
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -321,26 +322,29 @@ const ChangePasswordTab = () => {
   };
   const { loading } = useSelector((state) => state.auth);
 
-
-
   const handleSubmit = (e) => {
     e.preventDefault();
     if (formData.oldPassword === "" || formData.password === "") {
       setError("Please enter Password.");
       return;
     }
-    const encryptedPassword = CryptoJS.AES.encrypt(formData.password, process.env.REACT_APP_SECRET_KEY).toString();
-    const encryptedoldPassword = CryptoJS.AES.encrypt(formData.oldPassword, process.env.REACT_APP_SECRET_KEY).toString();
-    setError("")
+    const encryptedPassword = CryptoJS.AES.encrypt(
+      formData.password,
+      process.env.REACT_APP_SECRET_KEY
+    ).toString();
+    const encryptedoldPassword = CryptoJS.AES.encrypt(
+      formData.oldPassword,
+      process.env.REACT_APP_SECRET_KEY
+    ).toString();
+    setError("");
     const encryptedFormData = {
       password: encryptedPassword,
-      oldpassword: encryptedoldPassword
+      oldpassword: encryptedoldPassword,
     };
 
-    dispatch(UpdateUserAction(encryptedFormData));
-    setFormData({ oldPassword: "", password: "" })
+    dispatch(updateUserAction(encryptedFormData));
+    setFormData({ oldPassword: "", password: "" });
   };
-
 
   return (
     <Form onSubmit={handleSubmit}>
@@ -375,13 +379,14 @@ const ChangePasswordTab = () => {
               />
             </InputGroup>
           </Form.Group>
-          {error && <p className='text-danger'>{error}</p>}
+          {error && <p className="text-danger">{error}</p>}
         </Col>
       </Row>
-      <Button type="submit">{loading ? (<div className='spinner-border ' />) : (<div>Submit</div>)}</Button>
+      <Button type="submit">
+        {loading ? <div className="spinner-border " /> : <div>Submit</div>}
+      </Button>
     </Form>
   );
 };
-
 
 export default ProfilePage;

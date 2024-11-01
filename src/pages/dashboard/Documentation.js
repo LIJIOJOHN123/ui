@@ -1,5 +1,5 @@
 import React from "react";
-import NavBar from "./NavBar";
+import NavBar from "../layout/NavBar";
 import { Card, Col, Row } from "react-bootstrap";
 
 function Documentation() {
@@ -185,96 +185,93 @@ function Documentation() {
   };
 
   return (
-    <NavBar>
-      <div className="m-4">
-        <h4 className="text-center">API Documentation - Get Batch Report</h4>
-        <Row>
-          <Col>
-            <b>Batch Import</b>
-            <div>
-              <b>
-                This API helps to import one or more URLs for web risk analysis.
-                An individual case will be created for each URL.
-              </b>
-            </div>
-            <div className="bg-danger text-white text-center p-1 text-decoration-underline my-3">
-              <h4>API Documentation</h4>
-            </div>
-            <div>
-              <h2>Web Risk Monitoring API Documentation</h2>
-              <p className="fw-semibold">
-                <div className="fw-bold">
-                  Make sure the website URLs provided are in a valid format.
-                </div>
-                Otherwise, URLs will be rejected or produce inaccurate results.
-                Supported URL formats: https://www.example.com
-                http://www.example.com
-              </p>
-            </div>
-            <div className="bg-body-secondary p-2">
-              <h5>Request Body Parameters</h5>
-              <div style={{ fontSize: "12px" }}>
-                <table className="table table-striped table-bordered">
-                  <thead className="thead-dark">
-                    <tr>
-                      <th scope="col" className="text-center">
-                        Parameter
-                      </th>
-                      <th scope="col" className="text-center">
-                        Type
-                      </th>
-                      <th scope="col" className="w-100 text-center">
-                        Description
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td className="text-center align-middle">tag</td>
-                      <td className="text-center align-middle">String</td>
-                      <td className="align-middle">
-                        Unique identifier is helpful for tracking web statuses
-                        quickly. Eg. Axis Sample batch 7th June 2024
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="text-center align-middle">file</td>
-                      <td className="text-center align-middle">csv</td>
-                      <td className="align-middle">CSV File</td>
-                    </tr>
-                  </tbody>
-                </table>
+    <div className="m-0">
+      <h4 className="text-center">API Documentation - Get Batch Report</h4>
+      <Row>
+        <Col>
+          <b>Batch Import</b>
+          <div>
+            <b>
+              This API helps to import one or more URLs for web risk analysis.
+              An individual case will be created for each URL.
+            </b>
+          </div>
+          <div className="bg-danger text-white text-center p-1 text-decoration-underline my-3">
+            <h4>API Documentation</h4>
+          </div>
+          <div>
+            <h2>Web Risk Monitoring API Documentation</h2>
+            <p className="fw-semibold">
+              <div className="fw-bold">
+                Make sure the website URLs provided are in a valid format.
               </div>
+              Otherwise, URLs will be rejected or produce inaccurate results.
+              Supported URL formats: https://www.example.com
+              http://www.example.com
+            </p>
+          </div>
+          <div className="bg-body-secondary p-2">
+            <h5>Request Body Parameters</h5>
+            <div style={{ fontSize: "12px" }}>
+              <table className="table table-striped table-bordered">
+                <thead className="thead-dark">
+                  <tr>
+                    <th scope="col" className="text-center">
+                      Parameter
+                    </th>
+                    <th scope="col" className="text-center">
+                      Type
+                    </th>
+                    <th scope="col" className="w-100 text-center">
+                      Description
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td className="text-center align-middle">tag</td>
+                    <td className="text-center align-middle">String</td>
+                    <td className="align-middle">
+                      Unique identifier is helpful for tracking web statuses
+                      quickly. Eg. Axis Sample batch 7th June 2024
+                    </td>
+                  </tr>
+                  <tr>
+                    <td className="text-center align-middle">file</td>
+                    <td className="text-center align-middle">csv</td>
+                    <td className="align-middle">CSV File</td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
-          </Col>
-          <Col>
-            <Card className="my-4">
-              <Card.Header className="bg-dark text-white">
-                Sample Response
-              </Card.Header>
-              <div>
-                <pre
-                  className="p-3"
-                  style={{
-                    backgroundColor: "#2d2d2d",
-                    color: "#fff",
-                    fontFamily: "monospace",
-                    overflowX: "auto",
-                    overflowY: "scroll",
-                    height: "500px",
-                    scrollbarWidth: "none" /* For Firefox */,
-                    msOverflowStyle: "none",
-                  }}
-                >
-                  <code>{formatJson(data)}</code>
-                </pre>
-              </div>
-            </Card>
-          </Col>
-        </Row>
-      </div>
-      ;
-    </NavBar>
+          </div>
+        </Col>
+        <Col>
+          <Card className="my-4">
+            <Card.Header className="bg-dark text-white">
+              Sample Response
+            </Card.Header>
+            <div>
+              <pre
+                className="p-3"
+                style={{
+                  backgroundColor: "#2d2d2d",
+                  color: "#fff",
+                  fontFamily: "monospace",
+                  overflowX: "auto",
+                  overflowY: "scroll",
+                  height: "500px",
+                  scrollbarWidth: "none" /* For Firefox */,
+                  msOverflowStyle: "none",
+                }}
+              >
+                <code>{formatJson(data)}</code>
+              </pre>
+            </div>
+          </Card>
+        </Col>
+      </Row>
+    </div>
   );
 }
 

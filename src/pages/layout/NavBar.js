@@ -12,7 +12,6 @@ function NavBar({ children }) {
   const location = useLocation();
   const dispatch = useDispatch();
   const { loading, user } = useSelector((state) => state.auth);
-console.log(loading, user?.name ,"Nav")
 
   const handleNavigation = (path) => {
     if (path === "/") {
@@ -26,6 +25,8 @@ console.log(loading, user?.name ,"Nav")
     { label: "Dashboard", path: "/dashboard" },
     { label: "Batch Enrichment (CSV)", path: "/batch-enrichment" },
     { label: "Documentation", path: "/documentation" },
+    { label: "Api List", path: "/api-list" },
+    { label: "Api Group", path: "/api-group" },
     { label: "Plans", path: "/plans" },
     { label: "Settings", path: "/settings" },
     { label: "Logout", path: "/" },
@@ -108,7 +109,6 @@ console.log(loading, user?.name ,"Nav")
 
           <div className="w-100 mt-4 d-flex flex-column">
             {navItems.map((item) => (
-
               <Button
                 key={item.label}
                 variant={location.pathname === item.path ? "warning" : "dark"}

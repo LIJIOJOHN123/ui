@@ -1,57 +1,74 @@
-import React, { useEffect, useState } from "react";
-import { Alert, Button, Col, Container, Form, InputGroup, Row } from "react-bootstrap";
-import { useLocation, useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from 'react-redux';
 import CryptoJS from "crypto-js";
+import React, { useEffect, useState } from "react";
+import {
+  Alert,
+  Button,
+  Col,
+  Container,
+  Form,
+  InputGroup,
+  Row,
+} from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
+import { useLocation, useNavigate } from "react-router-dom";
 import logo from "../../assets/auth/icon.png";
 import logo6 from "../../assets/auth/logo6.png";
 import logo7 from "../../assets/auth/logo7.png";
-import { authSlice, ResetPasswordAction } from "../../store/authSlice";
+import { resetPasswordAction } from "../../store/authSlice";
 
 function RestePassword() {
   const [formData, setFormData] = useState({
     password: "",
     confirmPassword: "",
   });
-  const [isConfirmPasswordBlurred, setIsConfirmPasswordBlurred] = useState(false);
+  const [isConfirmPasswordBlurred, setIsConfirmPasswordBlurred] =
+    useState(false);
   const [passwordIsMatch, setPasswordIsMatch] = useState(true);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { loading, isAuthenticated } = useSelector((state) => state.resetPassword);
+  const { loading, isAuthenticated, status } = useSelector(
+    (state) => state.auth
+  );
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
-  const code = queryParams.get('code');
-  console.log(code, "code")
+  const code = queryParams.get("code");
+  console.log(code, "code");
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!passwordIsMatch) return;
-    setError('');
-    const encryptedPassword = CryptoJS.AES.encrypt(formData.password, process.env.REACT_APP_SECRET_KEY).toString();
-    const encryptedconfirmPassword = CryptoJS.AES.encrypt(formData.confirmPassword, process.env.REACT_APP_SECRET_KEY).toString();
+    setError("");
+    const encryptedPassword = CryptoJS.AES.encrypt(
+      formData.password,
+      process.env.REACT_APP_SECRET_KEY
+    ).toString();
+    const encryptedconfirmPassword = CryptoJS.AES.encrypt(
+      formData.confirmPassword,
+      process.env.REACT_APP_SECRET_KEY
+    ).toString();
 
     const encryptedFormData = {
       password: encryptedPassword,
       confirmPassword: encryptedconfirmPassword,
-      token: code
+      token: code,
     };
 
-    dispatch(ResetPasswordAction(encryptedFormData))
+    dispatch(resetPasswordAction(encryptedFormData));
 
-    setFormData({ confirmPassword: "", password: "" })
+    setFormData({ confirmPassword: "", password: "" });
   };
 
   useEffect(() => {
-    if (isAuthenticated) {
+    if (status === "ok") {
       navigate("/auth/login");
     }
-  }, [isAuthenticated])
+  }, [status]);
   useEffect(() => {
     if (!code) {
-      navigate("/")
+      navigate("/");
     }
-  }, [])
+  }, []);
   const handleConfirmPasswordBlur = () => {
     setIsConfirmPasswordBlurred(true);
   };
@@ -64,7 +81,9 @@ function RestePassword() {
 
     // Check if passwords match
     if (updatedFormData.password && updatedFormData.confirmPassword) {
-      setPasswordIsMatch(updatedFormData.password === updatedFormData.confirmPassword);
+      setPasswordIsMatch(
+        updatedFormData.password === updatedFormData.confirmPassword
+      );
     } else {
       setPasswordIsMatch(false);
     }
@@ -74,17 +93,20 @@ function RestePassword() {
     {
       img: logo6,
       title: "State-of-the-Art Accuracy",
-      description: "Employs cutting-edge classification algorithms for unparalleled precision in data extraction and categorization.",
+      description:
+        "Employs cutting-edge classification algorithms for unparalleled precision in data extraction and categorization.",
     },
     {
       img: logo7,
       title: "Aligned with IAB Guidelines",
-      description: "Utilizes the IAB’s standards to guarantee accuracy and consistency in data classification and handling.",
+      description:
+        "Utilizes the IAB’s standards to guarantee accuracy and consistency in data classification and handling.",
     },
     {
       img: logo7,
       title: "Market-Leading Completeness",
-      description: "Extract logos, find competitors or similar domains, classify into 385+ categories, and access a wide array of additional features.",
+      description:
+        "Extract logos, find competitors or similar domains, classify into 385+ categories, and access a wide array of additional features.",
     },
   ];
 
@@ -93,7 +115,12 @@ function RestePassword() {
       <Row className="align-items-center">
         <Col md={4} className="me-5">
           <div className="text-center">
-            <img src={logo} alt="ValidX Logo" className="mb-4" style={{ width: "75px" }} />
+            <img
+              src={logo}
+              alt="ValidX Logo"
+              className="mb-4"
+              style={{ width: "75px" }}
+            />
           </div>
 
           <h3 className="fw-bold text-center">Reset Password</h3>
@@ -113,12 +140,20 @@ function RestePassword() {
               />
             </InputGroup>
 
-            <InputGroup className={`mb-3 ${!passwordIsMatch && isConfirmPasswordBlurred ? 'shake' : ''}`}>
+            <InputGroup
+              className={`mb-3 ${
+                !passwordIsMatch && isConfirmPasswordBlurred ? "shake" : ""
+              }`}
+            >
               <Form.Control
                 type="password"
                 name="confirmPassword"
                 placeholder="Confirm Password"
-                className={`py-2 ${!passwordIsMatch && isConfirmPasswordBlurred ? 'is-invalid' : ''}`}
+                className={`py-2 ${
+                  !passwordIsMatch && isConfirmPasswordBlurred
+                    ? "is-invalid"
+                    : ""
+                }`}
                 onBlur={handleConfirmPasswordBlur}
                 value={formData.confirmPassword}
                 onChange={handleChange}
@@ -146,12 +181,20 @@ function RestePassword() {
 
         <Col md={7} className="ms-auto mt-5">
           <h6 className="mt-5 mb-4">
-            All-in-one domain data source. Get Website Logos, Company Data, Categorization, and much more from a URL or Email.
+            All-in-one domain data source. Get Website Logos, Company Data,
+            Categorization, and much more from a URL or Email.
           </h6>
 
           {features.map((item, index) => (
-            <div key={index} className="d-flex justify-content-start align-items-center mb-3">
-              <img src={item.img} alt={item.title} style={{ width: "30px", objectFit: "contain" }} />
+            <div
+              key={index}
+              className="d-flex justify-content-start align-items-center mb-3"
+            >
+              <img
+                src={item.img}
+                alt={item.title}
+                style={{ width: "30px", objectFit: "contain" }}
+              />
               <p className="mb-0 ms-3" style={{ fontSize: "14px" }}>
                 <strong>{item.title}:</strong> {item.description}
               </p>

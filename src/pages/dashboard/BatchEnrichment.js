@@ -1,12 +1,12 @@
 import { Check, Download, Search, Settings, Trash2 } from "lucide-react";
 import React from "react";
 import { Button } from "react-bootstrap";
-import NavBar from "./NavBar";
+import NavBar from "../layout/NavBar";
 
 function BatchEnrichment() {
   return (
-    <NavBar>
-      <div className="m-4">
+    
+      <div >
         <h3>URL Risk Analysis - Batch Check CSV Files</h3>
         <div style={{ fontSize: "14px" }}>
           <p className="fw-semibold" style={{ whiteSpace: "pre-line" }}>
@@ -177,7 +177,7 @@ function BatchEnrichment() {
           </table>
         </div>
       </div>
-    </NavBar>
+
   );
 }
 

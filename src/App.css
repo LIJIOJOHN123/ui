@@ -14,3 +14,11 @@
   border-color: #9bffb0 transparent transparent transparent; /* Makes all borders transparent except the bottom one */
   border-radius: 100%; /* Creates the curvature */
 }
+
+.line-clamp {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  -webkit-line-clamp: 1; /* Change this value to set the number of lines you want to show */
+  height: 4.5em; /* Adjust this value based on your line height and number of lines */
+}

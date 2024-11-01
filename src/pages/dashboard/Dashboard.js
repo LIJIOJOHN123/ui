@@ -10,7 +10,7 @@ import {
 import React from "react";
 import { Button, Col, Row } from "react-bootstrap";
 import { Bar } from "react-chartjs-2";
-import NavBar from "./NavBar";
+import NavBar from "../layout/NavBar";
 
 // Register the necessary components
 ChartJS.register(
@@ -23,8 +23,6 @@ ChartJS.register(
 );
 
 function Dashboard() {
-
-  
   const data = {
     labels: [
       "2024-08-04",
@@ -88,8 +86,8 @@ function Dashboard() {
   };
 
   return (
-    <NavBar>
-      <Row className="m-4 ">
+    <>
+      <Row>
         <Col
           md={2}
           className="bg-danger   border rounded-1 border-1  d-flex flex-column justify-content-center align-items-center"
@@ -196,7 +194,7 @@ function Dashboard() {
           </Button>
         </Col>
       </Row>
-    </NavBar>
+    </>
   );
 }
 

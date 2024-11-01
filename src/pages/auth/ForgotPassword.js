@@ -16,7 +16,7 @@ function ForgotPassword() {
     const [error, setError] = useState('');
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const { loading, message } = useSelector((state) => state.forgotPassword);
+    const { loading, message } = useSelector((state) => state.auth);
 
     // useEffect(() => {
     //     if (isAuthenticated) {

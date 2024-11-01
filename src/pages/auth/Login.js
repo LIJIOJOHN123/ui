@@ -19,7 +19,8 @@ function Login() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { loading, isAuthenticated, user, token } = useSelector((state) => state.auth);
-  
+  const data = useSelector((state) => state.auth);
+  console.log(data);
   useEffect(() => {
     if (isAuthenticated) {
       const tokenExist = getLocalStorage("authToken")
