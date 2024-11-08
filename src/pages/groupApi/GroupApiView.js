@@ -1,3 +1,4 @@
+import { CSVLink } from "react-csv";
 import { Check, Download, Search, Settings, Trash2 } from "lucide-react";
 import { Button, Col, Form } from "react-bootstrap";
 import React, { useEffect, useState } from "react";
@@ -56,15 +57,43 @@ function GroupApiView() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     dispatch(addAPIBatchingAction({ apiValue: formData, apiGroupId: id }));
-
-    // Reset formData to an empty object
     setFormData({});
   };
 
+  const dataset =
+    dataById?.apiList
+      ?.map((item) =>
+        item.apiId.fields.map((field) => `${field}(${item.apiId.apiname})`)
+      )
+      .flat() || [];
+  const headers = dataset.map((field) => ({
+    label: field,
+    key: field.replace(/\s+/g, "").toLowerCase(),
+  }));
+
+  const data = [];
   return (
     <div>
       {loading && <p>Loading...</p>}
+      <div style={{ fontSize: "14px" }}>
+        <p className="fw-semibold" style={{ whiteSpace: "pre-line" }}>
+          {`Place the URLs you wish to batch check in a CSV file with 1 URL or domain per row - placed in the first column.`}
 
+          {`\nAdditional columns can be included such as a userID, transactionID, clickID, etc. Live results will appear on this page as the file is processed. \nYou will receive an email notice once the report has finished processing. All completed reports are saved for future reference and can be viewed below.`}
+        </p>
+
+        <CSVLink
+          filename="sample_data.csv"
+          style={{ fontSize: "14px", backgroundColor: "#5bb75b" }}
+          className="text-decoration-underline border-0 p-1 rounded-2 text-decoration-none text-white"
+          data={data}
+          headers={headers}
+          separator=","
+        >
+          Download Sample CSV Template
+        </CSVLink>
+        <hr className="border-2" />
+      </div>
       {dataById && !loading && (
         <>
           <h4>Name: {dataById.name}</h4>

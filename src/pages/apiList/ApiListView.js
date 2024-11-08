@@ -8,14 +8,16 @@ import {
   addAPIBatchingAction,
   apiBatchingAction,
 } from "../../store/api_Batching";
-
+import { CSVLink } from "react-csv";
 function ApiListView() {
   const { id } = useParams();
   const dispatch = useDispatch();
   const { dataById, loading } = useSelector((state) => state.apiList);
-  const { data: api, loading: apiloading,status } = useSelector(
-    (state) => state.apiBatching
-  );
+  const {
+    data: api,
+    loading: apiloading,
+    status,
+  } = useSelector((state) => state.apiBatching);
   const [formData, setFormData] = useState({});
   const [file, setFile] = useState(null);
   console.log(api.length);
@@ -27,9 +29,9 @@ function ApiListView() {
       dispatch(apiBatchingAction());
     }
     if (status === "done") {
-        dispatch(apiBatchingAction())
-      }
-    }, [id, status, dispatch]);
+      dispatch(apiBatchingAction());
+    }
+  }, [id, status, dispatch]);
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
@@ -45,11 +47,34 @@ function ApiListView() {
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
   };
+  const headers = dataById.fields.map((field) => ({
+    label: field,
+    key: field.replace(/\s+/g, "").toLowerCase(), // Remove spaces and make lowercase for keys
+  }));
 
+  const data = [];
   return (
     <div>
       {isLoading && <p>Loading...</p>}
+      <div style={{ fontSize: "14px" }}>
+        <p className="fw-semibold" style={{ whiteSpace: "pre-line" }}>
+          {`Place the URLs you wish to batch check in a CSV file with 1 URL or domain per row - placed in the first column.`}
 
+          {`\nAdditional columns can be included such as a userID, transactionID, clickID, etc. Live results will appear on this page as the file is processed. \nYou will receive an email notice once the report has finished processing. All completed reports are saved for future reference and can be viewed below.`}
+        </p>
+
+        <CSVLink
+          filename="sample_data.csv"
+          style={{ fontSize: "14px", backgroundColor: "#5bb75b" }}
+          className="text-decoration-underline border-0 p-1 rounded-2 text-decoration-none text-white"
+          data={data}
+          headers={headers}
+          separator=","
+        >
+          Download Sample CSV Template
+        </CSVLink>
+        <hr className="border-2" />
+      </div>
       {dataById && !loading && (
         <>
           <h4>Name: {dataById.name}</h4>
