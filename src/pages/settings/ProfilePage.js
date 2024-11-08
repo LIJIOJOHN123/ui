@@ -69,6 +69,7 @@ const ProfileTab = () => {
   };
 
   const { loading, isAuthenticated, user } = useSelector((state) => state.auth);
+  console.log(user)
 
   useEffect(() => {
     if (isAuthenticated) {

@@ -47,7 +47,7 @@ function ApiListView() {
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
   };
-  const headers = dataById.fields.map((field) => ({
+  const headers = dataById?.fields?.map((field) => ({
     label: field,
     key: field.replace(/\s+/g, "").toLowerCase(), // Remove spaces and make lowercase for keys
   }));
