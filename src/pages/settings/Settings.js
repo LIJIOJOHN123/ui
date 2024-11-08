@@ -30,13 +30,13 @@ const AccountDetails = () => {
     website: "",
     apikey: "",
   });
-  const { loading, isAuthenticated, user } = useSelector((state) => state.auth);
+  const { isAuthenticated, user } = useSelector((state) => state.auth);
 
   useEffect(() => {
     if (isAuthenticated) {
       setFormData((prev) => ({ ...prev, ...user }));
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, user]);
 
   const [showAPI, setShowAPI] = useState(false);
 
@@ -287,7 +287,7 @@ function Settings() {
   };
 
   return (
-    <div >
+    <div>
       <div className="d-flex mb-3 justify-content-around w-75">
         {SettingsData.map((item, index) => (
           <h6

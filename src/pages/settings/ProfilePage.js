@@ -117,7 +117,6 @@ const ProfileTab = () => {
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
-                
               />
             </InputGroup>
           </Form.Group>
@@ -132,7 +131,6 @@ const ProfileTab = () => {
                 name="phone_number"
                 value={formData.phone_number}
                 onChange={handleChange}
-                
               />
             </InputGroup>
           </Form.Group>
@@ -147,7 +145,6 @@ const ProfileTab = () => {
                 name="company"
                 value={formData.company}
                 onChange={handleChange}
-                
               />
             </InputGroup>
           </Form.Group>
@@ -162,7 +159,6 @@ const ProfileTab = () => {
                 name="country"
                 value={formData.country}
                 onChange={handleChange}
-                
               />
             </InputGroup>
           </Form.Group>
@@ -177,7 +173,6 @@ const ProfileTab = () => {
                 name="website"
                 value={formData.website}
                 onChange={handleChange}
-                
               />
             </InputGroup>
           </Form.Group>
@@ -298,6 +293,7 @@ const ChangeEmailTab = () => {
           </Form.Group>
         </Col>
       </Row>
+      {error && error}
       <Button type="submit" className="mt-3">
         {loading ? <div className="spinner-border " /> : <div>Submit</div>}
       </Button>

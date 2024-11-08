@@ -1,53 +1,44 @@
-import { useGoogleLogin } from '@react-oauth/google';
+import { useGoogleLogin } from "@react-oauth/google";
 import CryptoJS from "crypto-js";
 import React, { useEffect, useState } from "react";
 import { Button, Col, Container, Form, InputGroup, Row } from "react-bootstrap";
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../../assets/auth/icon.png";
 import logo6 from "../../assets/auth/logo6.png";
 import logo7 from "../../assets/auth/logo7.png";
 import { googleOAuthLoginAction, loginAction } from "../../store/authSlice"; // Should be loginAction for login
-import { getLocalStorage, removeLocalStorage, setLocalStorage } from '../../utils/LocalStorage';
+import {
+  getLocalStorage
+} from "../../utils/LocalStorage";
 function Login() {
-
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { loading, isAuthenticated, user, token } = useSelector((state) => state.auth);
-  const data = useSelector((state) => state.auth);
-  console.log(data);
-  useEffect(() => {
-    if (isAuthenticated) {
-      const tokenExist = getLocalStorage("authToken")
-      const userExist = getLocalStorage("user")
-      if (tokenExist || userExist) {
-        removeLocalStorage("authToken")
-        removeLocalStorage("user")
-      }
-      setLocalStorage('authToken', token);
-      setLocalStorage('user', JSON.stringify(user));
+  const { loading } = useSelector((state) => state.auth);
 
+
+  const tokenExist = getLocalStorage("authToken");
+  useEffect(() => {
+    if (tokenExist) {
       navigate("/dashboard");
     }
-  }, [isAuthenticated, navigate]);
+  }, [tokenExist]);
 
   const googleLogin = useGoogleLogin({
     onSuccess: async (res) => {
       try {
-        console.log(res, ">>>>>>>>>>>>")
         dispatch(googleOAuthLoginAction(res.access_token));
-
       } catch (error) {
-        console.log('Error during Google login:', error);
+        console.log("Error during Google login:", error);
       }
     },
     onError: (error) => {
-      console.log('Login failed:', error);
+      console.log("Login failed:", error);
     },
   });
 
@@ -63,24 +54,26 @@ function Login() {
     e.preventDefault();
 
     if (!formData.email || !formData.password) {
-      setError('Please fill in both email and password.');
+      setError("Please fill in both email and password.");
       return;
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) {
-      setError('Please enter a valid email address.');
+      setError("Please enter a valid email address.");
       return;
     }
 
-    setError(''); // Clear error before encrypting
+    setError(""); // Clear error before encrypting
 
-
-    const encryptedPassword = CryptoJS.AES.encrypt(formData.password, process.env.REACT_APP_SECRET_KEY).toString();
+    const encryptedPassword = CryptoJS.AES.encrypt(
+      formData.password,
+      process.env.REACT_APP_SECRET_KEY
+    ).toString();
 
     const encryptedFormData = {
       ...formData,
-      password: encryptedPassword
+      password: encryptedPassword,
     };
 
     dispatch(loginAction(encryptedFormData));
@@ -123,7 +116,7 @@ function Login() {
           </p>
 
           <Form onSubmit={handleSubmit}>
-            {error && <p style={{ color: 'red' }}>{error}</p>}
+            {error && <p style={{ color: "red" }}>{error}</p>}
             <InputGroup className="mb-3">
               <Form.Control
                 type="text"
@@ -147,7 +140,11 @@ function Login() {
               />
             </InputGroup>
             <div className="d-flex justify-content-between align-items-center">
-              <Link to="/auth/forgot-password" className="text-decoration-none fw-semibold" style={{ color: "#420394" }}>
+              <Link
+                to="/auth/forgot-password"
+                className="text-decoration-none fw-semibold"
+                style={{ color: "#420394" }}
+              >
                 Forgot password?
               </Link>
             </div>
@@ -158,13 +155,15 @@ function Login() {
               type="submit"
               disabled={loading}
             >
-              {loading ? <div className="spinner-border" /> : <div>
-                Log In
-              </div>}
+              {loading ? <div className="spinner-border" /> : <div>Log In</div>}
             </Button>
             <div className="mt-2 text-center">
               Don’t have an account?{" "}
-              <Link to="/auth/register" className="text-decoration-none" style={{ color: "#420394" }}>
+              <Link
+                to="/auth/register"
+                className="text-decoration-none"
+                style={{ color: "#420394" }}
+              >
                 Sign up
               </Link>
             </div>
@@ -176,9 +175,10 @@ function Login() {
             <hr className="flex-grow-1" />
           </div>
 
-
-
-          <Button className="w-100 py-3 bg-white  border-black text-start " onClick={() => googleLogin()}>
+          <Button
+            className="w-100 py-3 bg-white  border-black text-start "
+            onClick={() => googleLogin()}
+          >
             <div className="d-flex flex-row">
               <img
                 alt="hi"
@@ -191,8 +191,6 @@ function Login() {
               </h5>
             </div>
           </Button>
-
-
         </Col>
 
         <Col md={7} className="ms-auto mt-5">

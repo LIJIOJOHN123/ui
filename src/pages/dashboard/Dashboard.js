@@ -87,7 +87,7 @@ function Dashboard() {
 
   return (
     <>
-      <Row>
+      <Row className="">
         <Col
           md={2}
           className="bg-danger   border rounded-1 border-1  d-flex flex-column justify-content-center align-items-center"

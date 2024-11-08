@@ -217,7 +217,7 @@ const seoData = {
   image: headerSec, // Relative image path
   url: "https://www.validx.chargebackzero.com/use-cases/publishing-advertising",
 };
-function Publishing_Advertising() {
+function PublishingAdvertising() {
   return (
     <div>
       <SEO
@@ -241,4 +241,4 @@ function Publishing_Advertising() {
   );
 }
 
-export default Publishing_Advertising;
+export default PublishingAdvertising;

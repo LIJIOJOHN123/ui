@@ -1,14 +1,18 @@
 import { createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { getLocalStorage } from "../utils/LocalStorage";
+import {
+  getLocalStorage,
+  removeLocalStorage,
+  setLocalStorage,
+} from "../utils/LocalStorage";
 
 const authInitialState = {
   isAuthenticated: false,
   loading: false,
-  user: null,
+  user: getLocalStorage("user"),
   status: null,
-  token: null,
+  token: getLocalStorage("authToken"),
 };
 
 // Auth slice
@@ -20,22 +24,26 @@ export const authSlice = createSlice({
       state.loading = true;
     },
     requestSuccess: (state, action) => {
-      state.isAuthenticated = !!action.payload.token;
+      setLocalStorage("authToken", action.payload.token);
+      setLocalStorage("user", JSON.stringify(action.payload.user));
+      state.isAuthenticated = true;
       state.loading = false;
-      state.user = action.payload.user;
-      state.token = action.payload.token;
+      state.user = getLocalStorage("user");
+      state.token = getLocalStorage("authToken");
       state.status = action.payload.status;
     },
     requestFail: (state, action) => {
       state.loading = false;
       state.status = action.payload.status;
+      state.token = removeLocalStorage("authToken");
+      state.user = removeLocalStorage("user");
     },
     logOut: (state) => {
       state.isAuthenticated = false;
-      state.user = null;
+      state.user = removeLocalStorage("user");
       state.loading = false;
       state.status = null;
-      state.token = null;
+      state.token = removeLocalStorage("authToken");
     },
   },
 });
@@ -133,7 +141,7 @@ export const currentUserAction = () => async (dispatch) => {
         headers: { Authorization: `Bearer ${token}` },
       }
     );
-    const { status, message, data, code } = res.data;
+    const { status, data, code } = res.data;
     if (code === "200") {
       dispatch(requestSuccess({ user: data, status, token: data.token }));
     }
@@ -181,8 +189,8 @@ export const resetPasswordAction = (formData) => async (dispatch) => {
       `${process.env.REACT_APP_Base_URL}/user/resetPassword`,
       formData
     );
-    const { status, message } = res.data;
-    console.log( res.data," res.data")
+    const { status } = res.data;
+    console.log(res.data, " res.data");
     if (status === "ok") {
       dispatch(
         requestSuccess({

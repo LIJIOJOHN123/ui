@@ -18,11 +18,7 @@ import logo3 from "../../assets/auth/logo3.png";
 import logo4 from "../../assets/auth/logo4.png";
 import logo6 from "../../assets/auth/logo6.png";
 import { registerAction } from "../../store/authSlice";
-import {
-  getLocalStorage,
-  removeLocalStorage,
-  setLocalStorage,
-} from "../../utils/LocalStorage";
+import { getLocalStorage } from "../../utils/LocalStorage";
 
 const data = [
   { img: logo1, title: "Smart Categorization Technology" },
@@ -45,24 +41,14 @@ function Register() {
     useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { loading, message, status, user, token, isAuthenticated } =
-    useSelector((state) => state.auth);
-  const data12 = useSelector((state) => state.auth);
-  console.log(data12);
-  useEffect(() => {
-    if (isAuthenticated) {
-      const tokenExist = getLocalStorage("authToken");
-      const userExist = getLocalStorage("user");
-      if (tokenExist || userExist) {
-        removeLocalStorage("authToken");
-        removeLocalStorage("user");
-      }
-      setLocalStorage("authToken", token);
-      setLocalStorage("user", JSON.stringify(user));
+  const { loading } = useSelector((state) => state.auth);
 
+  const tokenExist = getLocalStorage("authToken");
+  useEffect(() => {
+    if (tokenExist) {
       navigate("/dashboard");
     }
-  }, [isAuthenticated, navigate]);
+  }, [tokenExist, navigate]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;

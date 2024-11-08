@@ -1,7 +1,6 @@
 import { Check, Download, Search, Settings, Trash2 } from "lucide-react";
 import React from "react";
 import { Button } from "react-bootstrap";
-import NavBar from "../layout/NavBar";
 
 function BatchEnrichment() {
   return (

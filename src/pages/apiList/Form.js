@@ -1,12 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { Form as BootstrapForm, Button, Col, Row } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { AddApiAction, reset } from "../../store/apiSlice";
+import { useNavigate, useParams } from "react-router-dom";
+import {
+  addApiAction,
+  getByIdAPIAction,
+  updateApiAction,
+} from "../../store/apiSlice";
 
 function Form() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { id } = useParams();
 
   const [formData, setFormData] = useState({
     apiname: "",
@@ -16,14 +21,19 @@ function Form() {
     backend_api_key_name: "",
   });
   const [error, setError] = useState(false);
-  const { loading, status } = useSelector((state) => state.apiList);
+  const { loading, status, dataById } = useSelector((state) => state.apiList);
+  console.log(loading, "loading");
+  useEffect(() => {
+    if (id) {
+      dispatch(getByIdAPIAction(id));
+    }
+  }, [id]);
 
-  // useEffect(() => {
-  //   if (status === "ok") {
-  //     navigate("/api-list");
-  //     dispatch(reset());
-  //   }
-  // }, [status, navigate, dispatch]);
+  useEffect(() => {
+    if (id && dataById) {
+      setFormData(dataById);
+    }
+  }, [id, dataById]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -55,7 +65,12 @@ function Form() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    dispatch(AddApiAction(formData));
+    if (id) {
+      dispatch(updateApiAction(id, formData));
+    } else {
+      dispatch(addApiAction(formData));
+    }
+
     if (status === "ok") {
       navigate("/api-list");
     }
@@ -64,7 +79,7 @@ function Form() {
   return (
     <div>
       <div className="d-flex justify-content-between">
-        <h4>Create API</h4>
+        <h4>{id ? "Edit API" : "Create API"}</h4>
         <Button onClick={() => navigate("/api-list")} className="fw-bold">
           Back
         </Button>
@@ -99,7 +114,7 @@ function Form() {
 
           <BootstrapForm.Group className="mt-3" controlId="formApiFields">
             <BootstrapForm.Label className="m-0">Fields</BootstrapForm.Label>
-            {formData.fields.map((field, index) => (
+            {formData?.fields?.map((field, index) => (
               <Row className="" key={index}>
                 <Col xs={4}>
                   <BootstrapForm.Control

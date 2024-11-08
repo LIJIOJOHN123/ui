@@ -28,7 +28,7 @@ function RestePassword() {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { loading, isAuthenticated, status } = useSelector(
+  const { loading,status } = useSelector(
     (state) => state.auth
   );
   const location = useLocation();
@@ -63,12 +63,12 @@ function RestePassword() {
     if (status === "ok") {
       navigate("/auth/login");
     }
-  }, [status]);
+  }, [status,navigate]);
   useEffect(() => {
     if (!code) {
       navigate("/");
     }
-  }, []);
+  }, [code,navigate]);
   const handleConfirmPasswordBlur = () => {
     setIsConfirmPasswordBlurred(true);
   };

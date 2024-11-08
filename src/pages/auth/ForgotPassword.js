@@ -1,13 +1,12 @@
 
-import { useGoogleLogin } from '@react-oauth/google';
 import React, { useEffect, useState } from "react";
 import { Button, Col, Container, Form, InputGroup, Row } from "react-bootstrap";
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import logo from "../../assets/auth/icon.png";
 import logo6 from "../../assets/auth/logo6.png";
 import logo7 from "../../assets/auth/logo7.png";
-import { forgotPasswordAction, googleOAuthLoginAction } from "../../store/authSlice"; // Should be loginAction for login
+import { forgotPasswordAction } from "../../store/authSlice"; // Should be loginAction for login
 function ForgotPassword() {
 
     const [formData, setFormData] = useState({
@@ -15,8 +14,7 @@ function ForgotPassword() {
     });
     const [error, setError] = useState('');
     const dispatch = useDispatch();
-    const navigate = useNavigate();
-    const { loading, message } = useSelector((state) => state.auth);
+    const { loading } = useSelector((state) => state.auth);
 
     // useEffect(() => {
     //     if (isAuthenticated) {

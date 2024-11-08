@@ -1,6 +1,5 @@
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { Route, Routes, useNavigate } from "react-router-dom";
+import React from "react";
+import { Route, Routes } from "react-router-dom";
 import CalendlyDemo from "../components/CalendlyDemo";
 import ContactUs from "../components/ContactUs";
 import FAQ from "../components/FAQ";
@@ -16,47 +15,28 @@ import Marketing from "../pages/UseCase/Marketing";
 import MerchantIndustryClassification from "../pages/UseCase/MerchantInduClassify";
 import MerchantRisk from "../pages/UseCase/MerchantRisk";
 import OnlineReputation from "../pages/UseCase/OnlineReputation";
-import Publishing_Advertising from "../pages/UseCase/Publishing&Advertising";
+import PublishingAdvertising from "../pages/UseCase/PublishingAdvertising";
 import SALESINTELLIGENCE from "../pages/UseCase/SALESINTELLIGENCE";
+import Form from "../pages/apiList/Form";
+import ApiList from "../pages/apiList/List";
 import ForgotPassword from "../pages/auth/ForgotPassword";
 import Login from "../pages/auth/Login";
 import Register from "../pages/auth/Register";
 import RestePassword from "../pages/auth/RestePassword";
-import BatchEnrichment from "../pages/dashboard/BatchEnrichment";
+import BatchEnrichment from "../pages/batch-enrichment/BatchEnrichment";
 import Dashboard from "../pages/dashboard/Dashboard";
-import Documentation from "../pages/dashboard/Documentation";
-import Plans from "../pages/dashboard/Plans";
+import Documentation from "../pages/documentation/Documentation";
+import ApiGroup from "../pages/groupApi/ApiGroup";
+import GroupApiForm from "../pages/groupApi/GroupApiForm";
+import PrivateRoute from "../pages/layout/ProctedRoutes";
+import Plans from "../pages/plans/Plans";
 import Settings from "../pages/settings/Settings";
-import { currentUserAction } from "../store/authSlice";
-import { getLocalStorage } from "../utils/LocalStorage";
-import ApiGroup from "../pages/dashboard/ApiGroup";
-import ApiList from "../pages/apiList/List";
-import Form from "../pages/apiList/Form";
-import OutLet from "../pages/layout/OutLet";
+import GroupApiView from "../pages/groupApi/GroupApiView";
+import ApiListView from "../pages/apiList/ApiListView";
 
 function RoutesPage() {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+ 
 
-  const { isAuthenticated } = useSelector((state) => state.auth);
-
-  useEffect(() => {
-    const tokenExist = getLocalStorage("authToken");
-    if (tokenExist) {
-      dispatch(currentUserAction());
-      if (!isAuthenticated) {
-        navigate("/auth/login");
-      }
-    } else {
-      // navigate("/");
-    }
-  }, [dispatch]);
-
-  useEffect(() => {
-    if (isAuthenticated) {
-      navigate("/dashboard");
-    }
-  }, [isAuthenticated]);
   return (
     <>
       <Routes>
@@ -83,7 +63,7 @@ function RoutesPage() {
         <Route path="/use-cases/marketing" element={<Marketing />} />
         <Route
           path="/use-cases/publishing-advertising"
-          element={<Publishing_Advertising />}
+          element={<PublishingAdvertising />}
         />
 
         <Route path="/report" element={<Report />} />
@@ -110,18 +90,27 @@ function RoutesPage() {
           <Route path="reset-password" element={<RestePassword />} />
         </Route>
 
-        <Route path="/" element={<OutLet />}>
-          <Route path="dashboard" element={<Dashboard />} />
-          <Route path="batch-enrichment" element={<BatchEnrichment />} />
-          <Route path="api-group" element={<ApiGroup />} />
+        <Route path="/">
+          <Route element={<PrivateRoute />}>
+            <Route path="dashboard" element={<Dashboard />} />
+            <Route path="batch-enrichment" element={<BatchEnrichment />} />
 
-          {/* //////// */}
-          <Route path="api-list" element={<ApiList />} />
-          <Route path="api-list/create" element={<Form />} />
-          {/* ////// */}
-          <Route path="documentation" element={<Documentation />} />
-          <Route path="plans" element={<Plans />} />
-          <Route path="settings" element={<Settings />} />
+            {/* //////// */}
+            <Route path="api-list" element={<ApiList />} />
+            <Route path="api-list/:id" element={<ApiListView />} />
+            <Route path="api-list/create" element={<Form />} />
+            <Route path="/api-list/edit/:id" element={<Form />} />
+            {/* ////// */}
+            {/* //////// */}
+            <Route path="api-group" element={<ApiGroup />} />
+            <Route path="api-group/create" element={<GroupApiForm />} />
+            <Route path="api-group/:id" element={<GroupApiView />} />
+            <Route path="/api-group/edit/:id" element={<GroupApiForm />} />
+            {/* ////// */}
+            <Route path="documentation" element={<Documentation />} />
+            <Route path="plans" element={<Plans />} />
+            <Route path="settings" element={<Settings />} />
+          </Route>
         </Route>
       </Routes>
     </>

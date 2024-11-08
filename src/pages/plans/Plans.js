@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import NavBar from "../layout/NavBar";
 import { Button, Card, Col, Row } from "react-bootstrap";
 
 function Plans() {
