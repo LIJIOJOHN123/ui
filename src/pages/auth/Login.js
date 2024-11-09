@@ -1,4 +1,4 @@
-import { useGoogleLogin } from "@react-oauth/google";
+import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
 import CryptoJS from "crypto-js";
 import React, { useEffect, useState } from "react";
 import { Button, Col, Container, Form, InputGroup, Row } from "react-bootstrap";
@@ -8,9 +8,8 @@ import logo from "../../assets/auth/icon.png";
 import logo6 from "../../assets/auth/logo6.png";
 import logo7 from "../../assets/auth/logo7.png";
 import { googleOAuthLoginAction, loginAction } from "../../store/authSlice"; // Should be loginAction for login
-import {
-  getLocalStorage
-} from "../../utils/LocalStorage";
+import { getLocalStorage } from "../../utils/LocalStorage";
+
 function Login() {
   const [formData, setFormData] = useState({
     email: "",
@@ -21,7 +20,6 @@ function Login() {
   const navigate = useNavigate();
   const { loading } = useSelector((state) => state.auth);
 
-
   const tokenExist = getLocalStorage("authToken");
   useEffect(() => {
     if (tokenExist) {
@@ -29,18 +27,10 @@ function Login() {
     }
   }, [tokenExist]);
 
-  const googleLogin = useGoogleLogin({
-    onSuccess: async (res) => {
-      try {
-        dispatch(googleOAuthLoginAction(res.access_token));
-      } catch (error) {
-        console.log("Error during Google login:", error);
-      }
-    },
-    onError: (error) => {
-      console.log("Login failed:", error);
-    },
-  });
+  const handleLoginSuccess = (credentialResponse) => {
+    const { credential } = credentialResponse;
+    dispatch(googleOAuthLoginAction(credential));
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -175,7 +165,7 @@ function Login() {
             <hr className="flex-grow-1" />
           </div>
 
-          <Button
+          {/* <Button
             className="w-100 py-3 bg-white  border-black text-start "
             onClick={() => googleLogin()}
           >
@@ -190,7 +180,17 @@ function Login() {
                 Continue with Google
               </h5>
             </div>
-          </Button>
+          </Button> */}
+          <h1 className="w-50">
+            <GoogleOAuthProvider clientId="171131815196-57hvv8gcms6h63h3e13eqvv507go0g22.apps.googleusercontent.com">
+              <GoogleLogin
+                onSuccess={handleLoginSuccess}
+                onError={() => {
+                  console.log("Login Failed");
+                }}
+              />
+            </GoogleOAuthProvider>
+          </h1>
         </Col>
 
         <Col md={7} className="ms-auto mt-5">
