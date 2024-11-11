@@ -7,6 +7,7 @@ import { getByIdAPIAction } from "../../store/apiSlice";
 import {
   addAPIBatchingAction,
   apiBatchingAction,
+  uploadCSVFileAPIBatchingAction,
 } from "../../store/api_Batching";
 import { CSVLink } from "react-csv";
 function ApiListView() {
@@ -19,7 +20,8 @@ function ApiListView() {
     status,
   } = useSelector((state) => state.apiBatching);
   const [formData, setFormData] = useState({});
-  const [file, setFile] = useState(null);
+  const [selectedFile, setSelectedFile] = useState([]);
+
   console.log(api.length);
   const isLoading = loading || apiloading;
 
@@ -44,10 +46,35 @@ function ApiListView() {
     dispatch(apiBatchingAction());
   };
 
-  const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
+  const handleFileUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      setSelectedFile(file);
+    } else {
+      alert("Please select a CSV file to upload.");
+    }
   };
-  const headers = dataById?.fields?.map((field) => ({
+
+  // Handle file upload when the button is pressed
+  const handleUpload = () => {
+    // Check if a file has been selected
+    if (!selectedFile) {
+      alert("No CSV file selected. Please select a CSV file to upload.");
+      return;
+    }
+
+    // Create FormData object only when the button is clicked
+    const formData = new FormData();
+    formData.append("file", selectedFile);
+
+    // Dispatch the upload action with the FormData
+    dispatch(uploadCSVFileAPIBatchingAction(formData));
+
+    alert("CSV file uploaded successfully!");
+    setSelectedFile([]);
+  };
+
+  const headers = dataById.fields.map((field) => ({
     label: field,
     key: field.replace(/\s+/g, "").toLowerCase(), // Remove spaces and make lowercase for keys
   }));
@@ -117,7 +144,7 @@ function ApiListView() {
                 className="mt-5 border border-2 rounded-1 p-1 border-black"
                 style={{ width: "60%" }}
                 type="file"
-                onChange={handleFileChange}
+                onChange={handleFileUpload}
               />
             </div>
 
@@ -126,6 +153,7 @@ function ApiListView() {
                 variant="danger"
                 style={{ width: "150px", fontSize: "14px" }}
                 className="my-3"
+                onClick={handleUpload}
               >
                 Upload CSV Files
               </Button>

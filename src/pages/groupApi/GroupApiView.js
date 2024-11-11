@@ -9,11 +9,13 @@ import { getByIdAPIAction } from "../../store/groupSlice";
 import {
   addAPIBatchingAction,
   apiBatchingAction,
+  uploadCSVFileAPIBatchingAction,
 } from "../../store/api_Batching";
 
 function GroupApiView() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
   const { id } = useParams();
   const [error, setError] = useState(false);
   const { dataById } = useSelector((state) => state.groupApi);
@@ -24,6 +26,7 @@ function GroupApiView() {
     loading,
   } = useSelector((state) => state.apiBatching);
   const [formData, setFormData] = useState({});
+  const [selectedFile, setSelectedFile] = useState([]);
 
   const fields =
     dataById?.apiList?.map((item) => item.apiId.fields).flat() || [];
@@ -33,7 +36,6 @@ function GroupApiView() {
       dispatch(getByIdAPIAction(id)).catch(() => setError(true));
       dispatch(apiBatchingAction()).catch(() => setError(true));
     }
-
     if (status === "done") {
       dispatch(apiBatchingAction()).catch(() => setError(true));
     }
@@ -71,7 +73,33 @@ function GroupApiView() {
     key: field.replace(/\s+/g, "").toLowerCase(),
   }));
 
-  const data = [];
+  const handleFileUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      setSelectedFile(file);
+    } else {
+      alert("Please select a CSV file to upload.");
+    }
+  };
+
+  // Handle file upload when the button is pressed
+  const handleUpload = () => {
+    // Check if a file has been selected
+    if (!selectedFile) {
+      alert("No CSV file selected. Please select a CSV file to upload.");
+      return;
+    }
+
+    // Create FormData object only when the button is clicked
+    const formData = new FormData();
+    formData.append("file", selectedFile);
+
+    // Dispatch the upload action with the FormData
+    dispatch(uploadCSVFileAPIBatchingAction(formData));
+
+    alert("CSV file uploaded successfully!");
+  };
+
   return (
     <div>
       {loading && <p>Loading...</p>}
@@ -86,7 +114,7 @@ function GroupApiView() {
           filename="sample_data.csv"
           style={{ fontSize: "14px", backgroundColor: "#5bb75b" }}
           className="text-decoration-underline border-0 p-1 rounded-2 text-decoration-none text-white"
-          data={data}
+          data={[]}
           headers={headers}
           separator=","
         >
@@ -136,17 +164,20 @@ function GroupApiView() {
                 className="mt-5 border border-2 rounded-1 p-1 border-black"
                 style={{ width: "60%" }}
                 type="file"
+                accept=".csv"
+                onChange={handleFileUpload}
               />
-            </div>
 
-            <div className="justify-content-center d-flex w-50 mt-3">
-              <Button
-                variant="danger"
-                style={{ width: "150px", fontSize: "14px" }}
-                className="my-3"
-              >
-                Upload CSV Files
-              </Button>
+              <div className="justify-content-center d-flex w-50 mt-3">
+                <Button
+                  variant="danger"
+                  style={{ width: "150px", fontSize: "14px" }}
+                  className="my-3"
+                  onClick={handleUpload} // Optional if needed as a final confirmation
+                >
+                  Upload CSV Files
+                </Button>
+              </div>
             </div>
 
             <div className="my-3">

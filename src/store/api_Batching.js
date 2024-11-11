@@ -153,7 +153,7 @@ export const addAPIBatchingAction = (formData) => async (dispatch) => {
     const { status } = res.data;
     if (status === "ok") {
       toast.success("Created Successfully!");
-      dispatch(createAPIBatchingResponseSuccess({ status:"done" }));
+      dispatch(createAPIBatchingResponseSuccess({ status: "done" }));
     } else {
       dispatch(createAPIBatchingResponseFail({ status: 400 }));
     }
@@ -166,6 +166,38 @@ export const addAPIBatchingAction = (formData) => async (dispatch) => {
     toast.error(payload.message);
   }
 };
+// Upload CSV Batching
+export const uploadCSVFileAPIBatchingAction =
+  (formData) => async (dispatch) => {
+    try {
+      dispatch(request());
+      const token = getLocalStorage("authToken");
+      const res = await axios.post(
+        `${process.env.REACT_APP_Base_WEB_URL}/apis/uplode`,
+        formData,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      const { status } = res.data;
+
+      console.log(res);
+      if (status === "ok") {
+        toast.success("Uploaded Successfully!");
+        dispatch(createAPIBatchingResponseSuccess({ status: "uploaded" }));
+      } else {
+        dispatch(createAPIBatchingResponseFail({ status: 400 }));
+      }
+    } catch (error) {
+      const payload = {
+        message: error?.response?.data?.message || "An error occurred",
+        status: error?.response?.status || 500,
+      };
+      dispatch(createAPIBatchingResponseFail(payload));
+      toast.error(payload.message);
+    }
+  };
 
 // Update API Batching
 export const updateAPIBatchingAction = (id, formData) => async (dispatch) => {
