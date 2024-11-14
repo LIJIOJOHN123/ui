@@ -181,7 +181,7 @@ function Login() {
               </h5>
             </div>
           </Button> */}
-          <h1 className="w-50">
+          <h1 className="">
             <GoogleOAuthProvider clientId="171131815196-57hvv8gcms6h63h3e13eqvv507go0g22.apps.googleusercontent.com">
               <GoogleLogin
                 onSuccess={handleLoginSuccess}

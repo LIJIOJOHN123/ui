@@ -31,7 +31,7 @@ const AccountDetails = () => {
     apikey: "",
   });
   const { isAuthenticated, user } = useSelector((state) => state.auth);
-
+  console.log(user, "user",isAuthenticated);
   useEffect(() => {
     if (isAuthenticated) {
       setFormData((prev) => ({ ...prev, ...user }));

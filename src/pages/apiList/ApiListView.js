@@ -55,28 +55,20 @@ function ApiListView() {
     }
   };
 
-  // Handle file upload when the button is pressed
   const handleUpload = () => {
-    // Check if a file has been selected
     if (!selectedFile) {
       alert("No CSV file selected. Please select a CSV file to upload.");
       return;
     }
-
-    // Create FormData object only when the button is clicked
     const formData = new FormData();
     formData.append("file", selectedFile);
-
-    // Dispatch the upload action with the FormData
     dispatch(uploadCSVFileAPIBatchingAction(formData));
-
     alert("CSV file uploaded successfully!");
     setSelectedFile([]);
   };
-
-  const headers = dataById.fields.map((field) => ({
+  const headers = dataById?.fields?.map((field) => ({
     label: field,
-    key: field.replace(/\s+/g, "").toLowerCase(), // Remove spaces and make lowercase for keys
+    key: field.replace(/\s+/g, "").toLowerCase(),
   }));
 
   const data = [];
@@ -110,7 +102,7 @@ function ApiListView() {
           {dataById.apiList && (
             <div>
               <h4>API Fields:</h4>
-              {dataById.fields?.map((field, index) => (
+              {dataById?.fields?.map((field, index) => (
                 <p key={index}>{field}</p>
               ))}
             </div>
