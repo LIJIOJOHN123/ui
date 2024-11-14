@@ -10,7 +10,7 @@ import {
 const authInitialState = {
   isAuthenticated: false,
   loading: false,
-  user: getLocalStorage("user"),
+  user: JSON.parse(getLocalStorage("user")),
   status: null,
   token: getLocalStorage("authToken"),
 };
@@ -24,11 +24,13 @@ export const authSlice = createSlice({
       state.loading = true;
     },
     requestSuccess: (state, action) => {
-      setLocalStorage("authToken", action.payload.token);
-      setLocalStorage("user", JSON.stringify(action.payload.user));
+      if(action.payload.token){
+        setLocalStorage("authToken", action.payload.token);
+        setLocalStorage("user", JSON.stringify(action.payload.user));
+      }
       state.isAuthenticated = true;
       state.loading = false;
-      state.user = getLocalStorage("user");
+      state.user = JSON.parse(getLocalStorage("user"));
       state.token = getLocalStorage("authToken");
       state.status = action.payload.status;
     },
