@@ -187,14 +187,12 @@ export const forgotPasswordAction = (formData) => async (dispatch) => {
 
 export const resetPasswordAction = (formData) => async (dispatch) => {
   dispatch(requestStart());
-  console.log(formData, "formData");
   try {
     const res = await axios.put(
       `${process.env.REACT_APP_Base_URL}/user/resetPassword`,
       formData
     );
     const { status } = res.data;
-    console.log(res.data, " res.data");
     if (status === "ok") {
       dispatch(
         requestSuccess({

@@ -149,7 +149,6 @@ export const getByIdAPIAction = (id) => async (dispatch) => {
 // Add API Group
 export const addAPIGroupAction = (formData) => async (dispatch) => {
   try {
-    console.log(formData, "formData");
     dispatch(request());
     const token = getLocalStorage("authToken");
     const res = await axios.post(
@@ -180,7 +179,6 @@ export const addAPIGroupAction = (formData) => async (dispatch) => {
 // Update API Group
 export const updateAPIGroupAction = (id, formData) => async (dispatch) => {
   try {
-    console.log(formData,"redux")
     dispatch(request());
     const token = getLocalStorage("authToken");
     const res = await axios.put(

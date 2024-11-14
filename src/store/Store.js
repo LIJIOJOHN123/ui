@@ -3,6 +3,7 @@ import { apiListReducer } from "./apiSlice";
 import { authReducer } from "./authSlice";
 import { apiGroupReducer } from "./groupSlice";
 import { apiBatchingReducer } from "./api_Batching";
+import { clientManagementReducer } from "./clientManagementSlice";
 
 const store = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ const store = configureStore({
     apiList: apiListReducer,
     groupApi: apiGroupReducer,
     apiBatching: apiBatchingReducer,
+    clientManagement:clientManagementReducer
   },
 });
 

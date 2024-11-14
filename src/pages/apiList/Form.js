@@ -22,7 +22,6 @@ function Form() {
   });
   const [error, setError] = useState(false);
   const { loading, status, dataById } = useSelector((state) => state.apiList);
-  console.log(loading, "loading");
   useEffect(() => {
     if (id) {
       dispatch(getByIdAPIAction(id));

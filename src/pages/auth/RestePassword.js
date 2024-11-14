@@ -34,7 +34,6 @@ function RestePassword() {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const code = queryParams.get("code");
-  console.log(code, "code");
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!passwordIsMatch) return;

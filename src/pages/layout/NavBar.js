@@ -12,7 +12,6 @@ function NavBar({ children }) {
   const location = useLocation();
   const dispatch = useDispatch();
   const { loading, user } = useSelector((state) => state.auth);
-
   const handleNavigation = (path) => {
     if (path === "/") {
       window.location.replace(path)
@@ -23,11 +22,19 @@ function NavBar({ children }) {
   }
   const navItems = [
     { label: "Dashboard", path: "/dashboard" },
-    { label: "Batch Enrichment (CSV)", path: "/batch-enrichment" },
     { label: "Documentation", path: "/documentation" },
     { label: "Api List", path: "/api-list" },
     { label: "Api Group", path: "/api-group" },
-    { label: "Plans", path: "/plans" },
+    { label: "Settings", path: "/settings" },
+    { label: "Logout", path: "/" },
+  ];
+  const navAdminItems = [
+    { label: "Dashboard", path: "/dashboard" },
+    { label: "Documentation", path: "/documentation" },
+    { label: "Api List", path: "/api-list" },
+    { label: "Api Group", path: "/api-group" },
+    { label: "Clients", path: "/clients" },
+    { label: "Batch", path: "/batch" },
     { label: "Settings", path: "/settings" },
     { label: "Logout", path: "/" },
   ];
@@ -108,7 +115,17 @@ function NavBar({ children }) {
           )}
 
           <div className="w-100 mt-4 d-flex flex-column">
-            {navItems.map((item) => (
+            {user?.role==="USER"?navItems.map((item) => (
+              <Button
+                key={item.label}
+                variant={location.pathname === item.path ? "warning" : "dark"}
+                className="w-100 mb-2"
+                onClick={() => handleNavigation(item.path)}
+              >
+                {item.label}
+              </Button>
+
+            )):navAdminItems.map((item) => (
               <Button
                 key={item.label}
                 variant={location.pathname === item.path ? "warning" : "dark"}

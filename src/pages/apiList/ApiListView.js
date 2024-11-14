@@ -22,7 +22,6 @@ function ApiListView() {
   const [formData, setFormData] = useState({});
   const [selectedFile, setSelectedFile] = useState([]);
 
-  console.log(api.length);
   const isLoading = loading || apiloading;
 
   useEffect(() => {

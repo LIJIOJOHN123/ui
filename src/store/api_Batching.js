@@ -181,8 +181,6 @@ export const uploadCSVFileAPIBatchingAction =
       );
 
       const { status } = res.data;
-
-      console.log(res);
       if (status === "ok") {
         toast.success("Uploaded Successfully!");
         dispatch(createAPIBatchingResponseSuccess({ status: "uploaded" }));
@@ -202,7 +200,6 @@ export const uploadCSVFileAPIBatchingAction =
 // Update API Batching
 export const updateAPIBatchingAction = (id, formData) => async (dispatch) => {
   try {
-    console.log(formData, "redux");
     dispatch(request());
     const token = getLocalStorage("authToken");
     const res = await axios.put(

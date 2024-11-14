@@ -33,6 +33,8 @@ import Plans from "../pages/plans/Plans";
 import Settings from "../pages/settings/Settings";
 import GroupApiView from "../pages/groupApi/GroupApiView";
 import ApiListView from "../pages/apiList/ApiListView";
+import ClientManagement from "../pages/clientmanagement/List";
+import ClientDetails from "../pages/clientmanagement/Details";
 
 function RoutesPage() {
  
@@ -107,6 +109,8 @@ function RoutesPage() {
             <Route path="api-group/:id" element={<GroupApiView />} />
             <Route path="/api-group/edit/:id" element={<GroupApiForm />} />
             {/* ////// */}
+            <Route path="/clients" element={<ClientManagement />} />
+            <Route path="/client/:id" element={<ClientDetails />} />
             <Route path="documentation" element={<Documentation />} />
             <Route path="plans" element={<Plans />} />
             <Route path="settings" element={<Settings />} />

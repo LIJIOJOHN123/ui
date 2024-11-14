@@ -186,7 +186,7 @@ function Login() {
               <GoogleLogin
                 onSuccess={handleLoginSuccess}
                 onError={() => {
-                  console.log("Login Failed");
+                   ("Login Failed");
                 }}
               />
             </GoogleOAuthProvider>

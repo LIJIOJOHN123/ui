@@ -13,7 +13,7 @@ function ApiList() {
     if (!data.length && !loading) {
       dispatch(apiListAction());
     }
-  }, []);
+  }, [data]);
 
   return (
     <div>
