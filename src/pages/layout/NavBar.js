@@ -14,17 +14,18 @@ function NavBar({ children }) {
   const { loading, user } = useSelector((state) => state.auth);
   const handleNavigation = (path) => {
     if (path === "/") {
-      window.location.replace(path)
-      unsetLocalStorage()
-      dispatch(logOut())
+      window.location.replace(path);
+      unsetLocalStorage();
+      dispatch(logOut());
     }
-    navigate(path)
-  }
+    navigate(path);
+  };
   const navItems = [
     { label: "Dashboard", path: "/dashboard" },
     { label: "Documentation", path: "/documentation" },
     { label: "Api List", path: "/api-list" },
     { label: "Api Group", path: "/api-group" },
+    { label: "Transaction", path: "/transaction" },
     { label: "Settings", path: "/settings" },
     { label: "Logout", path: "/" },
   ];
@@ -33,6 +34,7 @@ function NavBar({ children }) {
     { label: "Documentation", path: "/documentation" },
     { label: "Api List", path: "/api-list" },
     { label: "Api Group", path: "/api-group" },
+    { label: "Transaction", path: "/transaction" },
     { label: "Clients", path: "/clients" },
     { label: "Batch", path: "/batch" },
     { label: "Settings", path: "/settings" },
@@ -94,7 +96,6 @@ function NavBar({ children }) {
           >
             Logout
           </Button>
-
         </Col>
       </Row>
 
@@ -110,32 +111,38 @@ function NavBar({ children }) {
             src="https://img.freepik.com/free-vector/illustration-businessman_53876-5856.jpg?w=740&t=st=1723811714~exp=1723812314~hmac=264cf4b222d991caf3459db719571b65cb1f5d98d462e1cb3aebd0bf5a4d2334"
             alt="Profile"
           />
-          {loading ? (<div className="spinner-border" />) : (
+          {loading ? (
+            <div className="spinner-border" />
+          ) : (
             <h5 className="mt-3">{user?.name}</h5>
           )}
 
           <div className="w-100 mt-4 d-flex flex-column">
-            {user?.role==="USER"?navItems.map((item) => (
-              <Button
-                key={item.label}
-                variant={location.pathname === item.path ? "warning" : "dark"}
-                className="w-100 mb-2"
-                onClick={() => handleNavigation(item.path)}
-              >
-                {item.label}
-              </Button>
-
-            )):navAdminItems.map((item) => (
-              <Button
-                key={item.label}
-                variant={location.pathname === item.path ? "warning" : "dark"}
-                className="w-100 mb-2"
-                onClick={() => handleNavigation(item.path)}
-              >
-                {item.label}
-              </Button>
-
-            ))}
+            {user?.role === "USER"
+              ? navItems.map((item) => (
+                  <Button
+                    key={item.label}
+                    variant={
+                      location.pathname === item.path ? "warning" : "dark"
+                    }
+                    className="w-100 mb-2"
+                    onClick={() => handleNavigation(item.path)}
+                  >
+                    {item.label}
+                  </Button>
+                ))
+              : navAdminItems.map((item) => (
+                  <Button
+                    key={item.label}
+                    variant={
+                      location.pathname === item.path ? "warning" : "dark"
+                    }
+                    className="w-100 mb-2"
+                    onClick={() => handleNavigation(item.path)}
+                  >
+                    {item.label}
+                  </Button>
+                ))}
           </div>
         </Col>
         <Col className="bg-light p-0">{children}</Col>

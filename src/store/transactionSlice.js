@@ -3,7 +3,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { getLocalStorage } from "../utils/LocalStorage";
 
-const apiListInitialState = {
+const transactionInitialState = {
   loading: false,
   data: [],
   status: null,
@@ -11,47 +11,45 @@ const apiListInitialState = {
   dataById: {},
 };
 
-// Get ALL apiList slice
-export const clientManagementSlice = createSlice({
-  name: "clientManagement",
-  initialState: apiListInitialState,
+// Transaction slice
+export const transactionSlice = createSlice({
+  name: "transaction",
+  initialState: transactionInitialState,
   reducers: {
     // List
-    clientManagementActionResponseSuccess: (state, action) => {
+    transactionActionResponseSuccess: (state, action) => {
       state.loading = false;
-      state.data = action.payload.data.result;
+      state.data = action.payload.data;
       state.status = action.payload.status;
       state.count = action.payload.count;
     },
-    clientManagementResponseFail: (state, action) => {
+    transactionResponseFail: (state, action) => {
       state.loading = false;
       state.status = action.payload.status;
     },
-    getByIdResponseSuccess: (state, action) => {
+    getByIdTransactionResponseSuccess: (state, action) => {
       state.loading = false;
       state.status = action.payload.status;
       state.dataById = action.payload.data;
     },
-    getByIdResponseFail: (state, action) => {
+    getByIdTransactionResponseFail: (state, action) => {
       state.loading = false;
       state.status = action.payload.status;
     },
-    // edit
-    updateResponseSuccess: (state, action) => {
+    // Update
+    updateTransactionResponseSuccess: (state, action) => {
       const index = state.data.findIndex(
         (item) => item._id === action.payload.data._id
       );
 
       if (index !== -1) {
         const updatedItem = { ...state.data[index], ...action.payload.data };
-
         state.data[index] = updatedItem;
       }
       state.loading = false;
       state.status = action.payload.status;
     },
-
-    updateResponseFail: (state, action) => {
+    updateTransactionResponseFail: (state, action) => {
       state.loading = false;
       state.status = action.payload.status;
     },
@@ -59,25 +57,22 @@ export const clientManagementSlice = createSlice({
 });
 
 export const {
-  request,
-  clientManagementActionResponseSuccess,
-  clientManagementResponseFail,
-  createResponseSuccess,
-  createResponseFail,
-  updateResponseFail,
-  updateResponseSuccess,
-  getByIdResponseFail,
-  getByIdResponseSuccess,
-} = clientManagementSlice.actions;
+  transactionActionResponseSuccess,
+  transactionResponseFail,
+  getByIdTransactionResponseSuccess,
+  getByIdTransactionResponseFail,
+  updateTransactionResponseSuccess,
+  updateTransactionResponseFail,
+} = transactionSlice.actions;
 
-export const clientManagementReducer = clientManagementSlice.reducer;
+export const transactionReducer = transactionSlice.reducer;
 
-// Fetch API List
-export const clientManagementListAction = () => async (dispatch) => {
+// Fetch Transaction List
+export const transactionListAction = () => async (dispatch) => {
   try {
     const token = getLocalStorage("authToken");
     const res = await axios.get(
-      `${process.env.REACT_APP_Base_URL}/user/clients`,
+      `${process.env.REACT_APP_Base_URL}/transaction`,
       {
         headers: { Authorization: `Bearer ${token}` },
       }
@@ -85,23 +80,24 @@ export const clientManagementListAction = () => async (dispatch) => {
 
     const { status, data, count } = res.data;
     if (status === "ok") {
-      dispatch(clientManagementActionResponseSuccess({ data, status, count }));
+      dispatch(transactionActionResponseSuccess({ data, status, count }));
     }
   } catch (error) {
     const payload = {
       message: error?.response?.data?.message || "An error occurred",
       status: error?.response?.status || 500,
     };
-    dispatch(clientManagementResponseFail(payload));
+    dispatch(transactionResponseFail(payload));
     toast.error(payload.message);
   }
 };
-// Fetch API By ID
-export const getByIdClientAction = (id) => async (dispatch) => {
+
+// Fetch Transaction By ID
+export const getByIdTransactionAction = (id) => async (dispatch) => {
   try {
     const token = getLocalStorage("authToken");
     const res = await axios.get(
-      `${process.env.REACT_APP_Base_URL}/user/client/${id}`,
+      `${process.env.REACT_APP_Base_URL}/transaction/${id}`,
       {
         headers: { Authorization: `Bearer ${token}` },
       }
@@ -109,34 +105,33 @@ export const getByIdClientAction = (id) => async (dispatch) => {
     const { status, data } = res.data;
 
     if (status === "ok") {
-      dispatch(getByIdResponseSuccess({ status, data }));
+      dispatch(getByIdTransactionResponseSuccess({ status, data }));
     }
   } catch (error) {
     const payload = {
       message: error?.response?.data?.message || "An error occurred",
       status: error?.response?.status || 500,
     };
-    dispatch(getByIdResponseFail(payload));
+    dispatch(getByIdTransactionResponseFail(payload));
     toast.error(payload.message);
   }
 };
 
-// update API
-export const updateClientAction = (id, formData) => async (dispatch) => {
+// Update Transaction
+export const updateTransactionAction = (id, formData) => async (dispatch) => {
   try {
     const token = getLocalStorage("authToken");
     const res = await axios.patch(
-      `${process.env.REACT_APP_Base_URL}/user/client/${id}`,
+      `${process.env.REACT_APP_Base_URL}/transaction/${id}`,
       formData,
       {
         headers: { Authorization: `Bearer ${token}` },
       }
     );
     const { status, message, data } = res.data;
-    console.log(res.data)
     if (status === "ok") {
       toast.success("Updated Successfully!");
-      dispatch(updateResponseSuccess({ status, data }));
+      dispatch(updateTransactionResponseSuccess({ status, data }));
     } else {
       toast.error(message);
     }
@@ -145,7 +140,7 @@ export const updateClientAction = (id, formData) => async (dispatch) => {
       message: error?.response?.data?.message || "An error occurred",
       status: error?.response?.status || 500,
     };
-    dispatch(updateResponseFail(payload));
+    dispatch(updateTransactionResponseFail(payload));
     toast.error(payload.message);
   }
 };

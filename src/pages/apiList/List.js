@@ -8,13 +8,13 @@ function ApiList() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { data, loading, count } = useSelector((state) => state.apiList);
-
+  console.log(data)
   useEffect(() => {
     if (!data.length && !loading) {
       dispatch(apiListAction());
     }
-  }, [data]);
-
+  }, []);
+  
   return (
     <div>
       {loading ? (
@@ -43,7 +43,10 @@ function ApiList() {
               data.map((item, i) => (
                 <Col key={i} xs={12} sm={6} md={4} lg={3} className="mb-4">
                   <div className="bg-info p-2 rounded-3 h-100">
-                    <div style={{cursor:"pointer"}} onClick={() => navigate(`/api-list/${item._id}`)}>
+                    <div
+                      style={{ cursor: "pointer" }}
+                      onClick={() => navigate(`/api-list/${item._id}`)}
+                    >
                       <h6>{item.apiname}</h6>
                       <p className="line-clamp">{item.des}</p>
                       <b>${item.pricing}</b>

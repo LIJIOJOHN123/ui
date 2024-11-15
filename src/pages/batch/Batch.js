@@ -1,24 +1,21 @@
 import React, { Fragment } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  clientManagementListAction,
-  updateClientAction,
-} from "../../store/clientManagementSlice";
-import { useNavigate } from "react-router-dom";
-import FundForm from "./FundForm";
 
-const ClientManagement = () => {
+import { useNavigate } from "react-router-dom";
+import { apiBatchingAction } from "../../store/api_Batching";
+import { updateTransactionAction } from "../../store/transactionSlice";
+
+const Batch = () => {
   const dispatch = useDispatch();
-  const data = useSelector((state) => state.clientManagement.data);
+  const { data } = useSelector((state) => state.apiBatching);
   React.useEffect(() => {
-    dispatch(clientManagementListAction());
+    dispatch(apiBatchingAction());
   }, []);
   const navigate = useNavigate();
   const handleButton = (id, data) => {
-    dispatch(updateClientAction(id, data));
+    dispatch(updateTransactionAction(id, data));
   };
-
-
+  console.log(data);
   return (
     <Fragment>
       <h3>Client list</h3>
@@ -27,9 +24,10 @@ const ClientManagement = () => {
           <tr>
             <th scope="col">View</th>
             <th scope="col">id</th>
-            <th scope="col">Name</th>
-            <th scope="col">email</th>
-            <th scope="col">role</th>
+            <th scope="col">Type</th>
+            <th scope="col">numberofrequest</th>
+            <th scope="col">apiGroupId</th>
+
             <th scope="col">actions</th>
           </tr>
         </thead>
@@ -44,9 +42,10 @@ const ClientManagement = () => {
                   ></i>
                 </td>
                 <td>{item._id}</td>
-                <td>{item.name}</td>
-                <td>{item.email}</td>
-                <td>{item.role}</td>
+                <td>{item.type}</td>
+                <td>{item.numberofrequest}</td>
+                <td>{item.apiGroupId}</td>
+
                 <td>
                   {item.status === "ACTIVE" && (
                     <button
@@ -88,7 +87,7 @@ const ClientManagement = () => {
                       Add as admin<i className="far fa-eye"></i>
                     </button>
                   )}
-                  <FundForm id={item._id} />
+                  {/* <FundForm id={item._id} /> */}
                 </td>
               </tr>
             );
@@ -99,4 +98,4 @@ const ClientManagement = () => {
   );
 };
 
-export default ClientManagement;
+export default Batch;

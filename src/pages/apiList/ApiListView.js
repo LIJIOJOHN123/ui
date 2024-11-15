@@ -40,7 +40,12 @@ function ApiListView() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(addAPIBatchingAction({ apiValue: formData, apiGroupId: id }));
+    dispatch(
+      addAPIBatchingAction({
+        apiValue: formData,
+        apiGroupId: dataById.apiGroupId,
+      })
+    );
     setFormData({});
     dispatch(apiBatchingAction());
   };

@@ -19,6 +19,7 @@ function Form() {
     fields: [""],
     pricing: "",
     backend_api_key_name: "",
+    api_type: "",
   });
   const [error, setError] = useState(false);
   const { loading, status, dataById } = useSelector((state) => state.apiList);
@@ -139,6 +140,22 @@ function Form() {
                 Add
               </Button>
             </div>
+          </BootstrapForm.Group>
+
+          <BootstrapForm.Group className="mt-3" controlId="formApiKeyoiiyufthf">
+            <BootstrapForm.Label className="m-0">API Type</BootstrapForm.Label>
+            <BootstrapForm.Select
+              name="api_type"
+              value={formData.api_type}
+              onChange={handleInputChange}
+              required
+            >
+              <option value="">Select API type</option>
+              <option value="LIVE">Live</option>
+              <option value="DEMO">Demo</option>
+              <option value="INTERNAL">Internal</option>
+              {/* Add more options as needed */}
+            </BootstrapForm.Select>
           </BootstrapForm.Group>
 
           <BootstrapForm.Group className="mt-3" controlId="formApiKey">

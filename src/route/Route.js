@@ -35,10 +35,10 @@ import GroupApiView from "../pages/groupApi/GroupApiView";
 import ApiListView from "../pages/apiList/ApiListView";
 import ClientManagement from "../pages/clientmanagement/List";
 import ClientDetails from "../pages/clientmanagement/Details";
+import Transaction from "../pages/transaction/Transaction";
+import Batch from "../pages/batch/Batch";
 
 function RoutesPage() {
- 
-
   return (
     <>
       <Routes>
@@ -103,6 +103,7 @@ function RoutesPage() {
             <Route path="api-list/create" element={<Form />} />
             <Route path="/api-list/edit/:id" element={<Form />} />
             {/* ////// */}
+
             {/* //////// */}
             <Route path="api-group" element={<ApiGroup />} />
             <Route path="api-group/create" element={<GroupApiForm />} />
@@ -110,6 +111,8 @@ function RoutesPage() {
             <Route path="/api-group/edit/:id" element={<GroupApiForm />} />
             {/* ////// */}
             <Route path="/clients" element={<ClientManagement />} />
+            <Route path="/transaction" element={<Transaction />} />
+            <Route path="/batch" element={<Batch />} />
             <Route path="/client/:id" element={<ClientDetails />} />
             <Route path="documentation" element={<Documentation />} />
             <Route path="plans" element={<Plans />} />
