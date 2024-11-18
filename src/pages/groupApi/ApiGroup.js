@@ -8,7 +8,6 @@ function ApiGroup() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { data, loading, count } = useSelector((state) => state.groupApi);
-  console.log(data);
   useEffect(() => {
     dispatch(apiGroupAction());
   }, [dispatch]);

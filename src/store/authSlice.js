@@ -111,7 +111,6 @@ export const googleOAuthLoginAction = (token) => async (dispatch) => {
       { token }
     );
     const { status, message, data, code } = res.data;
-    console.log(res.data, "?????");
     if (code === "200") {
       dispatch(
         requestSuccess({

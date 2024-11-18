@@ -31,7 +31,6 @@ const AccountDetails = () => {
     apikey: "",
   });
   const { isAuthenticated, user } = useSelector((state) => state.auth);
-  console.log(user, "user",isAuthenticated);
   useEffect(() => {
     if (isAuthenticated) {
       setFormData((prev) => ({ ...prev, ...user }));
@@ -52,13 +51,7 @@ const AccountDetails = () => {
     setShowAPI(!showAPI);
   };
 
-  // const data = [
-  //   { icon: <Check />, name: "Premium Features", className: "text-success" },
-  //   { icon: <LaptopMinimal />, name: "Website Validation" },
-  //   { icon: <TriangleAlert />, name: "Risk Scoring", className: "text-danger" },
-  //   { icon: <FileText />, name: "PDF Report" },
-  //   { icon: <Shield />, name: "Case Manager", className: "text-danger" },
-  // ];
+
 
   const data = [
     { icon: <Volume2 />, name: "Custom Volume" },

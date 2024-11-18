@@ -69,7 +69,6 @@ const ProfileTab = () => {
   };
 
   const { loading, isAuthenticated, user } = useSelector((state) => state.auth);
-
   useEffect(() => {
     if (isAuthenticated) {
       setFormData((prev) => ({ ...prev, ...user }));

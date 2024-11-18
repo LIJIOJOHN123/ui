@@ -133,7 +133,6 @@ export const updateClientAction = (id, formData) => async (dispatch) => {
       }
     );
     const { status, message, data } = res.data;
-    console.log(res.data)
     if (status === "ok") {
       toast.success("Updated Successfully!");
       dispatch(updateResponseSuccess({ status, data }));

@@ -8,7 +8,6 @@ function ApiList() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { data, loading, count } = useSelector((state) => state.apiList);
-  console.log(data)
   useEffect(() => {
     if (!data.length && !loading) {
       dispatch(apiListAction());

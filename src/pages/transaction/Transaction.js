@@ -17,7 +17,6 @@ const Transaction = () => {
   const handleButton = (id, data) => {
     dispatch(updateTransactionAction(id, data));
   };
-  console.log(data);
   return (
     <Fragment>
       <h3>Client list</h3>
