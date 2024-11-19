@@ -40,7 +40,6 @@ function NavBar({ children }) {
     { label: "Settings", path: "/settings" },
     { label: "Logout", path: "/" },
   ];
-
   return (
     <div className="bg-black container-fluid p-0">
       {/* Top Navigation Bar */}
