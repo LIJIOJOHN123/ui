@@ -175,8 +175,8 @@ export const uploadCSVFileAPIBatchingAction =
       dispatch(request());
       const token = getLocalStorage("authToken");
       const res = await axios.post(
-        `${process.env.REACT_APP_Base_WEB_URL}/apis/uplode/${formData.apiGroupId}`,
-        formData.formData,
+        `${process.env.REACT_APP_Base_WEB_URL}/apis/upload`,
+        formData,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
