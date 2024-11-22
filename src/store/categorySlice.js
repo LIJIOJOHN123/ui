@@ -3,7 +3,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { getLocalStorage } from "../utils/LocalStorage";
 
-const apiBatchingInitialState = {
+const categoryInitialState = {
   loading: false,
   data: [],
   status: null,
@@ -11,10 +11,10 @@ const apiBatchingInitialState = {
   dataById: {},
 };
 
-// Create API Batching slice
-export const apiBatchingSlice = createSlice({
-  name: "api_Batching",
-  initialState: apiBatchingInitialState,
+// Create category slice
+export const categorySlice = createSlice({
+  name: "category",
+  initialState: categoryInitialState,
   reducers: {
     // Request
     request: (state) => {
@@ -32,12 +32,13 @@ export const apiBatchingSlice = createSlice({
       state.status = action.payload.status;
     },
     // Add
-    createAPIBatchingResponseSuccess: (state, action) => {
+    createcategoryResponseSuccess: (state, action) => {
       state.loading = false;
       state.status = action.payload.status;
+      state.data = [action.payload.data, ...state.data];
       state.count = state.data.length;
     },
-    createAPIBatchingResponseFail: (state, action) => {
+    createcategoryResponseFail: (state, action) => {
       state.loading = false;
       state.status = action.payload.status;
       state.count = action.payload.count;
@@ -52,22 +53,23 @@ export const apiBatchingSlice = createSlice({
       state.status = action.payload.status;
     },
     // Edit
-    editAPIBatchingResponseSuccess: (state, action) => {
+    editcategoryResponseSuccess: (state, action) => {
       state.loading = false;
       state.status = action.payload.status;
     },
-    editAPIBatchingResponseFail: (state, action) => {
+
+    editcategoryResponseFail: (state, action) => {
       state.loading = false;
       state.status = action.payload.status;
     },
     // Delete
-    deleteAPIBatchingResponseSuccess: (state, action) => {
+    deletecategoryResponseSuccess: (state, action) => {
       state.loading = false;
       state.data = state.data.filter((item) => item._id !== action.payload.id);
       state.status = action.payload.status;
       state.count -= 1;
     },
-    deleteAPIBatchingResponseFail: (state, action) => {
+    deletecategoryResponseFail: (state, action) => {
       state.loading = false;
       state.status = action.payload.status;
     },
@@ -78,26 +80,29 @@ export const {
   request,
   listResponseSuccess,
   listResponseFail,
-  createAPIBatchingResponseSuccess,
-  createAPIBatchingResponseFail,
-  deleteAPIBatchingResponseSuccess,
-  deleteAPIBatchingResponseFail,
-  editAPIBatchingResponseFail,
-  editAPIBatchingResponseSuccess,
+  createcategoryResponseSuccess,
+  createcategoryResponseFail,
+  deletecategoryResponseSuccess,
+  deletecategoryResponseFail,
+  editcategoryResponseFail,
+  editcategoryResponseSuccess,
   getByIdResponseFail,
   getByIdResponseSuccess,
-} = apiBatchingSlice.actions;
+} = categorySlice.actions;
 
-export const apiBatchingReducer = apiBatchingSlice.reducer;
+export const categoryReducer = categorySlice.reducer;
 
-// Fetch API Batching List
-export const apiBatchingAction = () => async (dispatch) => {
+// Fetch API Group List
+export const categoryAction = () => async (dispatch) => {
   try {
     dispatch(request());
     const token = getLocalStorage("authToken");
-    const res = await axios.get(`${process.env.REACT_APP_Base_WEB_URL}/apis`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    const res = await axios.get(
+      `${process.env.REACT_APP_Base_WEB_URL}/category`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
 
     const { status, data, count } = res.data;
     if (status === "ok") {
@@ -119,12 +124,14 @@ export const getByIdAPIAction = (id) => async (dispatch) => {
     dispatch(request());
     const token = getLocalStorage("authToken");
     const res = await axios.get(
-      `${process.env.REACT_APP_Base_WEB_URL}/apis/${id}`,
+      `${process.env.REACT_APP_Base_WEB_URL}/category/${id}`,
       {
         headers: { Authorization: `Bearer ${token}` },
       }
     );
+
     const { status, data } = res.data;
+
     if (status === "ok") {
       dispatch(getByIdResponseSuccess({ status, data }));
     }
@@ -137,75 +144,44 @@ export const getByIdAPIAction = (id) => async (dispatch) => {
     toast.error(payload.message);
   }
 };
-// Add API Batching
-export const addAPIBatchingAction = (formData) => async (dispatch) => {
-  console.log(formData);
+// Add API Group
+export const addcategoryAction = (formData) => async (dispatch) => {
   try {
+    console.log(formData, ">>>>>>>>>");
     dispatch(request());
     const token = getLocalStorage("authToken");
     const res = await axios.post(
-      `${process.env.REACT_APP_Base_WEB_URL}/apis`,
+      `${process.env.REACT_APP_Base_WEB_URL}/category`,
       formData,
       {
         headers: { Authorization: `Bearer ${token}` },
       }
     );
 
-    const { status } = res.data;
+    const { status, data } = res.data;
     if (status === "ok") {
       toast.success("Created Successfully!");
-      dispatch(createAPIBatchingResponseSuccess({ status: "done" }));
+      dispatch(createcategoryResponseSuccess({ status, data }));
     } else {
-      dispatch(createAPIBatchingResponseFail({ status: 400 }));
+      dispatch(createcategoryResponseFail({ status: 400 }));
     }
   } catch (error) {
     const payload = {
       message: error?.response?.data?.message || "An error occurred",
       status: error?.response?.status || 500,
     };
-    dispatch(createAPIBatchingResponseFail(payload));
+    dispatch(createcategoryResponseFail(payload));
     toast.error(payload.message);
   }
 };
-// Upload CSV Batching
-export const uploadCSVFileAPIBatchingAction =
-  (formData) => async (dispatch) => {
-    console.log(formData);
-    try {
-      dispatch(request());
-      const token = getLocalStorage("authToken");
-      const res = await axios.post(
-        `${process.env.REACT_APP_Base_WEB_URL}/apis/uplode/${formData.apiGroupId}`,
-        formData.formData,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
 
-      const { status } = res.data;
-      if (status === "ok") {
-        toast.success("Uploaded Successfully!");
-        dispatch(createAPIBatchingResponseSuccess({ status: "uploaded" }));
-      } else {
-        dispatch(createAPIBatchingResponseFail({ status: 400 }));
-      }
-    } catch (error) {
-      const payload = {
-        message: error?.response?.data?.message || "An error occurred",
-        status: error?.response?.status || 500,
-      };
-      dispatch(createAPIBatchingResponseFail(payload));
-      toast.error(payload.message);
-    }
-  };
-
-// Update API Batching
-export const updateAPIBatchingAction = (id, formData) => async (dispatch) => {
+// Update API Group
+export const updatecategoryAction = (id, formData) => async (dispatch) => {
   try {
     dispatch(request());
     const token = getLocalStorage("authToken");
     const res = await axios.put(
-      `${process.env.REACT_APP_Base_WEB_URL}/apis/${id}`,
+      `${process.env.REACT_APP_Base_WEB_URL}/category/${id}`,
       formData,
       {
         headers: { Authorization: `Bearer ${token}` },
@@ -215,9 +191,9 @@ export const updateAPIBatchingAction = (id, formData) => async (dispatch) => {
     const { status, message, data } = res.data;
     if (status === "ok") {
       toast.success("Updated Successfully!");
-      dispatch(editAPIBatchingResponseSuccess({ status, data }));
+      dispatch(editcategoryResponseSuccess({ status, data }));
     } else {
-      dispatch(editAPIBatchingResponseFail({ status: 400 }));
+      dispatch(editcategoryResponseFail({ status: 400 }));
       toast.error(message);
     }
   } catch (error) {
@@ -225,18 +201,18 @@ export const updateAPIBatchingAction = (id, formData) => async (dispatch) => {
       message: error?.response?.data?.message || "An error occurred",
       status: error?.response?.status || 500,
     };
-    dispatch(editAPIBatchingResponseFail(payload));
+    dispatch(editcategoryResponseFail(payload));
     toast.error(payload.message);
   }
 };
 
-// Delete API Batching
-export const deleteAPIBatchingAction = (id) => async (dispatch) => {
+// Delete API Group
+export const deletecategoryAction = (id) => async (dispatch) => {
   try {
     dispatch(request());
     const token = getLocalStorage("authToken");
     const res = await axios.delete(
-      `${process.env.REACT_APP_Base_WEB_URL}/apis/${id}`,
+      `${process.env.REACT_APP_Base_WEB_URL}/category/${id}`,
       {
         headers: { Authorization: `Bearer ${token}` },
       }
@@ -244,7 +220,7 @@ export const deleteAPIBatchingAction = (id) => async (dispatch) => {
 
     const { status, message } = res.data;
     if (status === "ok") {
-      dispatch(deleteAPIBatchingResponseSuccess({ id, status }));
+      dispatch(deletecategoryResponseSuccess({ id, status }));
       toast.success(message);
     }
   } catch (error) {
@@ -252,7 +228,7 @@ export const deleteAPIBatchingAction = (id) => async (dispatch) => {
       message: error?.response?.data?.message || "An error occurred",
       status: error?.response?.status || 500,
     };
-    dispatch(deleteAPIBatchingResponseFail(payload));
+    dispatch(deletecategoryResponseFail(payload));
     toast.error(payload.message);
   }
 };

@@ -95,7 +95,7 @@ function GroupApiView() {
     formData.append("file", selectedFile);
 
     // Dispatch the upload action with the FormData
-    dispatch(uploadCSVFileAPIBatchingAction(formData));
+    dispatch(uploadCSVFileAPIBatchingAction({ formData, apiGroupId: id }));
 
     alert("CSV file uploaded successfully!");
   };
@@ -139,7 +139,7 @@ function GroupApiView() {
           <div>
             <h3>URL Risk Analysis - Batch Check CSV Files</h3>
             <Col md={6}>
-              <Form onSubmit={handleSubmit}>
+              <Form>
                 {fields.map((field, index) => (
                   <Form.Group key={index} controlId={`field-${index}`}>
                     <Form.Label className="m-0">{field}</Form.Label>

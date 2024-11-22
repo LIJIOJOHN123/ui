@@ -66,7 +66,12 @@ function ApiListView() {
     }
     const formData = new FormData();
     formData.append("file", selectedFile);
-    dispatch(uploadCSVFileAPIBatchingAction(formData));
+    dispatch(
+      uploadCSVFileAPIBatchingAction({
+        formData,
+        apiGroupId: dataById.apiGroupId,
+      })
+    );
     alert("CSV file uploaded successfully!");
     setSelectedFile([]);
   };
