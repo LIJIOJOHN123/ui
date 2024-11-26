@@ -15,7 +15,6 @@ const CategoryView = () => {
   useEffect(() => {
     dispatch(getByIdAPIAction(id));
   }, [id]);
-  console.log(dataById);
   return (
     <div>
       {loading ? (
@@ -27,7 +26,7 @@ const CategoryView = () => {
       ) : (
         <div>
           <div className="d-flex justify-content-between align-items-center">
-            <h3>Category</h3>
+            <h3>Products</h3>
             <Button
               onClick={() => navigate(`/api-group/create/${id}`)}
               variant="primary"

@@ -26,13 +26,13 @@ function CategoryList() {
       ) : (
         <div>
           <div className="d-flex justify-content-between align-items-center">
-            <h3>Category</h3>
+            <h3>API Group</h3>
             <Button
               onClick={() => navigate("/category/create")}
               variant="primary"
               className="fw-bold"
             >
-              Add Category
+              Add group
             </Button>
           </div>
           {count}
@@ -44,12 +44,6 @@ function CategoryList() {
                     <div onClick={() => navigate(`/category/${item._id}`)}>
                       <h6>{item.category_name}</h6>
                       <p className="line-clamp">{item.description}</p>
-                      <b>
-                        $
-                        {item.fields.map((field, i) => (
-                          <p key={i}>{field}</p>
-                        ))}
-                      </b>
                     </div>
                     <div className="mt-3 " style={{ zIndex: 10 }}>
                       <Button

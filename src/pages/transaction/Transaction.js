@@ -33,7 +33,7 @@ const Transaction = () => {
           </tr>
         </thead>
         <tbody>
-          {data?.map((item) => {
+          {data?.result?.map((item) => {
             return (
               <tr key={item._id}>
                 <td>
