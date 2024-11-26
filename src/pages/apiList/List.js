@@ -48,17 +48,12 @@ function ApiList() {
                     >
                       <h6>{item.apiname}</h6>
                       <p className="line-clamp">{item.des}</p>
-                      <b>${item.pricing}</b>
-                      <div>
-                        {item.fields &&
-                          item.fields.map((field, index) => (
-                            <p key={index}>{field}</p>
-                          ))}
-                      </div>
+                      <p><b>₹{item.pricing  }</b> per request</p>
                     </div>
-                    <div className="mt-3">
+                    <div className="mt-3 btn-toolbar">
                       <Button
                         onClick={() => dispatch(deleteApiAction(item._id))}
+                        className="ml-5"
                       >
                         Delete
                       </Button>

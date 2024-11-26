@@ -18,6 +18,7 @@ const ClientDetails = () => {
             <p>{data._id}</p>
             <p>{data.name}</p>
             <p>{data.email}</p>
+            <p>balance: {data?.client?.account_balance}</p>
         </Fragment>
       );
 }

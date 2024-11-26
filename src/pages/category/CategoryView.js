@@ -1,17 +1,20 @@
 import React, { useEffect } from "react";
 import { Button, Col, Row } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { apiGroupAction, deleteAPIGroupAction } from "../../store/groupSlice";
+import { useNavigate, useParams } from "react-router-dom";
+import {
+  deletecategoryAction,
+  getByIdAPIAction,
+} from "../../store/categorySlice";
 
-function ApiGroup() {
+const CategoryView = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { data, loading, count } = useSelector((state) => state.groupApi);
+  const { id } = useParams();
+  const { dataById = [], loading } = useSelector((state) => state.category);
   useEffect(() => {
-    dispatch(apiGroupAction());
-  }, [dispatch]);
-
+    dispatch(getByIdAPIAction(id));
+  }, [id]);
   return (
     <div>
       {loading ? (
@@ -25,35 +28,36 @@ function ApiGroup() {
           <div className="d-flex justify-content-between align-items-center">
             <h3>Products</h3>
             <Button
-              onClick={() => navigate("/api-group/create")}
+              onClick={() => navigate(`/api-group/create/${id}`)}
               variant="primary"
               className="fw-bold"
             >
-              Add API Group
+              Add Client
             </Button>
           </div>
-          {count}
+          {/* {count} */}
           <Row className="mt-4">
-            {data &&
-              data.map((item, i) => (
+            {dataById.length &&
+              dataById.map((item, i) => (
                 <Col key={i} xs={12} sm={6} md={4} lg={3} className="mb-4">
                   <div className="bg-info p-2 rounded-3 h-100">
-                    <div onClick={() => navigate(`/api-group/${item._id}`)}>
+                    <div
+                    // onClick={() => navigate(`/category/${item._id}`)}
+                    >
                       <h6>{item.name}</h6>
                       <p className="line-clamp">{item.des}</p>
-
                     </div>
                     <div className="mt-3 " style={{ zIndex: 10 }}>
                       <Button
-                        onClick={() => dispatch(deleteAPIGroupAction(item._id))}
+                        onClick={() => dispatch(deletecategoryAction(item._id))}
                       >
                         Delete
                       </Button>
-                      <Button
-                        onClick={() => navigate(`/api-group/edit/${item._id}`)}
+                      {/* <Button
+                        onClick={() => navigate(`/category/edit/${item._id}`)}
                       >
                         Edit
-                      </Button>
+                      </Button> */}
                     </div>
                   </div>
                 </Col>
@@ -63,6 +67,6 @@ function ApiGroup() {
       )}
     </div>
   );
-}
+};
 
-export default ApiGroup;
+export default CategoryView;

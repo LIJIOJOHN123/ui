@@ -54,8 +54,6 @@ export const apiGroupSlice = createSlice({
     },
     // Edit
     editAPIGroupResponseSuccess: (state, action) => {
-
-
       state.loading = false;
       state.status = action.payload.status;
     },
@@ -147,12 +145,12 @@ export const getByIdAPIAction = (id) => async (dispatch) => {
   }
 };
 // Add API Group
-export const addAPIGroupAction = (formData) => async (dispatch) => {
+export const addAPIGroupAction = (id, formData) => async (dispatch) => {
   try {
     dispatch(request());
     const token = getLocalStorage("authToken");
     const res = await axios.post(
-      `${process.env.REACT_APP_Base_WEB_URL}/apigroup`,
+      `${process.env.REACT_APP_Base_WEB_URL}/apigroup/${id}`,
       formData,
       {
         headers: { Authorization: `Bearer ${token}` },

@@ -27,7 +27,7 @@ import BatchEnrichment from "../pages/batch-enrichment/BatchEnrichment";
 import Dashboard from "../pages/dashboard/Dashboard";
 import Documentation from "../pages/documentation/Documentation";
 import ApiGroup from "../pages/groupApi/ApiGroup";
-import GroupApiForm from "../pages/groupApi/GroupApiForm";
+import GroupApiForm from "../pages/category/GroupApiForm";
 import PrivateRoute from "../pages/layout/ProctedRoutes";
 import Plans from "../pages/plans/Plans";
 import Settings from "../pages/settings/Settings";
@@ -37,6 +37,9 @@ import ClientManagement from "../pages/clientmanagement/List";
 import ClientDetails from "../pages/clientmanagement/Details";
 import Transaction from "../pages/transaction/Transaction";
 import Batch from "../pages/batch/Batch";
+import CategoryView from "../pages/category/CategoryView";
+import CategoryList from "../pages/category/CategoryList";
+import CategoryForm from "../pages/category/CategoryForm";
 
 function RoutesPage() {
   return (
@@ -106,9 +109,15 @@ function RoutesPage() {
 
             {/* //////// */}
             <Route path="api-group" element={<ApiGroup />} />
-            <Route path="api-group/create" element={<GroupApiForm />} />
+            <Route path="api-group/create/:id" element={<GroupApiForm />} />
             <Route path="api-group/:id" element={<GroupApiView />} />
             <Route path="/api-group/edit/:id" element={<GroupApiForm />} />
+            {/* ////// */}
+            {/* //////// */}
+            <Route path="/category" element={<CategoryList />} />
+            <Route path="/category/create" element={<CategoryForm />} />
+            <Route path="/category/:id" element={<CategoryView />} />
+            <Route path="/category/edit/:id" element={<CategoryForm />} />
             {/* ////// */}
             <Route path="/clients" element={<ClientManagement />} />
             <Route path="/transaction" element={<Transaction />} />
