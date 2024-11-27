@@ -24,7 +24,7 @@ export const authSlice = createSlice({
       state.loading = true;
     },
     requestSuccess: (state, action) => {
-      if(action.payload.token){
+      if (action.payload.token) {
         setLocalStorage("authToken", action.payload.token);
         setLocalStorage("user", JSON.stringify(action.payload.user));
       }
@@ -64,6 +64,7 @@ export const registerAction = (formData) => async (dispatch) => {
       formData
     );
     const { status, message, data, code } = res.data;
+    console.log(res.data);
     if (code === "201") {
       dispatch(requestSuccess({ user: data, status, token: data.token }));
       toast.success("Registered successfully!");

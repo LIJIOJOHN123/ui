@@ -18,8 +18,6 @@ function GroupApiForm() {
 
   const { loading, status, dataById } = useSelector((state) => state.groupApi);
   const clientData = useSelector((state) => state.clientManagement.data);
-  console.log(formData, status);
-  // Fetch necessary data when the component loads
   useEffect(() => {
     // if (id) {
     //   dispatch(getByIdAPIAction(id));
@@ -27,7 +25,6 @@ function GroupApiForm() {
     dispatch(clientManagementListAction());
   }, [id, dispatch]);
 
-  // Populate form data when editing
   useEffect(() => {
     if (id && dataById) {
       setFormData({
@@ -53,9 +50,7 @@ function GroupApiForm() {
     dispatch(addAPIGroupAction(id, formData));
     // }
 
-    if (status === "ok") {
-      navigate("/category/${id}");
-    }
+    status && navigate(-1);
   };
 
   return (
@@ -83,7 +78,7 @@ function GroupApiForm() {
             >
               <option value="">Select client</option>
               {clientData.map((client) => (
-                <option key={client._id} value={client._id}>
+                <option key={client.clientId} value={client.clientId}>
                   {client.name}
                 </option>
               ))}

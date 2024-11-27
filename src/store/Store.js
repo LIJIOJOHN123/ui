@@ -6,6 +6,7 @@ import { clientManagementReducer } from "./clientManagementSlice";
 import { apiGroupReducer } from "./groupSlice";
 import { transactionReducer } from "./transactionSlice";
 import { categoryReducer } from "./categorySlice";
+import { planReducer } from "./planSlice";
 
 const store = configureStore({
   reducer: {
@@ -13,9 +14,10 @@ const store = configureStore({
     apiList: apiListReducer,
     groupApi: apiGroupReducer,
     apiBatching: apiBatchingReducer,
-    clientManagement:clientManagementReducer,
-    transaction:transactionReducer,
-    category:categoryReducer,
+    clientManagement: clientManagementReducer,
+    transaction: transactionReducer,
+    category: categoryReducer,
+    plan: planReducer,
   },
 });
 

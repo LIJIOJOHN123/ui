@@ -6,15 +6,17 @@ import {
   deletecategoryAction,
   getByIdAPIAction,
 } from "../../store/categorySlice";
+import { deleteAPIGroupAction } from "../../store/groupSlice";
 
 const CategoryView = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { id } = useParams();
-  const { dataById = [], loading } = useSelector((state) => state.category);
+  const { dataById, loading } = useSelector((state) => state.category);
+  const { status } = useSelector((state) => state.groupApi);
   useEffect(() => {
     dispatch(getByIdAPIAction(id));
-  }, [id]);
+  }, [id, status]);
   console.log(dataById);
   return (
     <div>
@@ -27,7 +29,7 @@ const CategoryView = () => {
       ) : (
         <div>
           <div className="d-flex justify-content-between align-items-center">
-            <h3>Category</h3>
+            <h3>Category Group</h3>
             <Button
               onClick={() => navigate(`/api-group/create/${id}`)}
               variant="primary"
@@ -43,16 +45,21 @@ const CategoryView = () => {
                 <Col key={i} xs={12} sm={6} md={4} lg={3} className="mb-4">
                   <div className="bg-info p-2 rounded-3 h-100">
                     <div
-                    // onClick={() => navigate(`/category/${item._id}`)}
+                      onClick={() =>
+                        navigate(
+                          `/category/api-group?id=${id}&clientId=${item.clientId}`
+                        )
+                      }
                     >
                       <h6>{item.name}</h6>
                       <p className="line-clamp">{item.des}</p>
+                      <p className="line-clamp">{item._id}</p>
                     </div>
                     <div className="mt-3 " style={{ zIndex: 10 }}>
                       <Button
-                        onClick={() => dispatch(deletecategoryAction(item._id))}
+                        onClick={() => dispatch(deleteAPIGroupAction(item._id))}
                       >
-                        Delete
+                        DeleteLLL
                       </Button>
                       {/* <Button
                         onClick={() => navigate(`/category/edit/${item._id}`)}

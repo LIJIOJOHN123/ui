@@ -8,7 +8,7 @@ const PrivateRoute = () => {
 
   return tokenExist ? (
     <NavBar>
-      <div className="m-2">
+      <div className="m-2 ">
         <Outlet />
       </div>
     </NavBar>

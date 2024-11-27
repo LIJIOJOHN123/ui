@@ -219,7 +219,7 @@ export const deleteAPIGroupAction = (id) => async (dispatch) => {
 
     const { status, message } = res.data;
     if (status === "ok") {
-      dispatch(deleteAPIGroupResponseSuccess({ id, status }));
+      dispatch(deleteAPIGroupResponseSuccess({ id, status:"Deleted" }));
       toast.success(message);
     }
   } catch (error) {
