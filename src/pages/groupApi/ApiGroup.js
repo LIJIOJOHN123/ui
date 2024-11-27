@@ -23,7 +23,7 @@ function ApiGroup() {
       ) : (
         <div>
           <div className="d-flex justify-content-between align-items-center">
-            <h3>API Group</h3>
+            <h3>Products</h3>
             <Button
               onClick={() => navigate("/api-group/create")}
               variant="primary"
@@ -41,7 +41,7 @@ function ApiGroup() {
                     <div onClick={() => navigate(`/api-group/${item._id}`)}>
                       <h6>{item.name}</h6>
                       <p className="line-clamp">{item.des}</p>
-                      <b>${item.pricing}</b>
+
                     </div>
                     <div className="mt-3 " style={{ zIndex: 10 }}>
                       <Button

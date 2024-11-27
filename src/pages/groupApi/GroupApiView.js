@@ -28,8 +28,7 @@ function GroupApiView() {
   const [formData, setFormData] = useState({});
   const [selectedFile, setSelectedFile] = useState([]);
 
-  const fields =
-    dataById?.apiList?.map((item) => item.apiId.fields).flat() || [];
+  const fields =dataById?.category?.field_active?dataById?.category?.fields.flat() || [] :dataById?.apiList?.map((item) => item?.apiId?.fields).flat() || []
 
   useEffect(() => {
     if (id) {
@@ -39,13 +38,12 @@ function GroupApiView() {
     if (status === "done") {
       dispatch(apiBatchingAction()).catch(() => setError(true));
     }
-  }, [id, status, dispatch]);
-
+  }, [id]);
   useEffect(() => {
     if (!apiData.length && !loading) {
       dispatch(apiListAction()).catch(() => setError(true));
     }
-  }, [apiData, loading, dispatch]);
+  }, []);
 
   if (error) {
     return <p>Something went wrong. Please try again later.</p>;
@@ -57,22 +55,21 @@ function GroupApiView() {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    // e.preventDefault();
     dispatch(addAPIBatchingAction({ apiValue: formData, apiGroupId: id }));
     setFormData({});
   };
 
-  const dataset =
-    dataById?.apiList
-      ?.map((item) =>
-        item.apiId.fields.map((field) => `${field}(${item.apiId.apiname})`)
-      )
-      .flat() || [];
-  const headers = dataset.map((field) => ({
-    label: field,
-    key: field.replace(/\s+/g, "").toLowerCase(),
-  }));
 
+  let dataset  =dataById?.apiList
+    ?.map((item) =>
+      item?.apiId?.fields.map((field) => `${field}(${item?.apiId?.apiname})`)
+    )
+    .flat() || [];
+  const headers = dataset?.map((field) => ({
+    label: field,
+    key: field?.replace(/\s+/g, "").toLowerCase(),
+  }));
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -95,11 +92,19 @@ function GroupApiView() {
     formData.append("file", selectedFile);
 
     // Dispatch the upload action with the FormData
+
     dispatch(uploadCSVFileAPIBatchingAction({ formData, apiGroupId: id }));
 
     alert("CSV file uploaded successfully!");
   };
-
+  const downloadTextFile = (content,id) => {
+    const data = JSON.stringify(content)
+    const blob = new Blob([data], { type: "text/plain" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = `${id}.json`;
+    link.click();
+  };
   return (
     <div>
       {loading && <p>Loading...</p>}
@@ -130,7 +135,7 @@ function GroupApiView() {
           {dataById.apiList && (
             <div>
               <h4>API Fields:</h4>
-              {fields.map((field, index) => (
+              {fields?.map((field, index) => (
                 <p key={index}>{field}</p>
               ))}
             </div>
@@ -140,7 +145,7 @@ function GroupApiView() {
             <h3>URL Risk Analysis - Batch Check CSV Files</h3>
             <Col md={6}>
               <Form>
-                {fields.map((field, index) => (
+                {fields?.map((field, index) => (
                   <Form.Group key={index} controlId={`field-${index}`}>
                     <Form.Label className="m-0">{field}</Form.Label>
                     <Form.Control
@@ -153,7 +158,7 @@ function GroupApiView() {
                     />
                   </Form.Group>
                 ))}
-                <Button variant="primary" type="submit">
+                <Button variant="primary" type="submit" onClick={()=>handleSubmit()}>
                   Submit
                 </Button>
               </Form>
@@ -205,45 +210,50 @@ function GroupApiView() {
                   </div>
                 </div>
               </div>
-
               <table className="table table-striped table-bordered mt-2">
                 <thead className="thead-dark">
                   <tr>
                     <th className="text-center">Date</th>
-                    <th className="text-center">Records</th>
-                    <th className="text-center">Name</th>
-                    <th className="text-center">Status</th>
-                    <th className="text-center">Overview</th>
+                    <th className="text-center">Batch id</th>
+                    {/* <th className="text-center">Records</th> */}
+                    <th className="text-center">Job id</th>
+                    <th className="text-center">Unque id</th>
+                    {/* <th className="text-center">Overview</th> */}
+                    <th className="text-center">API name</th>
+                    <th className="text-center">API status</th>
                     <th className="text-center">Download</th>
-                    <th className="text-center">View Results</th>
-                    <th className="text-center">Delete</th>
+
                   </tr>
                 </thead>
                 <tbody>
                   {!loading &&
                     api &&
-                    api.map((item, i) => (
+                    api?.map((item, i) => (
                       <tr key={i}>
                         <td className="text-center align-middle">2024-08-17</td>
-                        <td className="text-center align-middle">
+                        {/* <td className="text-center align-middle">
                           <div
                             className="rounded-circle bg-primary text-white text-center"
                             style={{ width: "24px", height: "25px" }}
                           >
-                            {/* {item.numberofrequest} */}
+                            {item.numberofrequest}
                           </div>
-                        </td>
-                        <td className="text-center align-middle">{item._id}</td>
-                        <td className="text-center align-middle">
+                        </td> */}
+                        <td className="text-center align-middle">{item.batchId}</td>
+                        <td className="text-center align-middle">{item.job_id}</td>
+                        <td className="text-center align-middle">{item.unique_id}</td>
+                        <td className="text-center align-middle">{item.backend_api_key_name}</td>
+                        <td className="text-center align-middle">{item.apiStatus}</td>
+                        {/* <td className="text-center align-middle">
                           <Check className="text-success" />
-                        </td>
-                        <td className="text-center align-middle">
+                        </td> */}
+                        {/* <td className="text-center align-middle">
                           <Search className="text-primary" />
-                        </td>
+                        </td> */}
                         <td className="text-center align-middle">
-                          <Download />
+                          <Download onClick={()=>downloadTextFile(item.apiresponse,item.unique_id)} />
                         </td>
-                        <td className="text-center align-middle">
+                        {/* <td className="text-center align-middle">
                           <Button
                             variant="secondary"
                             className="btn btn-sm"
@@ -251,8 +261,8 @@ function GroupApiView() {
                           >
                             View Enriched Report
                           </Button>
-                        </td>
-                        <td className="text-center align-middle">
+                        </td> */}
+                        {/* <td className="text-center align-middle">
                           <div
                             className="text-center mx-auto"
                             style={{
@@ -263,11 +273,12 @@ function GroupApiView() {
                           >
                             <Trash2 className="text-white" />
                           </div>
-                        </td>
+                        </td> */}
                       </tr>
                     ))}
                 </tbody>
               </table>
+             
             </div>
           </div>
         </>

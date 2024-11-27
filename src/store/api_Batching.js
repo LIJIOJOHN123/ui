@@ -17,9 +17,7 @@ export const apiBatchingSlice = createSlice({
   initialState: apiBatchingInitialState,
   reducers: {
     // Request
-    request: (state) => {
-      state.loading = true;
-    },
+  
     // List
     listResponseSuccess: (state, action) => {
       state.loading = false;
@@ -93,7 +91,6 @@ export const apiBatchingReducer = apiBatchingSlice.reducer;
 // Fetch API Batching List
 export const apiBatchingAction = () => async (dispatch) => {
   try {
-    dispatch(request());
     const token = getLocalStorage("authToken");
     const res = await axios.get(`${process.env.REACT_APP_Base_WEB_URL}/apis`, {
       headers: { Authorization: `Bearer ${token}` },
@@ -116,7 +113,6 @@ export const apiBatchingAction = () => async (dispatch) => {
 // Fetch API By ID
 export const getByIdAPIAction = (id) => async (dispatch) => {
   try {
-    dispatch(request());
     const token = getLocalStorage("authToken");
     const res = await axios.get(
       `${process.env.REACT_APP_Base_WEB_URL}/apis/${id}`,
@@ -141,7 +137,6 @@ export const getByIdAPIAction = (id) => async (dispatch) => {
 export const addAPIBatchingAction = (formData) => async (dispatch) => {
   console.log(formData);
   try {
-    dispatch(request());
     const token = getLocalStorage("authToken");
     const res = await axios.post(
       `${process.env.REACT_APP_Base_WEB_URL}/apis`,
@@ -172,11 +167,11 @@ export const uploadCSVFileAPIBatchingAction =
   (formData) => async (dispatch) => {
     console.log(formData);
     try {
-      dispatch(request());
+
       const token = getLocalStorage("authToken");
       const res = await axios.post(
-        `${process.env.REACT_APP_Base_WEB_URL}/apis/upload`,
-        formData,
+        `${process.env.REACT_APP_Base_WEB_URL}/apis/upload/${formData.apiGroupId}`,
+        formData.formData,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -202,7 +197,6 @@ export const uploadCSVFileAPIBatchingAction =
 // Update API Batching
 export const updateAPIBatchingAction = (id, formData) => async (dispatch) => {
   try {
-    dispatch(request());
     const token = getLocalStorage("authToken");
     const res = await axios.put(
       `${process.env.REACT_APP_Base_WEB_URL}/apis/${id}`,
@@ -233,7 +227,6 @@ export const updateAPIBatchingAction = (id, formData) => async (dispatch) => {
 // Delete API Batching
 export const deleteAPIBatchingAction = (id) => async (dispatch) => {
   try {
-    dispatch(request());
     const token = getLocalStorage("authToken");
     const res = await axios.delete(
       `${process.env.REACT_APP_Base_WEB_URL}/apis/${id}`,
