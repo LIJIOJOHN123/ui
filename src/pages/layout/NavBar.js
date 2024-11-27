@@ -25,6 +25,7 @@ function NavBar({ children }) {
     { label: "Documentation", path: "/documentation" },
     { label: "Products", path: "/api-group" },
     { label: "Transaction", path: "/transaction" },
+    { label: "Plan", path: "/plan" },
     { label: "Settings", path: "/settings" },
     { label: "Logout", path: "/" },
   ];
@@ -37,6 +38,7 @@ function NavBar({ children }) {
     { label: "Transaction", path: "/transaction" },
     { label: "Clients", path: "/clients" },
     { label: "Batch", path: "/batch" },
+    { label: "Plan", path: "/plan" },
     { label: "Settings", path: "/settings" },
     { label: "Logout", path: "/" },
   ];

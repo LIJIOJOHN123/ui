@@ -40,6 +40,9 @@ import Batch from "../pages/batch/Batch";
 import CategoryView from "../pages/category/CategoryView";
 import CategoryList from "../pages/category/CategoryList";
 import CategoryForm from "../pages/category/CategoryForm";
+import CategoryGroupApi from "../pages/category/CategoryGroupApi";
+import PlanList from "../pages/plan/List";
+import PlanForm from "../pages/plan/PlanForm";
 
 function RoutesPage() {
   return (
@@ -112,6 +115,7 @@ function RoutesPage() {
             <Route path="api-group/create/:id" element={<GroupApiForm />} />
             <Route path="api-group/:id" element={<GroupApiView />} />
             <Route path="/api-group/edit/:id" element={<GroupApiForm />} />
+            <Route path="/category/api-group" element={<CategoryGroupApi />} />
             {/* ////// */}
             {/* //////// */}
             <Route path="/category" element={<CategoryList />} />
@@ -125,6 +129,12 @@ function RoutesPage() {
             <Route path="/client/:id" element={<ClientDetails />} />
             <Route path="documentation" element={<Documentation />} />
             <Route path="plans" element={<Plans />} />
+            {/* ////// */}
+            <Route path="plan" element={<PlanList />} />
+            <Route path="plan/create" element={<PlanForm />} />
+            <Route path="plan/edit/:id" element={<PlanForm />} />
+            <Route path="plan/:id" element={<PlanList />} />
+            {/* ////// */}
             <Route path="settings" element={<Settings />} />
           </Route>
         </Route>
