@@ -9,6 +9,7 @@ const planInitialState = {
   status: null,
   count: null,
   dataById: {},
+  apiListDetails: [],
 };
 
 // Create plan slice
@@ -52,6 +53,15 @@ export const planSlice = createSlice({
       state.loading = false;
       state.status = action.payload.status;
     },
+    getByIdApiResponseSuccess: (state, action) => {
+      state.loading = false;
+      state.status = action.payload.status;
+      state.apiListDetails = action.payload.data;
+    },
+    getByIdApiResponseFail: (state, action) => {
+      state.loading = false;
+      state.status = action.payload.status;
+    },
     // Edit
     editplanResponseSuccess: (state, action) => {
       state.loading = false;
@@ -73,6 +83,10 @@ export const planSlice = createSlice({
       state.loading = false;
       state.status = action.payload.status;
     },
+    resetApiListDetails: (state) => {
+      state.apiListDetails = [];
+      state.dataById = {};
+    },
   },
 });
 
@@ -88,6 +102,9 @@ export const {
   editplanResponseSuccess,
   getByIdResponseFail,
   getByIdResponseSuccess,
+  getByIdApiResponseFail,
+  getByIdApiResponseSuccess,
+  resetApiListDetails,
 } = planSlice.actions;
 
 export const planReducer = planSlice.reducer;
@@ -141,12 +158,12 @@ export const getByIdAPIAction = (id) => async (dispatch) => {
     toast.error(payload.message);
   }
 };
-export const getplanApiListAPIAction = (id, clientId) => async (dispatch) => {
+export const getplanApiListAPIAction = (id) => async (dispatch) => {
   try {
     dispatch(request());
     const token = getLocalStorage("authToken");
     const res = await axios.get(
-      `${process.env.REACT_APP_Base_WEB_URL}/plan/plan-apilist?id=${id}&clientId=${clientId}`,
+      `${process.env.REACT_APP_Base_WEB_URL}/plan/category-apilist/${id}`,
       {
         headers: { Authorization: `Bearer ${token}` },
       }
@@ -154,21 +171,20 @@ export const getplanApiListAPIAction = (id, clientId) => async (dispatch) => {
     const { status, data } = res.data;
 
     if (status === "ok") {
-      dispatch(getByIdResponseSuccess({ status, data }));
+      dispatch(getByIdApiResponseSuccess({ status, data }));
     }
   } catch (error) {
     const payload = {
       message: error?.response?.data?.message || "An error occurred",
       status: error?.response?.status || 500,
     };
-    dispatch(listResponseFail(payload));
+    dispatch(getByIdApiResponseFail(payload));
     toast.error(payload.message);
   }
 };
 // Add API Group
 export const addplanAction = (formData) => async (dispatch) => {
   try {
-    console.log(formData, ">>>>>>>>>");
     dispatch(request());
     const token = getLocalStorage("authToken");
     const res = await axios.post(

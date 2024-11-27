@@ -2,14 +2,12 @@ import React, { useEffect, useState } from "react";
 import { Form as BootstrapForm, Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import { addApiAction } from "../../store/apiSlice";
-import {
-  categoryAction,
-  getCategoryApiListAPIAction,
-} from "../../store/categorySlice";
+import { categoryAction } from "../../store/categorySlice";
 import {
   addplanAction,
   getByIdAPIAction,
+  getplanApiListAPIAction,
+  resetApiListDetails,
   updateplanAction,
 } from "../../store/planSlice";
 
@@ -27,13 +25,16 @@ function PlanForm() {
 
   const [formData, setFormData] = useState([]);
   const [formError, setFormError] = useState(false);
-  const { loading, status } = useSelector((state) => state.apiList);
-  const { data: categories, dataById } = useSelector((state) => state.category);
-  const { dataById: existingPlan } = useSelector((state) => state.plan);
+
+  const { data: categories } = useSelector((state) => state.category);
+  const { dataById: existingPlan, apiListDetails: dataById } = useSelector(
+    (state) => state.plan
+  );
+  console.log(existingPlan, "existingPlan>>>>>>>>>");
   useEffect(() => {
-    dispatch(getCategoryApiListAPIAction("", ""));
+    dispatch(resetApiListDetails());
     dispatch(categoryAction());
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     if (id) {
@@ -47,17 +48,45 @@ function PlanForm() {
     }
   }, [id, existingPlan]);
 
-  console.log(planFormData, "planFormData");
   useEffect(() => {
     if (planFormData.categoryId) {
-      dispatch(
-        getCategoryApiListAPIAction(
-          planFormData.categoryId,
-          "6740959813e42040b048023e"
-        )
-      );
+      dispatch(getplanApiListAPIAction(planFormData.categoryId));
     }
   }, [planFormData.categoryId, dispatch]);
+  console.log(dataById, "dataById");
+  useEffect(() => {
+    if (dataById.length) {
+      setFormData(
+        dataById.map((item) => {
+          // Check if existingPlan is available
+          const updatedItem = {
+            apiId: item._id,
+            pricing: item.pricing,
+            fields: item.fields,
+            discoutedPricing: item.discoutedPricing || false,
+            discoutedPrice: item.discoutedPrice || "",
+          };
+
+          if (existingPlan.apiId && id) {
+            const existingApi = existingPlan.apiId.find(
+              (existing) => existing.apiId === item._id
+            );
+            if (existingApi) {
+              updatedItem.discoutedPricing =
+                Boolean(existingApi.discoutedPrice) || false;
+              updatedItem.discoutedPrice = existingApi.discoutedPrice || "";
+            }
+          }
+
+          return updatedItem;
+        })
+      );
+    }
+  }, [dataById, existingPlan]);
+
+  useEffect(() => {
+    dispatch(resetApiListDetails());
+  }, [dispatch]);
 
   const handleInputChange = (e, index) => {
     const { name, value } = e.target;
@@ -76,36 +105,6 @@ function PlanForm() {
       )
     );
   };
-
-  useEffect(() => {
-    if (dataById.length) {
-      setFormData(
-        dataById.map((item) => ({
-          apiId: item.apiId._id,
-          discoutedPricing: false,
-          pricing: item.apiId.pricing,
-          fields: item.apiId.fields,
-        }))
-      );
-    }
-  }, [dataById]);
-  useEffect(() => {
-    if (dataById.length && existingPlan?.apiId?.length) {
-      setFormData(
-        dataById.map((item) => {
-          const matchingPlan = existingPlan.apiId.find(
-            (plan) => plan.apiId === item.apiId._id
-          );
-
-          return {
-            apiId: item.apiId._id,
-            discoutedPricing: Boolean(matchingPlan?.discoutedPrice),
-            discoutedPrice: matchingPlan?.discoutedPrice || "",
-          };
-        })
-      );
-    }
-  }, [dataById, existingPlan]);
 
   const handlePlanInputChange = (e) => {
     const { name, value } = e.target;
@@ -131,7 +130,7 @@ function PlanForm() {
     } else {
       dispatch(addplanAction(planFormData));
     }
- 
+
     navigate(-1);
   };
 
@@ -140,36 +139,32 @@ function PlanForm() {
     const item = formData[index];
 
     setPlanFormData((prevData) => {
-      const existingApiIndex = prevData.apiId.findIndex(
-        (data) => data.apiId === item.apiId
-      );
-      console.log(item);
+      const updatedApiData = [...prevData.apiId];
       if (!item.discoutedPricing) {
-        const updatedApiData = prevData.apiId.filter(
-          (data) => data.apiId !== item.apiId
+        const apiIndex = updatedApiData.findIndex(
+          (data) => data.apiId === item.apiId
         );
+        if (apiIndex !== -1) updatedApiData.splice(apiIndex, 1);
         item.discoutedPrice = "";
-        return { ...prevData, apiId: updatedApiData };
-      }
-      if (existingApiIndex !== -1) {
-        const updatedApiData = [...prevData.apiId];
-        updatedApiData[existingApiIndex] = {
-          ...updatedApiData[existingApiIndex],
-          discoutedPrice: item.discoutedPrice,
-        };
-        return { ...prevData, apiId: updatedApiData };
-      }
-      return {
-        ...prevData,
-        apiId: [
-          ...prevData.apiId,
-          {
+      } else {
+        const existingApiIndex = updatedApiData.findIndex(
+          (data) => data.apiId === item.apiId
+        );
+        if (existingApiIndex !== -1) {
+          updatedApiData[existingApiIndex] = {
+            ...updatedApiData[existingApiIndex],
+            discoutedPrice: item.discoutedPrice,
+          };
+        } else {
+          updatedApiData.push({
             apiId: item.apiId,
             discoutedPrice: item.discoutedPrice,
             categoryId: planFormData.categoryId,
-          },
-        ],
-      };
+          });
+        }
+      }
+
+      return { ...prevData, apiId: updatedApiData };
     });
   };
 
@@ -293,16 +288,16 @@ function PlanForm() {
                             name="discoutedPrice"
                             value={item.discoutedPrice}
                             onChange={(e) => handleInputChange(e, index)}
-                            className="w-25"
+                            className="form-control-sm"
                           />
                         </BootstrapForm.Group>
                       </td>
                       <td>
                         <Button
                           variant="primary"
-                          onClick={(e) => handleRowSubmit(e, index, item)}
+                          onClick={(e) => handleRowSubmit(e, index)}
                         >
-                          Submit
+                          {item.discoutedPricing ? "Update" : "Add"}
                         </Button>
                       </td>
                     </tr>
@@ -312,8 +307,8 @@ function PlanForm() {
             </div>
           )}
 
-          <Button variant="primary" type="submit" className="mt-4">
-            {loading ? <div className="spinner-border" /> : "Submit"}
+          <Button type="submit" className="mt-4">
+            {id ? "Update Plan" : "Create Plan"}
           </Button>
         </BootstrapForm>
       </div>
