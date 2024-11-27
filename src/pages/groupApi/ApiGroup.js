@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { Button, Col, Row } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { apiGroupAction, deleteAPIGroupAction } from "../../store/groupSlice";
+import { apiGroupAction, deleteAPIGroupAction } from "../../store/productManagementSlice";
 
 function ApiGroup() {
   const dispatch = useDispatch();

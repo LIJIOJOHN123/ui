@@ -3,7 +3,7 @@ import { apiBatchingReducer } from "./api_Batching";
 import { apiListReducer } from "./apiManagementSlice";
 import { authReducer } from "./authSlice";
 import { clientManagementReducer } from "./clientManagementSlice";
-import { apiGroupReducer } from "./groupSlice";
+import { apiGroupReducer } from "./productManagementSlice";
 import { transactionReducer } from "./transactionSlice";
 import { apiGroupManagementReducer } from "./apiGroupManagementSlice";
 

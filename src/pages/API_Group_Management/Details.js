@@ -5,7 +5,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import {
   getByIdAPIAction,
 } from "../../store/apiGroupManagementSlice";
-import { deleteAPIGroupAction } from "../../store/groupSlice";
+import { deleteAPIGroupAction } from "../../store/productManagementSlice";
 
 const CategoryView = () => {
   const dispatch = useDispatch();

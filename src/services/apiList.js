@@ -7,5 +7,6 @@ const backendAPIList = {
 // api management
 apiManagement:`${WEB_BACKEND_API_URL}/api_management`,
 apiGroupManagement:`${WEB_BACKEND_API_URL}/api_group_management`,
+productManagement:`${WEB_BACKEND_API_URL}/product_management`,
 };
 export default backendAPIList;

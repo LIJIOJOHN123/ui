@@ -3,7 +3,7 @@ import { Form as BootstrapForm, Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { clientManagementListAction } from "../../store/clientManagementSlice";
-import { addAPIGroupAction } from "../../store/groupSlice";
+import { addAPIGroupAction } from "../../store/productManagementSlice";
 
 function GroupApiForm() {
   const navigate = useNavigate();
@@ -54,7 +54,7 @@ function GroupApiForm() {
     // }
 
     if (status === "ok") {
-      navigate("/category/${id}");
+      navigate("/category");
     }
   };
 

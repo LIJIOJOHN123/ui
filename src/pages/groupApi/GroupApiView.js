@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { apiListAction } from "../../store/apiManagementSlice";
-import { getByIdAPIAction } from "../../store/groupSlice";
+import { getByIdAPIAction } from "../../store/productManagementSlice";
 import {
   addAPIBatchingAction,
   apiBatchingAction,
@@ -19,7 +19,7 @@ function GroupApiView() {
   const { id } = useParams();
   const [error, setError] = useState(false);
   const { dataById } = useSelector((state) => state.groupApi);
-  const { data: apiData } = useSelector((state) => state.apiList);
+  const { data: apiData } = useSelector((state) => state.apiManagement);
   const {
     data: api,
     status,

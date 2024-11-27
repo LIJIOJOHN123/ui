@@ -2,9 +2,10 @@ import { createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { getLocalStorage } from "../utils/LocalStorage";
+import backendAPIList from "../services/apiList";
 
 const apiGroupInitialState = {
-  loading: false,
+  loading: true,
   data: [],
   status: null,
   count: null,
@@ -13,13 +14,10 @@ const apiGroupInitialState = {
 
 // Create API Group slice
 export const apiGroupSlice = createSlice({
-  name: "apiGroup",
+  name: "product_management",
   initialState: apiGroupInitialState,
   reducers: {
-    // Request
-    request: (state) => {
-      state.loading = true;
-    },
+
     // List
     listResponseSuccess: (state, action) => {
       state.loading = false;
@@ -95,10 +93,9 @@ export const apiGroupReducer = apiGroupSlice.reducer;
 // Fetch API Group List
 export const apiGroupAction = () => async (dispatch) => {
   try {
-    dispatch(request());
     const token = getLocalStorage("authToken");
     const res = await axios.get(
-      `${process.env.REACT_APP_Base_WEB_URL}/apigroup`,
+      `${backendAPIList.productManagement}`,
       {
         headers: { Authorization: `Bearer ${token}` },
       }
@@ -121,10 +118,9 @@ export const apiGroupAction = () => async (dispatch) => {
 // Fetch API By ID
 export const getByIdAPIAction = (id) => async (dispatch) => {
   try {
-    dispatch(request());
     const token = getLocalStorage("authToken");
     const res = await axios.get(
-      `${process.env.REACT_APP_Base_WEB_URL}/apigroup/${id}`,
+      `${backendAPIList.productManagement}/${id}`,
       {
         headers: { Authorization: `Bearer ${token}` },
       }
@@ -147,10 +143,9 @@ export const getByIdAPIAction = (id) => async (dispatch) => {
 // Add API Group
 export const addAPIGroupAction = (id, formData) => async (dispatch) => {
   try {
-    dispatch(request());
     const token = getLocalStorage("authToken");
     const res = await axios.post(
-      `${process.env.REACT_APP_Base_WEB_URL}/apigroup/${id}`,
+      `${backendAPIList.productManagement}/${id}`,
       formData,
       {
         headers: { Authorization: `Bearer ${token}` },
@@ -177,10 +172,9 @@ export const addAPIGroupAction = (id, formData) => async (dispatch) => {
 // Update API Group
 export const updateAPIGroupAction = (id, formData) => async (dispatch) => {
   try {
-    dispatch(request());
     const token = getLocalStorage("authToken");
     const res = await axios.put(
-      `${process.env.REACT_APP_Base_WEB_URL}/apigroup/${id}`,
+      `${backendAPIList.productManagement}/${id}`,
       formData,
       {
         headers: { Authorization: `Bearer ${token}` },
@@ -208,10 +202,9 @@ export const updateAPIGroupAction = (id, formData) => async (dispatch) => {
 // Delete API Group
 export const deleteAPIGroupAction = (id) => async (dispatch) => {
   try {
-    dispatch(request());
     const token = getLocalStorage("authToken");
     const res = await axios.delete(
-      `${process.env.REACT_APP_Base_WEB_URL}/apigroup/${id}`,
+      `${backendAPIList.productManagement}/${id}`,
       {
         headers: { Authorization: `Bearer ${token}` },
       }
