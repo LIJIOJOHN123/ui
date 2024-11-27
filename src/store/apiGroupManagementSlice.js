@@ -2,24 +2,22 @@ import { createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { getLocalStorage } from "../utils/LocalStorage";
+import backendAPIList from "../services/apiList";
 
-const apiListInitialState = {
-  loading: false,
+const apiGroupIntialState = {
+  loading: true,
   data: [],
   status: null,
   count: null,
   dataById: {},
 };
 
-// Get ALL apiList slice
-export const apiListSlice = createSlice({
-  name: "apiList",
-  initialState: apiListInitialState,
+// Create category slice
+export const apiGroupMangementSlice = createSlice({
+  name: "api_group_management",
+  initialState: apiGroupIntialState,
   reducers: {
-    // Request
-    request: (state) => {
-      state.loading = true;
-    },
+    
     // List
     listResponseSuccess: (state, action) => {
       state.loading = false;
@@ -32,14 +30,13 @@ export const apiListSlice = createSlice({
       state.status = action.payload.status;
     },
     // Add
-    createResponseSuccess: (state, action) => {
+    createApiGroupResponseSuccess: (state, action) => {
       state.loading = false;
       state.status = action.payload.status;
-      state.data = [action.payload.data, ...state.data]; // Append new item
-      state.count = state.data.length; // Update count based on the new data length
+      state.data = [action.payload.data, ...state.data];
+      state.count = state.data.length;
     },
-
-    createResponseFail: (state, action) => {
+    createApiGroupResponseFail: (state, action) => {
       state.loading = false;
       state.status = action.payload.status;
       state.count = action.payload.count;
@@ -53,36 +50,24 @@ export const apiListSlice = createSlice({
       state.loading = false;
       state.status = action.payload.status;
     },
-    // edit
-    updateResponseSuccess: (state, action) => {
-      const index = state.data.findIndex(
-        (item) => item._id === action.payload.data._id
-      );
-
-      if (index !== -1) {
-        const updatedItem = { ...state.data[index], ...action.payload.data };
-
-        state.data[index] = updatedItem;
-      } else {
-        console.warn(`Item with id } not found in state.data`);
-      }
-
+    // Edit
+    editApiGroupResponseSuccess: (state, action) => {
       state.loading = false;
       state.status = action.payload.status;
     },
 
-    updateResponseFail: (state, action) => {
+    editApiGroupResponseFail: (state, action) => {
       state.loading = false;
       state.status = action.payload.status;
     },
     // Delete
-    deleteResponseSuccess: (state, action) => {
+    deleteApiGroupResponseSuccess: (state, action) => {
       state.loading = false;
       state.data = state.data.filter((item) => item._id !== action.payload.id);
       state.status = action.payload.status;
       state.count -= 1;
     },
-    deleteResponseFail: (state, action) => {
+    deleteApiGroupResponseFail: (state, action) => {
       state.loading = false;
       state.status = action.payload.status;
     },
@@ -93,25 +78,24 @@ export const {
   request,
   listResponseSuccess,
   listResponseFail,
-  createResponseSuccess,
-  createResponseFail,
-  deleteResponseSuccess,
-  deleteResponseFail,
-  updateResponseFail,
-  updateResponseSuccess,
+  createApiGroupResponseSuccess,
+  createApiGroupResponseFail,
+  deleteApiGroupResponseSuccess,
+  deleteApiGroupResponseFail,
+  editApiGroupResponseFail,
+  editApiGroupResponseSuccess,
   getByIdResponseFail,
   getByIdResponseSuccess,
-} = apiListSlice.actions;
+} = apiGroupMangementSlice.actions;
 
-export const apiListReducer = apiListSlice.reducer;
+export const apiGroupManagementReducer = apiGroupMangementSlice.reducer;
 
-// Fetch API List
-export const apiListAction = () => async (dispatch) => {
+// Fetch API Group List
+export const ApiGroupAction = () => async (dispatch) => {
   try {
-    dispatch(request());
     const token = getLocalStorage("authToken");
     const res = await axios.get(
-      `${process.env.REACT_APP_Base_WEB_URL}/apilist`,
+      backendAPIList.apiGroupManagement,
       {
         headers: { Authorization: `Bearer ${token}` },
       }
@@ -130,13 +114,13 @@ export const apiListAction = () => async (dispatch) => {
     toast.error(payload.message);
   }
 };
+
 // Fetch API By ID
 export const getByIdAPIAction = (id) => async (dispatch) => {
   try {
-    dispatch(request());
     const token = getLocalStorage("authToken");
     const res = await axios.get(
-      `${process.env.REACT_APP_Base_WEB_URL}/apilist/${id}`,
+      `${backendAPIList.apiGroupManagement}/${id}`,
       {
         headers: { Authorization: `Bearer ${token}` },
       }
@@ -156,14 +140,12 @@ export const getByIdAPIAction = (id) => async (dispatch) => {
     toast.error(payload.message);
   }
 };
-
-// Add API
-export const addApiAction = (formData) => async (dispatch) => {
+// Add API Group
+export const addApiGroupAction = (formData) => async (dispatch) => {
   try {
-    dispatch(request());
     const token = getLocalStorage("authToken");
     const res = await axios.post(
-      `${process.env.REACT_APP_Base_WEB_URL}/apilist`,
+      `${backendAPIList.apiGroupManagement}`,
       formData,
       {
         headers: { Authorization: `Bearer ${token}` },
@@ -173,27 +155,26 @@ export const addApiAction = (formData) => async (dispatch) => {
     const { status, data } = res.data;
     if (status === "ok") {
       toast.success("Created Successfully!");
-      dispatch(createResponseSuccess({ status, data }));
+      dispatch(createApiGroupResponseSuccess({ status, data }));
     } else {
-      dispatch(createResponseFail({ status: 400 }));
-      // toast.error(message);
+      dispatch(createApiGroupResponseFail({ status: 400 }));
     }
   } catch (error) {
     const payload = {
       message: error?.response?.data?.message || "An error occurred",
       status: error?.response?.status || 500,
     };
-    dispatch(createResponseFail(payload));
+    dispatch(createApiGroupResponseFail(payload));
     toast.error(payload.message);
   }
 };
-// update API
-export const updateApiAction = (id, formData) => async (dispatch) => {
+
+// Update API Group
+export const updateApiGroupAction = (id, formData) => async (dispatch) => {
   try {
-    dispatch(request());
     const token = getLocalStorage("authToken");
     const res = await axios.put(
-      `${process.env.REACT_APP_Base_WEB_URL}/apilist/${id}`,
+      `${backendAPIList.apiGroupManagement}/${id}`,
       formData,
       {
         headers: { Authorization: `Bearer ${token}` },
@@ -203,9 +184,9 @@ export const updateApiAction = (id, formData) => async (dispatch) => {
     const { status, message, data } = res.data;
     if (status === "ok") {
       toast.success("Updated Successfully!");
-      dispatch(updateResponseSuccess({ status, data }));
+      dispatch(editApiGroupResponseSuccess({ status, data }));
     } else {
-      dispatch(updateResponseFail({ status: 400 }));
+      dispatch(editApiGroupResponseFail({ status: 400 }));
       toast.error(message);
     }
   } catch (error) {
@@ -213,18 +194,17 @@ export const updateApiAction = (id, formData) => async (dispatch) => {
       message: error?.response?.data?.message || "An error occurred",
       status: error?.response?.status || 500,
     };
-    dispatch(createResponseFail(payload));
+    dispatch(editApiGroupResponseFail(payload));
     toast.error(payload.message);
   }
 };
 
-// Delete API
-export const deleteApiAction = (id) => async (dispatch) => {
+// Delete API Group
+export const deleteApiGroupAction = (id) => async (dispatch) => {
   try {
-    dispatch(request());
     const token = getLocalStorage("authToken");
     const res = await axios.delete(
-      `${process.env.REACT_APP_Base_WEB_URL}/apilist/${id}`,
+      `${backendAPIList.apiGroupManagement}/${id}`,
       {
         headers: { Authorization: `Bearer ${token}` },
       }
@@ -232,7 +212,7 @@ export const deleteApiAction = (id) => async (dispatch) => {
 
     const { status, message } = res.data;
     if (status === "ok") {
-      dispatch(deleteResponseSuccess({ id, status }));
+      dispatch(deleteApiGroupResponseSuccess({ id, status }));
       toast.success(message);
     }
   } catch (error) {
@@ -240,7 +220,7 @@ export const deleteApiAction = (id) => async (dispatch) => {
       message: error?.response?.data?.message || "An error occurred",
       status: error?.response?.status || 500,
     };
-    dispatch(deleteResponseFail(payload));
+    dispatch(deleteApiGroupResponseFail(payload));
     toast.error(payload.message);
   }
 };

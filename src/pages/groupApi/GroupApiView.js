@@ -4,7 +4,7 @@ import { Button, Col, Form } from "react-bootstrap";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import { apiListAction } from "../../store/apiSlice";
+import { apiListAction } from "../../store/apiManagementSlice";
 import { getByIdAPIAction } from "../../store/groupSlice";
 import {
   addAPIBatchingAction,

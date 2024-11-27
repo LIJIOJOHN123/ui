@@ -3,10 +3,10 @@ import { Form as BootstrapForm, Button, Col, Row } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import {
-  addApiAction,
+  addApiGroupAction,
   getByIdAPIAction,
   updateApiAction,
-} from "../../store/apiSlice";
+} from "../../store/apiManagementSlice";
 
 function Form() {
   const navigate = useNavigate();
@@ -22,11 +22,9 @@ function Form() {
     api_type: "",
   });
   const [error, setError] = useState(false);
-  const { loading, status, dataById } = useSelector((state) => state.apiList);
+  const { loading, status, dataById } = useSelector((state) => state.apiManagement);
   useEffect(() => {
-    if (id) {
-      dispatch(getByIdAPIAction(id));
-    }
+   id && dispatch(getByIdAPIAction(id));
   }, [id]);
 
   useEffect(() => {
@@ -68,7 +66,7 @@ function Form() {
     if (id) {
       dispatch(updateApiAction(id, formData));
     } else {
-      dispatch(addApiAction(formData));
+      dispatch(addApiGroupAction(formData));
     }
 
     if (status === "ok") {

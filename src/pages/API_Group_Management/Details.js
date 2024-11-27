@@ -3,15 +3,15 @@ import { Button, Col, Row } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import {
-  deletecategoryAction,
   getByIdAPIAction,
-} from "../../store/categorySlice";
+} from "../../store/apiGroupManagementSlice";
+import { deleteAPIGroupAction } from "../../store/groupSlice";
 
 const CategoryView = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { id } = useParams();
-  const { dataById = [], loading } = useSelector((state) => state.category);
+  const { dataById = [], loading } = useSelector((state) => state.apiGroupManagement);
   useEffect(() => {
     dispatch(getByIdAPIAction(id));
   }, [id]);
@@ -49,7 +49,7 @@ const CategoryView = () => {
                     </div>
                     <div className="mt-3 " style={{ zIndex: 10 }}>
                       <Button
-                        onClick={() => dispatch(deletecategoryAction(item._id))}
+                        onClick={() => dispatch(deleteAPIGroupAction(item._id))}
                       >
                         Delete
                       </Button>

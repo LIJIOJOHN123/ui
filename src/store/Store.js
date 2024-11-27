@@ -1,21 +1,21 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { apiBatchingReducer } from "./api_Batching";
-import { apiListReducer } from "./apiSlice";
+import { apiListReducer } from "./apiManagementSlice";
 import { authReducer } from "./authSlice";
 import { clientManagementReducer } from "./clientManagementSlice";
 import { apiGroupReducer } from "./groupSlice";
 import { transactionReducer } from "./transactionSlice";
-import { categoryReducer } from "./categorySlice";
+import { apiGroupManagementReducer } from "./apiGroupManagementSlice";
 
 const store = configureStore({
   reducer: {
     auth: authReducer,
-    apiList: apiListReducer,
+    apiManagement: apiListReducer,
     groupApi: apiGroupReducer,
     apiBatching: apiBatchingReducer,
     clientManagement:clientManagementReducer,
     transaction:transactionReducer,
-    category:categoryReducer,
+    apiGroupManagement:apiGroupManagementReducer,
   },
 });
 

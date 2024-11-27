@@ -2,18 +2,18 @@ import React, { useEffect } from "react";
 import { Button, Col, Row } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { apiListAction, deleteApiAction } from "../../store/apiSlice";
+import { deleteApiGroupAction, ApiGroupAction} from "../../store/apiGroupManagementSlice";
 
-function ApiList() {
+
+function APIGroupList() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { data, loading, count } = useSelector((state) => state.apiList);
+  const { data, loading, count } = useSelector((state) => state.apiGroupManagement);
+  console.log(data)
   useEffect(() => {
-    if (!data.length && !loading) {
-      dispatch(apiListAction());
-    }
+    dispatch(ApiGroupAction());
   }, []);
-  
+
   return (
     <div>
       {loading ? (
@@ -25,48 +25,40 @@ function ApiList() {
       ) : (
         <div>
           <div className="d-flex justify-content-between align-items-center">
-            <h3>API List</h3>
+            <h3>API Group</h3>
             <Button
-              onClick={() => navigate("/api-list/create")}
+              onClick={() => navigate("/category/create")}
               variant="primary"
               className="fw-bold"
             >
-              Add API
+              Add group
             </Button>
           </div>
           {count}
           <Row className="mt-4">
-            {!data.length ? (
-              <div>No data</div>
-            ) : (
+            {data &&
               data.map((item, i) => (
                 <Col key={i} xs={12} sm={6} md={4} lg={3} className="mb-4">
                   <div className="bg-info p-2 rounded-3 h-100">
-                    <div
-                      style={{ cursor: "pointer" }}
-                      onClick={() => navigate(`/api-list/${item._id}`)}
-                    >
-                      <h6>{item.apiname}</h6>
-                      <p className="line-clamp">{item.des}</p>
-                      <p><b>₹{item.pricing  }</b> per request</p>
+                    <div onClick={() => navigate(`/category/${item._id}`)}>
+                      <h6>{item.name}</h6>
+                      <p className="line-clamp">{item.description}</p>
                     </div>
-                    <div className="mt-3 btn-toolbar">
+                    <div className="mt-3 " style={{ zIndex: 10 }}>
                       <Button
-                        onClick={() => dispatch(deleteApiAction(item._id))}
-                        className="ml-5"
+                        onClick={() => dispatch(deleteApiGroupAction(item._id))}
                       >
                         Delete
                       </Button>
                       <Button
-                        onClick={() => navigate(`/api-list/edit/${item._id}`)}
+                        onClick={() => navigate(`/category/edit/${item._id}`)}
                       >
                         Edit
                       </Button>
                     </div>
                   </div>
                 </Col>
-              ))
-            )}
+              ))}
           </Row>
         </div>
       )}
@@ -74,4 +66,4 @@ function ApiList() {
   );
 }
 
-export default ApiList;
+export default APIGroupList;

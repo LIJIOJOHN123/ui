@@ -2,24 +2,21 @@ import { createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { getLocalStorage } from "../utils/LocalStorage";
+import backendAPIList from "../services/apiList";
 
-const categoryInitialState = {
-  loading: false,
+const apiMangementIntiaiState = {
+  loading: true,
   data: [],
   status: null,
   count: null,
   dataById: {},
 };
 
-// Create category slice
-export const categorySlice = createSlice({
-  name: "category",
-  initialState: categoryInitialState,
+// Get ALL apiList slice
+export const apiMangementSlice = createSlice({
+  name: "api_management",
+  initialState: apiMangementIntiaiState,
   reducers: {
-    // Request
-    request: (state) => {
-      state.loading = true;
-    },
     // List
     listResponseSuccess: (state, action) => {
       state.loading = false;
@@ -32,13 +29,14 @@ export const categorySlice = createSlice({
       state.status = action.payload.status;
     },
     // Add
-    createcategoryResponseSuccess: (state, action) => {
+    createResponseSuccess: (state, action) => {
       state.loading = false;
       state.status = action.payload.status;
-      state.data = [action.payload.data, ...state.data];
-      state.count = state.data.length;
+      state.data = [action.payload.data, ...state.data]; // Append new item
+      state.count = state.data.length; // Update count based on the new data length
     },
-    createcategoryResponseFail: (state, action) => {
+
+    createResponseFail: (state, action) => {
       state.loading = false;
       state.status = action.payload.status;
       state.count = action.payload.count;
@@ -52,24 +50,36 @@ export const categorySlice = createSlice({
       state.loading = false;
       state.status = action.payload.status;
     },
-    // Edit
-    editcategoryResponseSuccess: (state, action) => {
+    // edit
+    updateResponseSuccess: (state, action) => {
+      const index = state.data.findIndex(
+        (item) => item._id === action.payload.data._id
+      );
+
+      if (index !== -1) {
+        const updatedItem = { ...state.data[index], ...action.payload.data };
+
+        state.data[index] = updatedItem;
+      } else {
+        console.warn(`Item with id } not found in state.data`);
+      }
+
       state.loading = false;
       state.status = action.payload.status;
     },
 
-    editcategoryResponseFail: (state, action) => {
+    updateResponseFail: (state, action) => {
       state.loading = false;
       state.status = action.payload.status;
     },
     // Delete
-    deletecategoryResponseSuccess: (state, action) => {
+    deleteResponseSuccess: (state, action) => {
       state.loading = false;
       state.data = state.data.filter((item) => item._id !== action.payload.id);
       state.status = action.payload.status;
       state.count -= 1;
     },
-    deletecategoryResponseFail: (state, action) => {
+    deleteResponseFail: (state, action) => {
       state.loading = false;
       state.status = action.payload.status;
     },
@@ -80,30 +90,28 @@ export const {
   request,
   listResponseSuccess,
   listResponseFail,
-  createcategoryResponseSuccess,
-  createcategoryResponseFail,
-  deletecategoryResponseSuccess,
-  deletecategoryResponseFail,
-  editcategoryResponseFail,
-  editcategoryResponseSuccess,
+  createResponseSuccess,
+  createResponseFail,
+  deleteResponseSuccess,
+  deleteResponseFail,
+  updateResponseFail,
+  updateResponseSuccess,
   getByIdResponseFail,
   getByIdResponseSuccess,
-} = categorySlice.actions;
+} = apiMangementSlice.actions;
 
-export const categoryReducer = categorySlice.reducer;
+export const apiListReducer = apiMangementSlice.reducer;
 
-// Fetch API Group List
-export const categoryAction = () => async (dispatch) => {
+// Fetch API List
+export const apiListAction = () => async (dispatch) => {
   try {
-    dispatch(request());
     const token = getLocalStorage("authToken");
     const res = await axios.get(
-      `${process.env.REACT_APP_Base_WEB_URL}/category`,
+      backendAPIList.apiManagement,
       {
         headers: { Authorization: `Bearer ${token}` },
       }
     );
-
     const { status, data, count } = res.data;
     if (status === "ok") {
       dispatch(listResponseSuccess({ data, status, count }));
@@ -117,14 +125,12 @@ export const categoryAction = () => async (dispatch) => {
     toast.error(payload.message);
   }
 };
-
 // Fetch API By ID
 export const getByIdAPIAction = (id) => async (dispatch) => {
   try {
-    dispatch(request());
     const token = getLocalStorage("authToken");
     const res = await axios.get(
-      `${process.env.REACT_APP_Base_WEB_URL}/category/${id}`,
+      `${backendAPIList.apiManagement}/${id}`,
       {
         headers: { Authorization: `Bearer ${token}` },
       }
@@ -144,14 +150,13 @@ export const getByIdAPIAction = (id) => async (dispatch) => {
     toast.error(payload.message);
   }
 };
-// Add API Group
-export const addcategoryAction = (formData) => async (dispatch) => {
+
+// Add API
+export const addApiGroupAction = (formData) => async (dispatch) => {
   try {
-    console.log(formData, ">>>>>>>>>");
-    dispatch(request());
     const token = getLocalStorage("authToken");
     const res = await axios.post(
-      `${process.env.REACT_APP_Base_WEB_URL}/category`,
+      `${backendAPIList.apiManagement}`,
       formData,
       {
         headers: { Authorization: `Bearer ${token}` },
@@ -161,27 +166,26 @@ export const addcategoryAction = (formData) => async (dispatch) => {
     const { status, data } = res.data;
     if (status === "ok") {
       toast.success("Created Successfully!");
-      dispatch(createcategoryResponseSuccess({ status, data }));
+      dispatch(createResponseSuccess({ status, data }));
     } else {
-      dispatch(createcategoryResponseFail({ status: 400 }));
+      dispatch(createResponseFail({ status: 400 }));
+      // toast.error(message);
     }
   } catch (error) {
     const payload = {
       message: error?.response?.data?.message || "An error occurred",
       status: error?.response?.status || 500,
     };
-    dispatch(createcategoryResponseFail(payload));
+    dispatch(createResponseFail(payload));
     toast.error(payload.message);
   }
 };
-
-// Update API Group
-export const updatecategoryAction = (id, formData) => async (dispatch) => {
+// update API
+export const updateApiAction = (id, formData) => async (dispatch) => {
   try {
-    dispatch(request());
     const token = getLocalStorage("authToken");
     const res = await axios.put(
-      `${process.env.REACT_APP_Base_WEB_URL}/category/${id}`,
+      `${backendAPIList.apiManagement}/${id}`,
       formData,
       {
         headers: { Authorization: `Bearer ${token}` },
@@ -191,9 +195,9 @@ export const updatecategoryAction = (id, formData) => async (dispatch) => {
     const { status, message, data } = res.data;
     if (status === "ok") {
       toast.success("Updated Successfully!");
-      dispatch(editcategoryResponseSuccess({ status, data }));
+      dispatch(updateResponseSuccess({ status, data }));
     } else {
-      dispatch(editcategoryResponseFail({ status: 400 }));
+      dispatch(updateResponseFail({ status: 400 }));
       toast.error(message);
     }
   } catch (error) {
@@ -201,18 +205,17 @@ export const updatecategoryAction = (id, formData) => async (dispatch) => {
       message: error?.response?.data?.message || "An error occurred",
       status: error?.response?.status || 500,
     };
-    dispatch(editcategoryResponseFail(payload));
+    dispatch(createResponseFail(payload));
     toast.error(payload.message);
   }
 };
 
-// Delete API Group
-export const deletecategoryAction = (id) => async (dispatch) => {
+// Delete API
+export const deleteApiAction = (id) => async (dispatch) => {
   try {
-    dispatch(request());
     const token = getLocalStorage("authToken");
     const res = await axios.delete(
-      `${process.env.REACT_APP_Base_WEB_URL}/category/${id}`,
+      `${backendAPIList.apiManagement}/${id}`,
       {
         headers: { Authorization: `Bearer ${token}` },
       }
@@ -220,7 +223,7 @@ export const deletecategoryAction = (id) => async (dispatch) => {
 
     const { status, message } = res.data;
     if (status === "ok") {
-      dispatch(deletecategoryResponseSuccess({ id, status }));
+      dispatch(deleteResponseSuccess({ id, status }));
       toast.success(message);
     }
   } catch (error) {
@@ -228,7 +231,7 @@ export const deletecategoryAction = (id) => async (dispatch) => {
       message: error?.response?.data?.message || "An error occurred",
       status: error?.response?.status || 500,
     };
-    dispatch(deletecategoryResponseFail(payload));
+    dispatch(deleteResponseFail(payload));
     toast.error(payload.message);
   }
 };

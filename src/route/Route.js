@@ -17,8 +17,8 @@ import MerchantRisk from "../pages/UseCase/MerchantRisk";
 import OnlineReputation from "../pages/UseCase/OnlineReputation";
 import PublishingAdvertising from "../pages/UseCase/PublishingAdvertising";
 import SALESINTELLIGENCE from "../pages/UseCase/SALESINTELLIGENCE";
-import Form from "../pages/apiList/Form";
-import ApiList from "../pages/apiList/List";
+import Form from "../pages/API_Management/Form";
+import ApiList from "../pages/API_Management/List";
 import ForgotPassword from "../pages/auth/ForgotPassword";
 import Login from "../pages/auth/Login";
 import Register from "../pages/auth/Register";
@@ -27,19 +27,19 @@ import BatchEnrichment from "../pages/batch-enrichment/BatchEnrichment";
 import Dashboard from "../pages/dashboard/Dashboard";
 import Documentation from "../pages/documentation/Documentation";
 import ApiGroup from "../pages/groupApi/ApiGroup";
-import GroupApiForm from "../pages/category/GroupApiForm";
+import GroupApiForm from "../pages/API_Group_Management/GroupApiForm";
 import PrivateRoute from "../pages/layout/ProctedRoutes";
 import Plans from "../pages/plans/Plans";
 import Settings from "../pages/settings/Settings";
 import GroupApiView from "../pages/groupApi/GroupApiView";
-import ApiListView from "../pages/apiList/ApiListView";
+import ApiListView from "../pages/API_Management/Details";
 import ClientManagement from "../pages/clientmanagement/List";
 import ClientDetails from "../pages/clientmanagement/Details";
 import Transaction from "../pages/transaction/Transaction";
 import Batch from "../pages/batch/Batch";
-import CategoryView from "../pages/category/CategoryView";
-import CategoryList from "../pages/category/CategoryList";
-import CategoryForm from "../pages/category/CategoryForm";
+import APIGroupDetails from "../pages/API_Group_Management/Details";
+import APIGroupList from "../pages/API_Group_Management/List";
+import APIGroupForm from "../pages/API_Group_Management/Form";
 
 function RoutesPage() {
   return (
@@ -114,10 +114,10 @@ function RoutesPage() {
             <Route path="/api-group/edit/:id" element={<GroupApiForm />} />
             {/* ////// */}
             {/* //////// */}
-            <Route path="/category" element={<CategoryList />} />
-            <Route path="/category/create" element={<CategoryForm />} />
-            <Route path="/category/:id" element={<CategoryView />} />
-            <Route path="/category/edit/:id" element={<CategoryForm />} />
+            <Route path="/category" element={<APIGroupList />} />
+            <Route path="/category/create" element={<APIGroupForm />} />
+            <Route path="/category/:id" element={<APIGroupDetails />} />
+            <Route path="/category/edit/:id" element={<APIGroupForm />} />
             {/* ////// */}
             <Route path="/clients" element={<ClientManagement />} />
             <Route path="/transaction" element={<Transaction />} />

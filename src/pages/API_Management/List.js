@@ -2,19 +2,17 @@ import React, { useEffect } from "react";
 import { Button, Col, Row } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import {
-  categoryAction,
-  deletecategoryAction,
-} from "../../store/categorySlice";
+import { apiListAction, deleteApiAction } from "../../store/apiManagementSlice";
 
-function CategoryList() {
+function ApiList() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { data, loading, count } = useSelector((state) => state.category);
+  const { data, loading, count } = useSelector((state) => state.apiManagement);
+  console.log(data,loading,count)
   useEffect(() => {
-    dispatch(categoryAction());
-  }, [dispatch]);
-
+      dispatch(apiListAction());
+  }, []);
+  
   return (
     <div>
       {loading ? (
@@ -26,40 +24,48 @@ function CategoryList() {
       ) : (
         <div>
           <div className="d-flex justify-content-between align-items-center">
-            <h3>API Group</h3>
+            <h3>API List</h3>
             <Button
-              onClick={() => navigate("/category/create")}
+              onClick={() => navigate("/api-list/create")}
               variant="primary"
               className="fw-bold"
             >
-              Add group
+              Add API
             </Button>
           </div>
           {count}
           <Row className="mt-4">
-            {data &&
+            {!data.length ? (
+              <div>No data</div>
+            ) : (
               data.map((item, i) => (
                 <Col key={i} xs={12} sm={6} md={4} lg={3} className="mb-4">
                   <div className="bg-info p-2 rounded-3 h-100">
-                    <div onClick={() => navigate(`/category/${item._id}`)}>
-                      <h6>{item.category_name}</h6>
-                      <p className="line-clamp">{item.description}</p>
+                    <div
+                      style={{ cursor: "pointer" }}
+                      onClick={() => navigate(`/api-list/${item._id}`)}
+                    >
+                      <h6>{item.apiname}</h6>
+                      <p className="line-clamp">{item.des}</p>
+                      <p><b>₹{item.pricing  }</b> per request</p>
                     </div>
-                    <div className="mt-3 " style={{ zIndex: 10 }}>
+                    <div className="mt-3 btn-toolbar">
                       <Button
-                        onClick={() => dispatch(deletecategoryAction(item._id))}
+                        onClick={() => dispatch(deleteApiAction(item._id))}
+                        className="ml-5"
                       >
                         Delete
                       </Button>
                       <Button
-                        onClick={() => navigate(`/category/edit/${item._id}`)}
+                        onClick={() => navigate(`/api-list/edit/${item._id}`)}
                       >
                         Edit
                       </Button>
                     </div>
                   </div>
                 </Col>
-              ))}
+              ))
+            )}
           </Row>
         </div>
       )}
@@ -67,4 +73,4 @@ function CategoryList() {
   );
 }
 
-export default CategoryList;
+export default ApiList;

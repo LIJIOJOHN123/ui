@@ -3,12 +3,13 @@ import { Form as BootstrapForm, Button, Col, Row } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import Select from "react-select";
-import { apiListAction } from "../../store/apiSlice";
+import { apiListAction } from "../../store/apiManagementSlice";
 import {
-  addcategoryAction,
   getByIdAPIAction,
-  updatecategoryAction,
-} from "../../store/categorySlice";
+  addApiGroupAction,
+  updateApiGroupAction
+} from "../../store/apiGroupManagementSlice";
+import {  } from "../../store/groupSlice";
 
 function CategoryForm() {
   const navigate = useNavigate();
@@ -17,7 +18,7 @@ function CategoryForm() {
 
   const [selectedValues, setSelectedValues] = useState([]);
   const [formData, setFormData] = useState({
-    category_name: "",
+    name: "",
     description: "",
     fields: [""],
     field_active: false,
@@ -25,12 +26,12 @@ function CategoryForm() {
   });
   const [error, setError] = useState(false);
 
-  const { loading, status, dataById } = useSelector((state) => state.category);
-  const { data: apiData } = useSelector((state) => state.apiList);
-  console.log(formData.field_active, dataById);
+  const { loading, status, dataById } = useSelector((state) => state.apiGroupManagement);
+  const { data: apiData } = useSelector((state) => state.apiManagement);
+  console.log(apiData);
   useEffect(() => {
     if (id) dispatch(getByIdAPIAction(id));
-  }, [id, dispatch]);
+  }, [id]);
 
   const filteredData = apiData.filter((item) =>
     dataById?.apiId?.includes(item._id)
@@ -38,7 +39,7 @@ function CategoryForm() {
   useEffect(() => {
     if (id && dataById) {
       setFormData({
-        category_name: dataById.category_name || "",
+        name: dataById.name || "",
         description: dataById.description || "",
         fields: !dataById.fields?.length
           ? [""]
@@ -92,15 +93,15 @@ function CategoryForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.category_name) {
+    if (!formData.name) {
       setError(true);
       return;
     }
 
     if (id) {
-      dispatch(updatecategoryAction(id, formData));
+      dispatch(updateApiGroupAction(id, formData));
     } else {
-      dispatch(addcategoryAction(formData));
+      dispatch(addApiGroupAction(formData));
     }
     if (status === "ok") navigate("/category");
   };
@@ -125,11 +126,11 @@ function CategoryForm() {
             <BootstrapForm.Control
               type="text"
               placeholder="Enter category name"
-              name="category_name"
-              value={formData.category_name}
+              name="name"
+              value={formData.name}
               onChange={handleInputChange}
               required
-              isInvalid={error && !formData.category_name}
+              isInvalid={error && !formData.name}
             />
             <BootstrapForm.Control.Feedback type="invalid">
               Category name is required.

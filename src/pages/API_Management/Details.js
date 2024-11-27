@@ -3,17 +3,17 @@ import React, { useEffect, useState } from "react";
 import { Button, Col, Form } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { getByIdAPIAction } from "../../store/apiSlice";
+import { getByIdAPIAction } from "../../store/apiManagementSlice";
 import {
   addAPIBatchingAction,
   apiBatchingAction,
   uploadCSVFileAPIBatchingAction,
 } from "../../store/api_Batching";
 import { CSVLink } from "react-csv";
-function ApiListView() {
+function APIDetails() {
   const { id } = useParams();
   const dispatch = useDispatch();
-  const { dataById, loading } = useSelector((state) => state.apiList);
+  const { dataById, loading } = useSelector((state) => state.apiManagement);
   const {
     data: api,
     loading: apiloading,
@@ -259,4 +259,4 @@ function ApiListView() {
   );
 }
 
-export default ApiListView;
+export default APIDetails;
