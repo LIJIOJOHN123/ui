@@ -9,6 +9,9 @@ const apiListInitialState = {
   status: null,
   count: null,
   dataById: {},
+  page:1,
+  search:"",
+  limit:50
 };
 
 // Get ALL apiList slice
@@ -59,7 +62,6 @@ export const clientManagementSlice = createSlice({
 });
 
 export const {
-  request,
   clientManagementActionResponseSuccess,
   clientManagementResponseFail,
   createResponseSuccess,

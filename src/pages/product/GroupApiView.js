@@ -1,11 +1,13 @@
 import React from 'react';
-const APIGroupDetails = () => {
-  return (
-    <p>I am group api group page</p>
-    );
+const AddProduct = () => {
+  return ( 
+    <>
+    I am from product 
+    </>
+   );
 }
  
-export default APIGroupDetails;
+export default AddProduct;
 // import React, { useEffect } from "react";
 // import { Button, Col, Row } from "react-bootstrap";
 // import { useDispatch, useSelector } from "react-redux";
@@ -33,7 +35,7 @@ export default APIGroupDetails;
 //         </div>
 //       ) : (
 //         <div>
-//           {/* <div className="d-flex justify-content-between align-items-center">
+//           <div className="d-flex justify-content-between align-items-center">
 //             <h3>Products</h3>
 //             <Button
 //               onClick={() => navigate(`/api-group/create/${id}`)}
@@ -42,7 +44,7 @@ export default APIGroupDetails;
 //             >
 //               Add Product
 //             </Button>
-//           </div> */}
+//           </div>
 //           {/* {count} */}
 //           <Row className="mt-4">
 //             {dataById.length &&

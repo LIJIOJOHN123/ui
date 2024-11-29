@@ -25,7 +25,7 @@ function ApiGroup() {
           <div className="d-flex justify-content-between align-items-center">
             <h3>Products</h3>
             <Button
-              onClick={() => navigate("/api-group/create")}
+              onClick={() => navigate("/products/create")}
               variant="primary"
               className="fw-bold"
             >
@@ -38,7 +38,7 @@ function ApiGroup() {
               data.map((item, i) => (
                 <Col key={i} xs={12} sm={6} md={4} lg={3} className="mb-4">
                   <div className="bg-info p-2 rounded-3 h-100">
-                    <div onClick={() => navigate(`/api-group/${item._id}`)}>
+                    <div onClick={() => navigate(`/products/create`)}>
                       <h6>{item.name}</h6>
                       <p className="line-clamp">{item.des}</p>
 

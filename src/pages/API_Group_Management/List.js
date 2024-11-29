@@ -27,7 +27,7 @@ function APIGroupList() {
           <div className="d-flex justify-content-between align-items-center">
             <h3>API Group</h3>
             <Button
-              onClick={() => navigate("/category/create")}
+              onClick={() => navigate("/api-groups/create")}
               variant="primary"
               className="fw-bold"
             >
@@ -40,7 +40,7 @@ function APIGroupList() {
               data.map((item, i) => (
                 <Col key={i} xs={12} sm={6} md={4} lg={3} className="mb-4">
                   <div className="bg-info p-2 rounded-3 h-100">
-                    <div onClick={() => navigate(`/category/${item._id}`)}>
+                    <div onClick={() => navigate(`/api-groups/${item._id}`)}>
                       <h6>{item.name}</h6>
                       <p className="line-clamp">{item.description}</p>
                     </div>
