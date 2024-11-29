@@ -31,7 +31,7 @@ import GroupApiForm from "../pages/product/Form";
 import PrivateRoute from "../pages/layout/ProctedRoutes";
 import Plans from "../pages/plans/Plans";
 import Settings from "../pages/settings/Settings";
-import GroupApiView from "../pages/product/GroupApiView";
+import GroupApiView from "../pages/product/Details";
 import ApiListView from "../pages/API_Management/Details";
 import ClientManagement from "../pages/clientmanagement/List";
 import ClientDetails from "../pages/clientmanagement/Details";
@@ -88,7 +88,7 @@ function RoutesPage() {
         <Route path="/blog" element={<BlogPage />} />
         <Route path="/contact-us" element={<ContactUs />} />
 
-        <Route path="/auth">
+        <Route path="auth">
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
           <Route path="forgot-password" element={<ForgotPassword />} />
@@ -104,25 +104,25 @@ function RoutesPage() {
             <Route path="api-list" element={<ApiList />} />
             <Route path="api-list/:id" element={<ApiListView />} />
             <Route path="api-list/create" element={<Form />} />
-            <Route path="/api-list/edit/:id" element={<Form />} />
+            <Route path="api-list/edit/:id" element={<Form />} />
             {/* ////// */}
 
             {/* //////// */}
             <Route path="products" element={<ApiGroup />} />
             <Route path="products/create" element={<GroupApiForm />} />
             <Route path="products/:id" element={<GroupApiView />} />
-            <Route path="/products/edit/:id" element={<GroupApiForm />} />
+            <Route path="products/edit/:id" element={<GroupApiForm />} />
             {/* ////// */}
             {/* //////// */}
-            <Route path="/api-groups" element={<APIGroupList />} />
-            <Route path="/api-groups/create" element={<APIGroupForm />} />
-            <Route path="/api-groups/:id" element={<APIGroupDetails />} />
-            <Route path="/api-groups/edit/:id" element={<APIGroupForm />} />
+            <Route path="api-groups" element={<APIGroupList />} />
+            <Route path="api-groups/create" element={<APIGroupForm />} />
+            <Route path="api-groups/:id" element={<APIGroupDetails />} />
+            <Route path="api-groups/edit/:id" element={<APIGroupForm />} />
             {/* ////// */}
-            <Route path="/clients" element={<ClientManagement />} />
-            <Route path="/transaction" element={<Transaction />} />
-            <Route path="/batch" element={<Batch />} />
-            <Route path="/client/:id" element={<ClientDetails />} />
+            <Route path="clients" element={<ClientManagement />} />
+            <Route path="transaction" element={<Transaction />} />
+            <Route path="batch" element={<Batch />} />
+            <Route path="client/:id" element={<ClientDetails />} />
             <Route path="documentation" element={<Documentation />} />
             <Route path="plans" element={<Plans />} />
             <Route path="settings" element={<Settings />} />
