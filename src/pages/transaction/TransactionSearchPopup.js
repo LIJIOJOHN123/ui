@@ -11,6 +11,8 @@ function TransactionSearchPopup({ setSearchQueries }) {
     type: "",
     amount: "",
     mode: "",
+    createdAtFrom: "",
+    createdAtTo: "",
   });
 
   const handleClose = () => {
@@ -19,6 +21,8 @@ function TransactionSearchPopup({ setSearchQueries }) {
       type: "",
       amount: "",
       mode: "",
+      createdAtFrom: "",
+      createdAtTo: "",
     });
   };
 
@@ -41,7 +45,6 @@ function TransactionSearchPopup({ setSearchQueries }) {
       <Button variant="primary" onClick={handleShow}>
         <i className="bi bi-search me-2"></i> Search
       </Button>
-      
 
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
@@ -85,8 +88,31 @@ function TransactionSearchPopup({ setSearchQueries }) {
                 <option value="">Select Mode</option>
                 <option value="ONLINE">ONLINE</option>
                 <option value="CBZERO">CBZERO</option>
-                {/* <option value="API USAGE">API USAGE</option> */}
               </Form.Control>
+            </InputGroup>
+
+            {/* Created At From Input */}
+            <InputGroup className="mb-3">
+              <InputGroup.Text>Start Date</InputGroup.Text>
+              <Form.Control
+                type="date"
+                value={tempSearchQueries.createdAtFrom}
+                onChange={(e) =>
+                  handleInputChange("createdAtFrom", e.target.value)
+                }
+              />
+            </InputGroup>
+
+            {/* Created At To Input */}
+            <InputGroup className="mb-3">
+              <InputGroup.Text>End Date</InputGroup.Text>
+              <Form.Control
+                type="date"
+                value={tempSearchQueries.createdAtTo}
+                onChange={(e) =>
+                  handleInputChange("createdAtTo", e.target.value)
+                }
+              />
             </InputGroup>
           </Form>
         </Modal.Body>
