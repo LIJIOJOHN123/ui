@@ -103,7 +103,7 @@ function CategoryForm() {
     } else {
       dispatch(addApiGroupAction(formData));
     }
-    if (status === "ok") navigate("/category");
+    if (status === "ok") navigate("/api-groups");
   };
 
   const options = apiData?.map((item) => ({
@@ -114,18 +114,18 @@ function CategoryForm() {
   return (
     <div>
       <div className="d-flex justify-content-between">
-        <h4>{id ? "Edit Category" : "Create Category"}</h4>
-        <Button onClick={() => navigate("/category")} className="fw-bold">
+        <h4>{id ? "Edit API Group" : "Create API Group"}</h4>
+        <Button onClick={() => navigate("/api-groups")} className="fw-bold">
           Back
         </Button>
       </div>
       <div className="mt-4 bg-body-secondary rounded-2 p-3">
         <BootstrapForm onSubmit={handleSubmit}>
           <BootstrapForm.Group controlId="formCategoryName">
-            <BootstrapForm.Label>Category Name</BootstrapForm.Label>
+            <BootstrapForm.Label>Name</BootstrapForm.Label>
             <BootstrapForm.Control
               type="text"
-              placeholder="Enter category name"
+              placeholder="Enter API group name"
               name="name"
               value={formData.name}
               onChange={handleInputChange}
@@ -133,7 +133,7 @@ function CategoryForm() {
               isInvalid={error && !formData.name}
             />
             <BootstrapForm.Control.Feedback type="invalid">
-              Category name is required.
+              Name is required.
             </BootstrapForm.Control.Feedback>
           </BootstrapForm.Group>
 

@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import { getLocalStorage } from "../utils/LocalStorage";
 import backendAPIList from "../services/apiList";
 
-const apiGroupInitialState = {
+const productInitialState = {
   loading: true,
   data: [],
   status: null,
@@ -13,9 +13,9 @@ const apiGroupInitialState = {
 };
 
 // Create API Group slice
-export const apiGroupSlice = createSlice({
+export const productSlice = createSlice({
   name: "product_management",
-  initialState: apiGroupInitialState,
+  initialState: productInitialState,
   reducers: {
 
     // List
@@ -30,7 +30,7 @@ export const apiGroupSlice = createSlice({
       state.status = action.payload.status;
     },
     // Add
-    createAPIGroupResponseSuccess: (state, action) => {
+    createproductResponseSuccess: (state, action) => {
       state.loading = false;
       state.status = action.payload.status;
       state.data = [action.payload.data, ...state.data];
@@ -78,20 +78,20 @@ export const {
   request,
   listResponseSuccess,
   listResponseFail,
-  createAPIGroupResponseSuccess,
-  createAPIGroupResponseFail,
-  deleteAPIGroupResponseSuccess,
-  deleteAPIGroupResponseFail,
-  editAPIGroupResponseFail,
-  editAPIGroupResponseSuccess,
+  createproductResponseSuccess,
+  createproductResponseFail,
+  deleteproductResponseSuccess,
+  deleteproductResponseFail,
+  editproductResponseFail,
+  editproductResponseSuccess,
   getByIdResponseFail,
   getByIdResponseSuccess,
-} = apiGroupSlice.actions;
+} = productSlice.actions;
 
-export const apiGroupReducer = apiGroupSlice.reducer;
+export const productReducer = productSlice.reducer;
 
 // Fetch API Group List
-export const apiGroupAction = () => async (dispatch) => {
+export const productAction = () => async (dispatch) => {
   try {
     const token = getLocalStorage("authToken");
     const res = await axios.get(
@@ -141,7 +141,7 @@ export const getByIdAPIAction = (id) => async (dispatch) => {
   }
 };
 // Add API Group
-export const addAPIGroupAction = (id, formData) => async (dispatch) => {
+export const addproductAction = (id, formData) => async (dispatch) => {
   try {
     const token = getLocalStorage("authToken");
     const res = await axios.post(
@@ -155,22 +155,22 @@ export const addAPIGroupAction = (id, formData) => async (dispatch) => {
     const { status, data } = res.data;
     if (status === "ok") {
       toast.success("Created Successfully!");
-      dispatch(createAPIGroupResponseSuccess({ status, data }));
+      dispatch(createproductResponseSuccess({ status, data }));
     } else {
-      dispatch(createAPIGroupResponseFail({ status: 400 }));
+      dispatch(createproductResponseFail({ status: 400 }));
     }
   } catch (error) {
     const payload = {
       message: error?.response?.data?.message || "An error occurred",
       status: error?.response?.status || 500,
     };
-    dispatch(createAPIGroupResponseFail(payload));
+    dispatch(createproductResponseFail(payload));
     toast.error(payload.message);
   }
 };
 
 // Update API Group
-export const updateAPIGroupAction = (id, formData) => async (dispatch) => {
+export const updateproductAction = (id, formData) => async (dispatch) => {
   try {
     const token = getLocalStorage("authToken");
     const res = await axios.put(
@@ -184,9 +184,9 @@ export const updateAPIGroupAction = (id, formData) => async (dispatch) => {
     const { status, message, data } = res.data;
     if (status === "ok") {
       toast.success("Updated Successfully!");
-      dispatch(editAPIGroupResponseSuccess({ status, data }));
+      dispatch(editproductResponseSuccess({ status, data }));
     } else {
-      dispatch(editAPIGroupResponseFail({ status: 400 }));
+      dispatch(editproductResponseFail({ status: 400 }));
       toast.error(message);
     }
   } catch (error) {
@@ -194,13 +194,13 @@ export const updateAPIGroupAction = (id, formData) => async (dispatch) => {
       message: error?.response?.data?.message || "An error occurred",
       status: error?.response?.status || 500,
     };
-    dispatch(editAPIGroupResponseFail(payload));
+    dispatch(editproductResponseFail(payload));
     toast.error(payload.message);
   }
 };
 
 // Delete API Group
-export const deleteAPIGroupAction = (id) => async (dispatch) => {
+export const deleteproductAction = (id) => async (dispatch) => {
   try {
     const token = getLocalStorage("authToken");
     const res = await axios.delete(
@@ -212,7 +212,7 @@ export const deleteAPIGroupAction = (id) => async (dispatch) => {
 
     const { status, message } = res.data;
     if (status === "ok") {
-      dispatch(deleteAPIGroupResponseSuccess({ id, status }));
+      dispatch(deleteproductResponseSuccess({ id, status }));
       toast.success(message);
     }
   } catch (error) {
@@ -220,7 +220,7 @@ export const deleteAPIGroupAction = (id) => async (dispatch) => {
       message: error?.response?.data?.message || "An error occurred",
       status: error?.response?.status || 500,
     };
-    dispatch(deleteAPIGroupResponseFail(payload));
+    dispatch(deleteproductResponseFail(payload));
     toast.error(payload.message);
   }
 };

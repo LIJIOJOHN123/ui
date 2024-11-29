@@ -2,14 +2,14 @@ import React, { useEffect } from "react";
 import { Button, Col, Row } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { apiGroupAction, deleteAPIGroupAction } from "../../store/productManagementSlice";
+import {  deleteproductAction, productAction } from "../../store/productManagementSlice";
 
 function ApiGroup() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { data, loading, count } = useSelector((state) => state.groupApi);
+  const { data, loading, count } = useSelector((state) => state.productManagement);
   useEffect(() => {
-    dispatch(apiGroupAction());
+    dispatch(productAction());
   }, [dispatch]);
 
   return (
@@ -29,7 +29,7 @@ function ApiGroup() {
               variant="primary"
               className="fw-bold"
             >
-              Add API Group
+              Add a product
             </Button>
           </div>
           {count}
@@ -38,14 +38,14 @@ function ApiGroup() {
               data.map((item, i) => (
                 <Col key={i} xs={12} sm={6} md={4} lg={3} className="mb-4">
                   <div className="bg-info p-2 rounded-3 h-100">
-                    <div onClick={() => navigate(`/products/create`)}>
+                    <div onClick={() => navigate(`/products/${item._id}`)}>
                       <h6>{item.name}</h6>
                       <p className="line-clamp">{item.des}</p>
 
                     </div>
                     <div className="mt-3 " style={{ zIndex: 10 }}>
                       <Button
-                        onClick={() => dispatch(deleteAPIGroupAction(item._id))}
+                        onClick={() => dispatch(deleteproductAction(item._id))}
                       >
                         Delete
                       </Button>
