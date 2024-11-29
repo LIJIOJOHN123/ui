@@ -9,7 +9,7 @@ import {
 
 const authInitialState = {
   isAuthenticated: false,
-  loading: false,
+  loading: true,
   user: JSON.parse(getLocalStorage("user")),
   status: null,
   token: getLocalStorage("authToken"),
@@ -20,9 +20,6 @@ export const authSlice = createSlice({
   name: "auth",
   initialState: authInitialState,
   reducers: {
-    requestStart: (state) => {
-      state.loading = true;
-    },
     requestSuccess: (state, action) => {
       if(action.payload.token){
         setLocalStorage("authToken", action.payload.token);
@@ -39,6 +36,7 @@ export const authSlice = createSlice({
       state.status = action.payload.status;
       state.token = removeLocalStorage("authToken");
       state.user = removeLocalStorage("user");
+      state.isAuthenticated = false;
     },
     logOut: (state) => {
       state.isAuthenticated = false;
@@ -50,14 +48,13 @@ export const authSlice = createSlice({
   },
 });
 
-export const { requestStart, requestSuccess, requestFail, logOut } =
+export const { requestSuccess, requestFail, logOut } =
   authSlice.actions;
 
 export const authReducer = authSlice.reducer;
 
 // Authentication Actions
-export const registerAction = (formData) => async (dispatch) => {
-  dispatch(requestStart());
+export const registerAction = (formData) => async (dispatch) => {;
   try {
     const res = await axios.post(
       `${process.env.REACT_APP_Base_URL}/clients/save-validx-client`,
@@ -80,7 +77,6 @@ export const registerAction = (formData) => async (dispatch) => {
 };
 
 export const loginAction = (formData) => async (dispatch) => {
-  dispatch(requestStart());
   try {
     const res = await axios.post(
       `${process.env.REACT_APP_Base_URL}/user/login`,
@@ -104,7 +100,6 @@ export const loginAction = (formData) => async (dispatch) => {
 
 // Google OAuth Action
 export const googleOAuthLoginAction = (token) => async (dispatch) => {
-  dispatch(requestStart());
   try {
     const res = await axios.post(
       `${process.env.REACT_APP_Base_URL}/user/oauth`,
@@ -134,7 +129,6 @@ export const googleOAuthLoginAction = (token) => async (dispatch) => {
 
 // Current User Action
 export const currentUserAction = () => async (dispatch) => {
-  dispatch(requestStart());
   try {
     const token = getLocalStorage("authToken");
     const res = await axios.get(
@@ -158,7 +152,6 @@ export const currentUserAction = () => async (dispatch) => {
 
 // Password Actions
 export const forgotPasswordAction = (formData) => async (dispatch) => {
-  dispatch(requestStart());
   try {
     const res = await axios.put(
       `${process.env.REACT_APP_Base_URL}/user/forgotPassword`,
@@ -185,7 +178,6 @@ export const forgotPasswordAction = (formData) => async (dispatch) => {
 };
 
 export const resetPasswordAction = (formData) => async (dispatch) => {
-  dispatch(requestStart());
   try {
     const res = await axios.put(
       `${process.env.REACT_APP_Base_URL}/user/resetPassword`,
@@ -215,7 +207,6 @@ export const resetPasswordAction = (formData) => async (dispatch) => {
 
 // User Update Action
 export const updateUserAction = (formData) => async (dispatch) => {
-  dispatch(requestStart());
   try {
     const token = getLocalStorage("authToken");
     const res = await axios.put(
