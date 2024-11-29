@@ -32,8 +32,8 @@ function NavBar({ children }) {
     { label: "Dashboard", path: "/dashboard" },
     { label: "Documentation", path: "/documentation" },
     { label: "Api List", path: "/api-list" },
-    { label: "Api Group", path: "/category" },
-    { label: "Products", path: "/api-group" },
+    { label: "Api Group", path: "/api-groups" },
+    { label: "Products", path: "/products" },
     { label: "Transaction", path: "/transaction" },
     { label: "Clients", path: "/clients" },
     { label: "Batch", path: "/batch" },
@@ -110,11 +110,7 @@ function NavBar({ children }) {
             src="https://img.freepik.com/free-vector/illustration-businessman_53876-5856.jpg?w=740&t=st=1723811714~exp=1723812314~hmac=264cf4b222d991caf3459db719571b65cb1f5d98d462e1cb3aebd0bf5a4d2334"
             alt="Profile"
           />
-          {loading ? (
-            <div className="spinner-border" />
-          ) : (
-            <h5 className="mt-3">{user?.name}</h5>
-          )}
+       <h5 className="mt-3">{user?.name}</h5>
 
           <div className="w-100 mt-4 d-flex flex-column">
             {user?.role === "USER"

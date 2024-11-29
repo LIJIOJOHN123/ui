@@ -18,14 +18,13 @@ function Login() {
   const [error, setError] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { loading } = useSelector((state) => state.auth);
 
-  const tokenExist = getLocalStorage("authToken");
+  const {isAuthenticated} = useSelector(state=>state.auth)
   useEffect(() => {
-    if (tokenExist) {
+    if (isAuthenticated) {
       navigate("/dashboard");
     }
-  }, [tokenExist]);
+  }, [isAuthenticated]);
 
   const handleLoginSuccess = (credentialResponse) => {
     const { credential } = credentialResponse;
@@ -143,9 +142,9 @@ function Login() {
               style={{ backgroundColor: "#420394" }}
               className="w-100 py-3 mt-3"
               type="submit"
-              disabled={loading}
+              // disabled={loading}
             >
-              {loading ? <div className="spinner-border" /> : <div>Log In</div>}
+               <div>Log In</div>
             </Button>
             <div className="mt-2 text-center">
               Don’t have an account?{" "}

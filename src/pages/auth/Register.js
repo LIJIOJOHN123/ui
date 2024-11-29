@@ -41,14 +41,13 @@ function Register() {
     useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { loading } = useSelector((state) => state.auth);
 
-  const tokenExist = getLocalStorage("authToken");
+  const {isAuthenticated} = useSelector(state=>state.auth)
   useEffect(() => {
-    if (tokenExist) {
+    if (isAuthenticated) {
       navigate("/dashboard");
     }
-  }, [tokenExist, navigate]);
+  }, [isAuthenticated]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -179,9 +178,9 @@ function Register() {
                 type="submit"
                 style={{ backgroundColor: "#420394" }}
                 className="w-100 py-3"
-                disabled={!passwordIsMatch || loading}
+                disabled={!passwordIsMatch }
               >
-                {loading ? "Registering..." : "Register"}
+               Register
               </Button>
             </Form>
           </div>

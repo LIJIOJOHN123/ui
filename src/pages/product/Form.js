@@ -63,7 +63,7 @@ function GroupApiForm() {
       <div className="d-flex justify-content-between">
         <h4>Create Group</h4>
         {/* <h4>{id ? "Edit Group" : "Create Group"}</h4> */}
-        <Button onClick={() => navigate("/api-group")} className="fw-bold">
+        <Button onClick={() => navigate("/products")} className="fw-bold">
           Back
         </Button>
       </div>

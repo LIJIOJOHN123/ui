@@ -116,6 +116,7 @@ const ProfileTab = () => {
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
+                autocomplete="off"
               />
             </InputGroup>
           </Form.Group>
@@ -130,6 +131,7 @@ const ProfileTab = () => {
                 name="phone_number"
                 value={formData.phone_number}
                 onChange={handleChange}
+                autocomplete="off"
               />
             </InputGroup>
           </Form.Group>
@@ -144,6 +146,7 @@ const ProfileTab = () => {
                 name="company"
                 value={formData.company}
                 onChange={handleChange}
+                autocomplete="off"
               />
             </InputGroup>
           </Form.Group>
@@ -158,6 +161,7 @@ const ProfileTab = () => {
                 name="country"
                 value={formData.country}
                 onChange={handleChange}
+                autocomplete="off"
               />
             </InputGroup>
           </Form.Group>
@@ -172,6 +176,7 @@ const ProfileTab = () => {
                 name="website"
                 value={formData.website}
                 onChange={handleChange}
+                autocomplete="off"
               />
             </InputGroup>
           </Form.Group>
@@ -186,6 +191,7 @@ const ProfileTab = () => {
                 value={formData.oldpassword}
                 onChange={handleChange}
                 required
+                autocomplete="off"
               />
             </InputGroup>
           </Form.Group>
@@ -193,7 +199,7 @@ const ProfileTab = () => {
         {error && <p className="text-danger">{error}</p>}
       </Row>
       <Button type="submit">
-        {loading ? <div className="spinner-border " /> : <div>Submit</div>}
+      <div>Submit</div>
       </Button>
     </Form>
   );
@@ -273,6 +279,7 @@ const ChangeEmailTab = () => {
                 value={formData.newEmail}
                 onChange={handleChange}
                 required
+                autocomplete="off"
               />
             </InputGroup>
           </Form.Group>
@@ -287,6 +294,7 @@ const ChangeEmailTab = () => {
                 value={formData.oldpassword}
                 onChange={handleChange}
                 required
+                autocomplete="off"
               />
             </InputGroup>
           </Form.Group>
@@ -356,7 +364,9 @@ const ChangePasswordTab = () => {
                 value={formData.oldPassword}
                 onChange={handleChange}
                 required
+                autocomplete="off"
               />
+              
             </InputGroup>
           </Form.Group>
 
@@ -371,6 +381,7 @@ const ChangePasswordTab = () => {
                 value={formData.password}
                 onChange={handleChange}
                 required
+                autocomplete="off"
               />
             </InputGroup>
           </Form.Group>
