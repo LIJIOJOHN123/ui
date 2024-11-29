@@ -68,29 +68,31 @@ export const {
 export const transactionReducer = transactionSlice.reducer;
 
 // Fetch Transaction List
-export const transactionListAction = () => async (dispatch) => {
-  try {
-    const token = getLocalStorage("authToken");
-    const res = await axios.get(
-      `${process.env.REACT_APP_Base_URL}/transaction`,
-      {
-        headers: { Authorization: `Bearer ${token}` },
-      }
-    );
+export const transactionListAction =
+  (page = 1, limit = 5, searchQueries) =>
+  async (dispatch) => {
+    try {
+      const token = getLocalStorage("authToken");
+      const res = await axios.get(
+        `${process.env.REACT_APP_Base_URL}/transaction?page=${page}&limit=${limit}&${searchQueries}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
 
-    const { status, data, count } = res.data;
-    if (status === "ok") {
-      dispatch(transactionActionResponseSuccess({ data, status, count }));
+      const { status, data, count } = res.data;
+      if (status === "ok") {
+        dispatch(transactionActionResponseSuccess({ data, status, count }));
+      }
+    } catch (error) {
+      const payload = {
+        message: error?.response?.data?.message || "An error occurred",
+        status: error?.response?.status || 500,
+      };
+      dispatch(transactionResponseFail(payload));
+      toast.error(payload.message);
     }
-  } catch (error) {
-    const payload = {
-      message: error?.response?.data?.message || "An error occurred",
-      status: error?.response?.status || 500,
-    };
-    dispatch(transactionResponseFail(payload));
-    toast.error(payload.message);
-  }
-};
+  };
 
 // Fetch Transaction By ID
 export const getByIdTransactionAction = (id) => async (dispatch) => {
@@ -144,3 +146,17 @@ export const updateTransactionAction = (id, formData) => async (dispatch) => {
     toast.error(payload.message);
   }
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -2,18 +2,23 @@ import React, { useEffect } from "react";
 import { Button, Col, Row } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { planAction, deleteplanAction } from "../../store/planSlice";
+import { deleteplanAction, planAction } from "../../store/planSlice";
 
 function PlanList() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { data, loading, count } = useSelector((state) => state.plan);
+
+  // Extracting state from Redux
+  const { data = [], loading, count } = useSelector((state) => state.plan);
 
   useEffect(() => {
-    if (!data.length && !loading) {
+    // Fetch plans only if data is not already available and loading is false
+    if (!data?.length && !loading) {
       dispatch(planAction());
     }
-  }, [dispatch]);
+  }, [dispatch, data, loading]);
+
+  console.log(data);
 
   return (
     <div>
@@ -25,6 +30,7 @@ function PlanList() {
         </div>
       ) : (
         <div>
+          {/* Header Section */}
           <div className="d-flex justify-content-between align-items-center">
             <h3>Plans</h3>
             <Button
@@ -35,39 +41,40 @@ function PlanList() {
               Add Plans
             </Button>
           </div>
-          <p>Total Plans: {count}</p>
+          <p>Total Plans: {count || 0}</p>
+
+          {/* Plan List */}
           <Row className="mt-4">
-            {!data.length ? (
-              <div>No plans available</div>
+            {data.length === 0 ? (
+              <div>No data available</div>
             ) : (
-              data.map((item) => (
-                <Col
-                  key={item._id}
-                  xs={12}
-                  sm={6}
-                  md={4}
-                  lg={3}
-                  className="mb-4"
-                >
-                  <div className="bg-info p-3 rounded-3 h-100">
+              data.map((item, i) => (
+                <Col key={i} xs={12} sm={6} md={4} lg={3} className="mb-4">
+                  <div className="bg-info p-2 rounded-3 h-100">
+                    {/* Plan Details */}
                     <div
                       style={{ cursor: "pointer" }}
                       onClick={() => navigate(`/api-list/${item._id}`)}
                     >
                       <h6>{item.name}</h6>
-                      <p>{item.des}</p>
+                      <p className="line-clamp">{item.des}</p>
                       <b>${item.pricing}</b>
-                      {item.apiId?.map((field) => (
-                        <p key={field.apiId}>
-                          {field.apiId}: {field.discoutedPrice}
-                        </p>
-                      ))}
+                      <div>
+                        {item.apiId &&
+                          item.apiId.map((field, index) => (
+                            <p key={index}>
+                              {field.apiId}: {field.discoutedPrice}
+                            </p>
+                          ))}
+                      </div>
                     </div>
+
+                    {/* Action Buttons */}
                     <div className="mt-3">
                       <Button
                         variant="danger"
-                        className="me-2"
                         onClick={() => dispatch(deleteplanAction(item._id))}
+                        className="me-2"
                       >
                         Delete
                       </Button>

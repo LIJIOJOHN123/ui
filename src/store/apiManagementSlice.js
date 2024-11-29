@@ -10,6 +10,9 @@ const apiMangementIntiaiState = {
   status: null,
   count: null,
   dataById: {},
+  page: 1,
+  search: "",
+  limit: 2,
 };
 
 // Get ALL apiList slice
@@ -103,38 +106,37 @@ export const {
 export const apiListReducer = apiMangementSlice.reducer;
 
 // Fetch API List
-export const apiListAction = () => async (dispatch) => {
-  try {
-    const token = getLocalStorage("authToken");
-    const res = await axios.get(
-      backendAPIList.apiManagement,
-      {
-        headers: { Authorization: `Bearer ${token}` },
+export const apiListAction =
+  (page = 1, limit = 5, searchQueries) =>
+  async (dispatch) => {
+    try {
+      const token = getLocalStorage("authToken");
+      const res = await axios.get(
+        `${backendAPIList.apiManagement}?page=${page}&limit=${limit}&${searchQueries}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      const { status, data, count } = res.data;
+      if (status === "ok") {
+        dispatch(listResponseSuccess({ data, status, count }));
       }
-    );
-    const { status, data, count } = res.data;
-    if (status === "ok") {
-      dispatch(listResponseSuccess({ data, status, count }));
+    } catch (error) {
+      const payload = {
+        message: error?.response?.data?.message || "An error occurred",
+        status: error?.response?.status || 500,
+      };
+      dispatch(listResponseFail(payload));
+      toast.error(payload.message);
     }
-  } catch (error) {
-    const payload = {
-      message: error?.response?.data?.message || "An error occurred",
-      status: error?.response?.status || 500,
-    };
-    dispatch(listResponseFail(payload));
-    toast.error(payload.message);
-  }
-};
+  };
 // Fetch API By ID
 export const getByIdAPIAction = (id) => async (dispatch) => {
   try {
     const token = getLocalStorage("authToken");
-    const res = await axios.get(
-      `${backendAPIList.apiManagement}/${id}`,
-      {
-        headers: { Authorization: `Bearer ${token}` },
-      }
-    );
+    const res = await axios.get(`${backendAPIList.apiManagement}/${id}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
 
     const { status, data } = res.data;
 
@@ -155,13 +157,9 @@ export const getByIdAPIAction = (id) => async (dispatch) => {
 export const addApiGroupAction = (formData) => async (dispatch) => {
   try {
     const token = getLocalStorage("authToken");
-    const res = await axios.post(
-      `${backendAPIList.apiManagement}`,
-      formData,
-      {
-        headers: { Authorization: `Bearer ${token}` },
-      }
-    );
+    const res = await axios.post(`${backendAPIList.apiManagement}`, formData, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
 
     const { status, data } = res.data;
     if (status === "ok") {
@@ -214,12 +212,9 @@ export const updateApiAction = (id, formData) => async (dispatch) => {
 export const deleteApiAction = (id) => async (dispatch) => {
   try {
     const token = getLocalStorage("authToken");
-    const res = await axios.delete(
-      `${backendAPIList.apiManagement}/${id}`,
-      {
-        headers: { Authorization: `Bearer ${token}` },
-      }
-    );
+    const res = await axios.delete(`${backendAPIList.apiManagement}/${id}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
 
     const { status, message } = res.data;
     if (status === "ok") {
