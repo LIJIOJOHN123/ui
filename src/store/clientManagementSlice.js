@@ -22,7 +22,7 @@ export const clientManagementSlice = createSlice({
     // List
     clientManagementActionResponseSuccess: (state, action) => {
       state.loading = false;
-      state.data = action.payload.data.result;
+      state.data = action.payload.data;
       state.status = action.payload.status;
       state.count = action.payload.count;
     },
@@ -75,29 +75,32 @@ export const {
 export const clientManagementReducer = clientManagementSlice.reducer;
 
 // Fetch API List
-export const clientManagementListAction = () => async (dispatch) => {
-  try {
-    const token = getLocalStorage("authToken");
-    const res = await axios.get(
-      `${process.env.REACT_APP_Base_URL}/user/clients`,
-      {
-        headers: { Authorization: `Bearer ${token}` },
+export const clientManagementListAction =
+  (page = 1, limit = 5, searchQueries) =>
+  async (dispatch) => {
+    try {
+      const token = getLocalStorage("authToken");
+      const res = await axios.get(
+        `${process.env.REACT_APP_Base_URL}/user/clients?page=${page}&limit=${limit}&${searchQueries}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      const { status, data, count } = res.data;
+      if (status === "ok") {
+        dispatch(
+          clientManagementActionResponseSuccess({ data, status, count })
+        );
       }
-    );
-
-    const { status, data, count } = res.data;
-    if (status === "ok") {
-      dispatch(clientManagementActionResponseSuccess({ data, status, count }));
+    } catch (error) {
+      const payload = {
+        message: error?.response?.data?.message || "An error occurred",
+        status: error?.response?.status || 500,
+      };
+      dispatch(clientManagementResponseFail(payload));
+      toast.error(payload.message);
     }
-  } catch (error) {
-    const payload = {
-      message: error?.response?.data?.message || "An error occurred",
-      status: error?.response?.status || 500,
-    };
-    dispatch(clientManagementResponseFail(payload));
-    toast.error(payload.message);
-  }
-};
+  };
 // Fetch API By ID
 export const getByIdClientAction = (id) => async (dispatch) => {
   try {
