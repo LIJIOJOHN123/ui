@@ -1,3 +1,5 @@
+
+
 import { CSVLink } from "react-csv";
 import { Check, Download, Search, Settings, Trash2 } from "lucide-react";
 import { Button, Col, Form } from "react-bootstrap";
@@ -8,12 +10,10 @@ import { apiListAction } from "../../store/apiManagementSlice";
 import { getByIdAPIAction } from "../../store/productManagementSlice";
 import {
   addAPIBatchingAction,
-  apiBatchingAction,
   uploadCSVFileAPIBatchingAction,
 } from "../../store/api_Batching";
 
 function GroupApiView() {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const { id } = useParams();
@@ -23,14 +23,13 @@ function GroupApiView() {
   const { data: apiData } = useSelector((state) => state.apiManagement);
   const {
     data: api,
-    status,
     loading,
   } = useSelector((state) => state.apiBatching);
   const [formData, setFormData] = useState({});
   const [selectedFile, setSelectedFile] = useState([]);
 
-  const fields =dataById?.category?.field_active?dataById?.category?.fields.flat() || [] :dataById?.apiList?.map((item) => item?.apiId?.fields).flat() || []
-
+  const fields =dataById?.apiGroup?.field_active?dataById?.apiGroup?.fields.flat() || [] :dataById?.api?.map((item) => item?.apiId.fields).flat() || []
+  console.log(dataById)
   useEffect(() => {
     dispatch(getByIdAPIAction(id))
     // if (id) {
@@ -58,20 +57,20 @@ function GroupApiView() {
 
   const handleSubmit = async (e) => {
     // e.preventDefault();
-    dispatch(addAPIBatchingAction({ apiValue: formData, apiGroupId: id }));
+    dispatch(addAPIBatchingAction({ apiValue: formData, productId: id }));
     setFormData({});
   };
 
-
-  let dataset  =dataById?.apiList
-    ?.map((item) =>
-      item?.apiId?.fields.map((field) => `${field}(${item?.apiId?.apiname})`)
-    )
-    .flat() || [];
-  const headers = dataset?.map((field) => ({
-    label: field,
-    key: field?.replace(/\s+/g, "").toLowerCase(),
-  }));
+  console.log(dataById)
+  // let dataset  =dataById?.apiList
+  //   ?.map((item) =>
+  //     item?.apiId?.fields.map((field) => `${field}(${item?.apiId?.apiname})`)
+  //   )
+  //   .flat() || [];
+  // const headers = dataset?.map((field) => ({
+  //   label: field,
+  //   key: field?.replace(/\s+/g, "").toLowerCase(),
+  // }));
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -122,7 +121,7 @@ function GroupApiView() {
           style={{ fontSize: "14px", backgroundColor: "#5bb75b" }}
           className="text-decoration-underline border-0 p-1 rounded-2 text-decoration-none text-white"
           data={[]}
-          headers={headers}
+          // headers={headers}
           separator=","
         >
           Download Sample CSV Template

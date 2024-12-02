@@ -50,7 +50,7 @@ function ApiGroup() {
                         Delete
                       </Button>
                       <Button
-                        onClick={() => navigate(`/api-group/edit/${item._id}`)}
+                        onClick={() => navigate(`/products/edit/${item._id}`)}
                       >
                         Edit
                       </Button>
