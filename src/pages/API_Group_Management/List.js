@@ -51,7 +51,7 @@ function APIGroupList() {
                         Delete
                       </Button>
                       <Button
-                        onClick={() => navigate(`/category/edit/${item._id}`)}
+                        onClick={() => navigate(`/api-groups/edit/${item._id}`)}
                       >
                         Edit
                       </Button>

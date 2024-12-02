@@ -13,8 +13,7 @@ import TransactionSearchPopup from "./TransactionSearchPopup";
 const Transaction = () => {
   const dispatch = useDispatch();
   const { data, count } = useSelector((state) => state.transaction);
-  const { user: userData } = useSelector((state) => state.auth);
-
+  const { user: userData } = useSelector((state) => state.auth)
   const navigate = useNavigate();
   // const handleButton = (id, data) => {
   //   dispatch(updateTransactionAction(id, data));
@@ -108,7 +107,7 @@ const Transaction = () => {
               disabled={page === 1}
               onClick={() => setPage(page - 1)}
             />
-            {[...Array(totalPages)].map((_, idx) => (
+            {/* {[...Array(totalPages)].map((_, idx) => (
               <Pagination.Item
                 key={idx}
                 active={page === idx + 1}
@@ -116,7 +115,7 @@ const Transaction = () => {
               >
                 {idx + 1}
               </Pagination.Item>
-            ))}
+            ))} */}
             <Pagination.Next
               disabled={page === totalPages}
               onClick={() => setPage(page + 1)}
