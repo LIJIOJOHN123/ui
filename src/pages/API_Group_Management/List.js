@@ -1,19 +1,39 @@
-import React, { useEffect } from "react";
-import { Button, Col, Row } from "react-bootstrap";
+import React, { useEffect, useState } from "react";
+import { Button, Col, Form, Pagination, Row } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { deleteApiGroupAction, ApiGroupAction} from "../../store/apiGroupManagementSlice";
-
+import {
+  deleteApiGroupAction,
+  ApiGroupAction,
+} from "../../store/apiGroupManagementSlice";
+import APiGroupSearch from "./APiGroupSearch";
 
 function APIGroupList() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { data, loading, count } = useSelector((state) => state.apiGroupManagement);
-  console.log(data)
-  useEffect(() => {
-    dispatch(ApiGroupAction());
-  }, []);
+  const { data, loading, count } = useSelector(
+    (state) => state.apiGroupManagement
+  );
 
+  const [searchQueries, setSearchQueries] = useState({});
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(5);
+
+  const queryString = Object.entries(searchQueries)
+    .filter(([_, value]) => value !== "")
+    .map(([key, value]) => `${key}=${value}`)
+    .join("&");
+
+  useEffect(() => {
+    dispatch(ApiGroupAction(page, limit, queryString));
+  }, [page, limit, dispatch, queryString]);
+
+  const totalPages = Math.ceil(count / limit);
+  const handleLimitChange = (e) => {
+    const value = parseInt(e.target.value, 10);
+    setLimit(value);
+    setPage(1);
+  };
   return (
     <div>
       {loading ? (
