@@ -7,11 +7,9 @@ import Modal from "react-bootstrap/Modal";
 function APiGroupSearch({ setSearchQueries }) {
   const [show, setShow] = useState(false);
 
-  // Initialize tempSearchQueries with predefined keys
+
   const [tempSearchQueries, setTempSearchQueries] = useState({
     name: "",
-    description: "",
-    backend_api_key_name: "",
     description: "",
   });
 
@@ -47,46 +45,23 @@ function APiGroupSearch({ setSearchQueries }) {
 
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Search Api Group Details</Modal.Title>
+          <Modal.Title>Search Group Details</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form>
             {/* Explicit Inputs */}
             <InputGroup className="mb-3">
-              <InputGroup.Text>API Name</InputGroup.Text>
+              <InputGroup.Text>Group Name</InputGroup.Text>
               <Form.Control
                 type="text"
-                placeholder="Enter API Name"
-                value={tempSearchQueries.apiname}
-                onChange={(e) => handleInputChange("apiname", e.target.value)}
+                placeholder="Enter API Group Name"
+                value={tempSearchQueries.name}
+                onChange={(e) => handleInputChange("name", e.target.value)}
               />
             </InputGroup>
 
-            <InputGroup className="mb-3">
-              <InputGroup.Text>API Type</InputGroup.Text>
-              <Form.Control
-                as="select"
-                value={tempSearchQueries.api_type}
-                onChange={(e) => handleInputChange("api_type", e.target.value)}
-              >
-                <option value="">Select API Type</option>
-                <option value="live">Live</option>
-                <option value="demo">Demo</option>
-                <option value="internal">Demo</option>
-              </Form.Control>
-            </InputGroup>
-
-            <InputGroup className="mb-3">
-              <InputGroup.Text>Backend API Key Name</InputGroup.Text>
-              <Form.Control
-                type="text"
-                placeholder="Enter Backend API Key Name"
-                value={tempSearchQueries.backend_api_key_name}
-                onChange={(e) =>
-                  handleInputChange("backend_api_key_name", e.target.value)
-                }
-              />
-            </InputGroup>
+     
+            
 
             <InputGroup className="mb-3">
               <InputGroup.Text>Description</InputGroup.Text>

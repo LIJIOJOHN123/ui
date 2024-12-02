@@ -17,7 +17,6 @@ export const apiGroupMangementSlice = createSlice({
   name: "api_group_management",
   initialState: apiGroupIntialState,
   reducers: {
-    
     // List
     listResponseSuccess: (state, action) => {
       state.loading = false;
@@ -91,40 +90,39 @@ export const {
 export const apiGroupManagementReducer = apiGroupMangementSlice.reducer;
 
 // Fetch API Group List
-export const ApiGroupAction = () => async (dispatch) => {
-  try {
-    const token = getLocalStorage("authToken");
-    const res = await axios.get(
-      backendAPIList.apiGroupManagement,
-      {
-        headers: { Authorization: `Bearer ${token}` },
-      }
-    );
+export const ApiGroupAction =
+  (page = 1, limit = 5, searchQueries) =>
+  async (dispatch) => {
+    try {
+      const token = getLocalStorage("authToken");
+      const res = await axios.get(
+        `${backendAPIList.apiGroupManagement}?page=${page}&limit=${limit}&${searchQueries}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
 
-    const { status, data, count } = res.data;
-    if (status === "ok") {
-      dispatch(listResponseSuccess({ data, status, count }));
+      const { status, data, count } = res.data;
+      if (status === "ok") {
+        dispatch(listResponseSuccess({ data, status, count }));
+      }
+    } catch (error) {
+      const payload = {
+        message: error?.response?.data?.message || "An error occurred",
+        status: error?.response?.status || 500,
+      };
+      dispatch(listResponseFail(payload));
+      toast.error(payload.message);
     }
-  } catch (error) {
-    const payload = {
-      message: error?.response?.data?.message || "An error occurred",
-      status: error?.response?.status || 500,
-    };
-    dispatch(listResponseFail(payload));
-    toast.error(payload.message);
-  }
-};
+  };
 
 // Fetch API By ID
 export const getByIdAPIAction = (id) => async (dispatch) => {
   try {
     const token = getLocalStorage("authToken");
-    const res = await axios.get(
-      `${backendAPIList.apiGroupManagement}/${id}`,
-      {
-        headers: { Authorization: `Bearer ${token}` },
-      }
-    );
+    const res = await axios.get(`${backendAPIList.apiGroupManagement}/${id}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
 
     const { status, data } = res.data;
 

@@ -14,7 +14,7 @@ function APIGroupList() {
   const { data, loading, count } = useSelector(
     (state) => state.apiGroupManagement
   );
-  console.log(data, "data");
+
   const [searchQueries, setSearchQueries] = useState({});
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(5);
@@ -75,7 +75,7 @@ function APIGroupList() {
               </Form.Select>
             </div>
 
-            <APiGroupSearch data={data} setSearchQueries={setSearchQueries} />
+            <APiGroupSearch  setSearchQueries={setSearchQueries} />
           </div>
           <div className="d-flex flex-column min-vh-100">
             <div className="flex-grow-2">
