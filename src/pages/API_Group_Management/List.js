@@ -14,7 +14,6 @@ function APIGroupList() {
   const { data, loading, count } = useSelector(
     (state) => state.apiGroupManagement
   );
-  console.log(data, "data");
   const [searchQueries, setSearchQueries] = useState({});
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(5);
