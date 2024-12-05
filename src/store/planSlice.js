@@ -2,22 +2,25 @@ import { createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { getLocalStorage } from "../utils/LocalStorage";
-import backendAPIList from "../services/apiList";
 
-const productInitialState = {
-  loading: true,
+const planInitialState = {
+  loading: false,
   data: [],
   status: null,
   count: null,
   dataById: {},
+  apiListDetails: [],
 };
 
-// Create API Group slice
-export const productSlice = createSlice({
-  name: "product_management",
-  initialState: productInitialState,
+// Create plan slice
+export const planSlice = createSlice({
+  name: "plan",
+  initialState: planInitialState,
   reducers: {
-
+    // Request
+    request: (state) => {
+      state.loading = true;
+    },
     // List
     listResponseSuccess: (state, action) => {
       state.loading = false;
@@ -30,13 +33,13 @@ export const productSlice = createSlice({
       state.status = action.payload.status;
     },
     // Add
-    createproductResponseSuccess: (state, action) => {
+    createplanResponseSuccess: (state, action) => {
       state.loading = false;
       state.status = action.payload.status;
       state.data = [action.payload.data, ...state.data];
       state.count = state.data.length;
     },
-    createAPIGroupResponseFail: (state, action) => {
+    createplanResponseFail: (state, action) => {
       state.loading = false;
       state.status = action.payload.status;
       state.count = action.payload.count;
@@ -50,26 +53,39 @@ export const productSlice = createSlice({
       state.loading = false;
       state.status = action.payload.status;
     },
+    getByIdApiResponseSuccess: (state, action) => {
+      state.loading = false;
+      state.status = action.payload.status;
+      state.apiListDetails = action.payload.data;
+    },
+    getByIdApiResponseFail: (state, action) => {
+      state.loading = false;
+      state.status = action.payload.status;
+    },
     // Edit
-    editproductResponseSuccess: (state, action) => {
+    editplanResponseSuccess: (state, action) => {
       state.loading = false;
       state.status = action.payload.status;
     },
 
-    editproductResponseFail: (state, action) => {
+    editplanResponseFail: (state, action) => {
       state.loading = false;
       state.status = action.payload.status;
     },
     // Delete
-    deleteAPIGroupResponseSuccess: (state, action) => {
+    deleteplanResponseSuccess: (state, action) => {
       state.loading = false;
       state.data = state.data.filter((item) => item._id !== action.payload.id);
       state.status = action.payload.status;
       state.count -= 1;
     },
-    deleteAPIGroupResponseFail: (state, action) => {
+    deleteplanResponseFail: (state, action) => {
       state.loading = false;
       state.status = action.payload.status;
+    },
+    resetApiListDetails: (state) => {
+      state.apiListDetails = [];
+      state.dataById = {};
     },
   },
 });
@@ -78,28 +94,29 @@ export const {
   request,
   listResponseSuccess,
   listResponseFail,
-  createproductResponseSuccess,
-  createproductResponseFail,
-  deleteproductResponseSuccess,
-  deleteproductResponseFail,
-  editproductResponseFail,
-  editproductResponseSuccess,
+  createplanResponseSuccess,
+  createplanResponseFail,
+  deleteplanResponseSuccess,
+  deleteplanResponseFail,
+  editplanResponseFail,
+  editplanResponseSuccess,
   getByIdResponseFail,
   getByIdResponseSuccess,
-} = productSlice.actions;
+  getByIdApiResponseFail,
+  getByIdApiResponseSuccess,
+  resetApiListDetails,
+} = planSlice.actions;
 
-export const productReducer = productSlice.reducer;
+export const planReducer = planSlice.reducer;
 
 // Fetch API Group List
-export const productAction = () => async (dispatch) => {
+export const planAction = () => async (dispatch) => {
   try {
+    dispatch(request());
     const token = getLocalStorage("authToken");
-    const res = await axios.get(
-      `${backendAPIList.productManagement}`,
-      {
-        headers: { Authorization: `Bearer ${token}` },
-      }
-    );
+    const res = await axios.get(`${process.env.REACT_APP_Base_WEB_URL}/plan`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
 
     const { status, data, count } = res.data;
     if (status === "ok") {
@@ -115,12 +132,13 @@ export const productAction = () => async (dispatch) => {
   }
 };
 
-// Fetch API By ID
-export const getByIdAPIAction = (id) => async (dispatch) => {
+// Fetch Plan By ID
+export const getByIdPlanAction = (id) => async (dispatch) => {
   try {
+    dispatch(request());
     const token = getLocalStorage("authToken");
     const res = await axios.get(
-      `${backendAPIList.productManagement}/${id}`,
+      `${process.env.REACT_APP_Base_WEB_URL}/plan/${id}`,
       {
         headers: { Authorization: `Bearer ${token}` },
       }
@@ -140,12 +158,37 @@ export const getByIdAPIAction = (id) => async (dispatch) => {
     toast.error(payload.message);
   }
 };
-// Add API Group
-export const addproductAction = (id, formData) => async (dispatch) => {
+export const getplanApiListAPIAction = (id) => async (dispatch) => {
   try {
+    dispatch(request());
+    const token = getLocalStorage("authToken");
+    const res = await axios.get(
+      `${process.env.REACT_APP_Base_WEB_URL}/plan/category-apilist/${id}`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
+    const { status, data } = res.data;
+
+    if (status === "ok") {
+      dispatch(getByIdApiResponseSuccess({ status, data }));
+    }
+  } catch (error) {
+    const payload = {
+      message: error?.response?.data?.message || "An error occurred",
+      status: error?.response?.status || 500,
+    };
+    dispatch(getByIdApiResponseFail(payload));
+    toast.error(payload.message);
+  }
+};
+// Add API Group
+export const addplanAction = (formData) => async (dispatch) => {
+  try {
+    dispatch(request());
     const token = getLocalStorage("authToken");
     const res = await axios.post(
-      `${backendAPIList.productManagement}/${id}`,
+      `${process.env.REACT_APP_Base_WEB_URL}/plan`,
       formData,
       {
         headers: { Authorization: `Bearer ${token}` },
@@ -155,27 +198,27 @@ export const addproductAction = (id, formData) => async (dispatch) => {
     const { status, data } = res.data;
     if (status === "ok") {
       toast.success("Created Successfully!");
-      dispatch(createproductResponseSuccess({ status, data }));
+      dispatch(createplanResponseSuccess({ status, data }));
     } else {
-      dispatch(createproductResponseFail({ status: 400 }));
+      dispatch(createplanResponseFail({ status: 400 }));
     }
   } catch (error) {
     const payload = {
       message: error?.response?.data?.message || "An error occurred",
       status: error?.response?.status || 500,
     };
-    dispatch(createproductResponseFail(payload));
+    dispatch(createplanResponseFail(payload));
     toast.error(payload.message);
   }
 };
 
 // Update API Group
-export const updateproductAction = (id, formData) => async (dispatch) => {
+export const updateplanAction = (id, formData) => async (dispatch) => {
   try {
-    console.log(id, formData,"id, formData")
+    dispatch(request());
     const token = getLocalStorage("authToken");
     const res = await axios.put(
-      `${backendAPIList.productManagement}/${id}`,
+      `${process.env.REACT_APP_Base_WEB_URL}/plan/${id}`,
       formData,
       {
         headers: { Authorization: `Bearer ${token}` },
@@ -183,12 +226,11 @@ export const updateproductAction = (id, formData) => async (dispatch) => {
     );
 
     const { status, message, data } = res.data;
-    console.log(res.data,"res.data")
     if (status === "ok") {
       toast.success("Updated Successfully!");
-      dispatch(editproductResponseSuccess({ status, data }));
+      dispatch(editplanResponseSuccess({ status: "updated", data }));
     } else {
-      dispatch(editproductResponseFail({ status: 400 }));
+      dispatch(editplanResponseFail({ status: 400 }));
       toast.error(message);
     }
   } catch (error) {
@@ -196,17 +238,18 @@ export const updateproductAction = (id, formData) => async (dispatch) => {
       message: error?.response?.data?.message || "An error occurred",
       status: error?.response?.status || 500,
     };
-    dispatch(editproductResponseFail(payload));
+    dispatch(editplanResponseFail(payload));
     toast.error(payload.message);
   }
 };
 
 // Delete API Group
-export const deleteproductAction = (id) => async (dispatch) => {
+export const deleteplanAction = (id) => async (dispatch) => {
   try {
+    dispatch(request());
     const token = getLocalStorage("authToken");
     const res = await axios.delete(
-      `${backendAPIList.productManagement}/${id}`,
+      `${process.env.REACT_APP_Base_WEB_URL}/plan/${id}`,
       {
         headers: { Authorization: `Bearer ${token}` },
       }
@@ -214,7 +257,7 @@ export const deleteproductAction = (id) => async (dispatch) => {
 
     const { status, message } = res.data;
     if (status === "ok") {
-      dispatch(deleteproductResponseSuccess({ id, status }));
+      dispatch(deleteplanResponseSuccess({ id, status }));
       toast.success(message);
     }
   } catch (error) {
@@ -222,7 +265,7 @@ export const deleteproductAction = (id) => async (dispatch) => {
       message: error?.response?.data?.message || "An error occurred",
       status: error?.response?.status || 500,
     };
-    dispatch(deleteproductResponseFail(payload));
+    dispatch(deleteplanResponseFail(payload));
     toast.error(payload.message);
   }
 };
