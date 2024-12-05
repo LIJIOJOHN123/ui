@@ -40,6 +40,8 @@ import Batch from "../pages/batch/Batch";
 import APIGroupDetails from "../pages/API_Group_Management/Details";
 import APIGroupList from "../pages/API_Group_Management/List";
 import APIGroupForm from "../pages/API_Group_Management/Form";
+import PlanList from "../pages/plan/List";
+import PlanForm from "../pages/plan/PlanForm";
 
 function RoutesPage() {
   return (
@@ -107,12 +109,27 @@ function RoutesPage() {
             <Route path="api-list/edit/:id" element={<Form />} />
             {/* ////// */}
 
+
             {/* //////// */}
             <Route path="products" element={<ApiGroup />} />
             <Route path="products/create" element={<GroupApiForm />} />
             <Route path="products/:id" element={<GroupApiView />} />
             <Route path="products/edit/:id" element={<GroupApiForm />} />
             {/* ////// */}
+            {/* //////// */}
+            <Route path="products" element={<ApiGroup />} />
+            <Route path="products/create" element={<GroupApiForm />} />
+            <Route path="products/:id" element={<GroupApiView />} />
+            <Route path="products/edit/:id" element={<GroupApiForm />} />
+            {/* ////// */}
+
+            {/* ////// */}
+            <Route path="plan" element={<PlanList />} />
+            <Route path="plan/create" element={<PlanForm />} />
+            <Route path="plan/edit/:id" element={<PlanForm />} />
+            <Route path="plan/:id" element={<PlanList />} />
+            {/* ////// */}
+
             {/* //////// */}
             <Route path="api-groups" element={<APIGroupList />} />
             <Route path="api-groups/create" element={<APIGroupForm />} />
@@ -134,3 +151,5 @@ function RoutesPage() {
 }
 
 export default RoutesPage;
+
+

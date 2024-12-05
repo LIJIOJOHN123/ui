@@ -9,16 +9,12 @@ function PlanList() {
   const navigate = useNavigate();
 
   // Extracting state from Redux
-  const { data = [], loading, count } = useSelector((state) => state.plan);
+  const { data, loading, count } = useSelector((state) => state.plan);
 
   useEffect(() => {
-    // Fetch plans only if data is not already available and loading is false
-    if (!data?.length && !loading) {
-      dispatch(planAction());
-    }
-  }, [dispatch, data, loading]);
+    dispatch(planAction());
+  }, []);
 
-  console.log(data);
 
   return (
     <div>
