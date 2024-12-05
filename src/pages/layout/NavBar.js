@@ -26,6 +26,7 @@ function NavBar({ children }) {
     { label: "Products", path: "/products" },
     { label: "Transaction", path: "/transaction" },
     { label: "Plan", path: "/plan" },
+    { label: "Pre-Validation", path: "/pre-validation" },
     { label: "Settings", path: "/settings" },
     { label: "Logout", path: "/" },
   ];
@@ -39,6 +40,7 @@ function NavBar({ children }) {
     { label: "Clients", path: "/clients" },
     { label: "Batch", path: "/batch" },
     { label: "Plan", path: "/plan" },
+    { label: "Pre-Validation", path: "/pre-validation" },
     { label: "Settings", path: "/settings" },
     { label: "Logout", path: "/" },
   ];

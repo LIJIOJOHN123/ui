@@ -42,6 +42,8 @@ import APIGroupList from "../pages/API_Group_Management/List";
 import APIGroupForm from "../pages/API_Group_Management/Form";
 import PlanList from "../pages/plan/List";
 import PlanForm from "../pages/plan/PlanForm";
+import PreValidationList from "../pages/product/List";
+import ValidationForm from "../pages/preValidation/Form";
 
 function RoutesPage() {
   return (
@@ -111,17 +113,23 @@ function RoutesPage() {
 
 
             {/* //////// */}
-            <Route path="products" element={<ApiGroup />} />
-            <Route path="products/create" element={<GroupApiForm />} />
-            <Route path="products/:id" element={<GroupApiView />} />
-            <Route path="products/edit/:id" element={<GroupApiForm />} />
+            <Route path="pre-validation" element={<PreValidationList />} />
+            <Route path="pre-validation/:id" element={<ApiListView />} />
+            <Route path="pre-validation/create" element={<ValidationForm />} />
+            <Route path="pre-validation/edit/:id" element={<ValidationForm />} />
             {/* ////// */}
+
+
             {/* //////// */}
             <Route path="products" element={<ApiGroup />} />
             <Route path="products/create" element={<GroupApiForm />} />
             <Route path="products/:id" element={<GroupApiView />} />
             <Route path="products/edit/:id" element={<GroupApiForm />} />
             {/* ////// */}
+           
+
+
+
 
             {/* ////// */}
             <Route path="plan" element={<PlanList />} />
