@@ -20,11 +20,14 @@ function Form() {
     pricing: "",
     backend_api_key_name: "",
     api_type: "",
+    category_type: "",
   });
   const [error, setError] = useState(false);
-  const { loading, status, dataById } = useSelector((state) => state.apiManagement);
+  const { loading, status, dataById } = useSelector(
+    (state) => state.apiManagement
+  );
   useEffect(() => {
-   id && dispatch(getByIdAPIAction(id));
+    id && dispatch(getByIdAPIAction(id));
   }, [id]);
 
   useEffect(() => {
@@ -155,6 +158,28 @@ function Form() {
               {/* Add more options as needed */}
             </BootstrapForm.Select>
           </BootstrapForm.Group>
+          <BootstrapForm.Group
+            className="mt-3"
+            controlId="formApiKeyoiiyufthfoi"
+          >
+            <BootstrapForm.Label className="m-0">
+              Category Type
+            </BootstrapForm.Label>
+            <BootstrapForm.Select
+              name="category_type"
+              value={formData.category_type}
+              onChange={handleInputChange}
+              required
+            >
+              <option value="" disabled>
+                Select Category type
+              </option>
+              <option value="REALTIME">Real Time</option>
+              <option value="SCHEDULED">Scheduled</option>
+
+              {/* Add more options as needed */}
+            </BootstrapForm.Select>
+          </BootstrapForm.Group>
 
           <BootstrapForm.Group className="mt-3" controlId="formApiKey">
             <BootstrapForm.Label className="m-0">
@@ -184,7 +209,7 @@ function Form() {
           </BootstrapForm.Group>
 
           <Button variant="primary" type="submit" className="mt-4">
-            {loading ? <div className="spinner-border" /> : <div>Submit</div>}
+            {!loading ? <div className="spinner-border" /> : <div>Submit</div>}
           </Button>
         </BootstrapForm>
       </div>

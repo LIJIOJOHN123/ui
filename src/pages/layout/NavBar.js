@@ -26,6 +26,8 @@ function NavBar({ children }) {
     { label: "Products", path: "/products" },
     { label: "Transaction", path: "/transaction" },
     { label: "Plan", path: "/plan" },
+    { label: "Pre-Validation", path: "/pre-validation" },
+    { label: "Post-Validation", path: "/post-validation" },
     { label: "Settings", path: "/settings" },
     { label: "Logout", path: "/" },
   ];
@@ -39,6 +41,8 @@ function NavBar({ children }) {
     { label: "Clients", path: "/clients" },
     { label: "Batch", path: "/batch" },
     { label: "Plan", path: "/plan" },
+    { label: "Pre-Validation", path: "/pre-validation" },
+    { label: "Post-Validation", path: "/post-validation" },
     { label: "Settings", path: "/settings" },
     { label: "Logout", path: "/" },
   ];
@@ -112,7 +116,7 @@ function NavBar({ children }) {
             src="https://img.freepik.com/free-vector/illustration-businessman_53876-5856.jpg?w=740&t=st=1723811714~exp=1723812314~hmac=264cf4b222d991caf3459db719571b65cb1f5d98d462e1cb3aebd0bf5a4d2334"
             alt="Profile"
           />
-       <h5 className="mt-3">{user?.name}</h5>
+          <h5 className="mt-3">{user?.name}</h5>
 
           <div className="w-100 mt-4 d-flex flex-column">
             {user?.role === "USER"

@@ -1,15 +1,20 @@
 import React, { useEffect, useState } from "react";
-import { Button, Col, Form, Pagination, Row } from "react-bootstrap";
+import { Alert, Button, Col, Form, Pagination, Row } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { deleteplanAction, planAction } from "../../store/planSlice";
-import PlanSearchPopup from "./SearchInput";
+import {
+  deleteValidation,
+  fetchValidations,
+} from "../../store/prevalidationSlice";
+import ValidationSearchPopup from "./SearchInput";
 
-function PlanList() {
+function PreValidationList() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { data, loading, count } = useSelector((state) => state.plan);
+  const { data, loading, count, error } = useSelector(
+    (state) => state.prevalidation
+  );
 
   // /////////
 
@@ -24,7 +29,7 @@ function PlanList() {
     .join("&");
 
   useEffect(() => {
-    dispatch(planAction(page, limit, queryString));
+    dispatch(fetchValidations(page, limit, queryString));
   }, [page, limit, dispatch, queryString]);
 
   const totalPages = Math.ceil(count / limit);
@@ -37,6 +42,10 @@ function PlanList() {
 
   // ///////////
 
+  const handleDelete = (id) => {
+    dispatch(deleteValidation(id));
+  };
+
   return (
     <div>
       {loading ? (
@@ -45,19 +54,23 @@ function PlanList() {
             <span className="visually-hidden">Loading...</span>
           </div>
         </div>
+      ) : error ? (
+        <Alert variant="danger" className="mt-3">
+          {error}
+        </Alert>
       ) : (
         <div>
-          {/* Header Section */}
           <div className="d-flex justify-content-between align-items-center">
-            <h3>Plans</h3>
+            <h3>Pre-Validation</h3>
             <Button
-              onClick={() => navigate("/plan/create")}
+              onClick={() => navigate("/pre-validation/create")}
               variant="primary"
               className="fw-bold"
             >
-              Add Plans
+              Add Validation
             </Button>
           </div>
+
           <div className="d-flex align-items-center mt-3">
             <p className="mb-0 me-3">
               Total: <b>{count}</b>
@@ -78,50 +91,40 @@ function PlanList() {
               </Form.Select>
             </div>
 
-            <PlanSearchPopup setSearchQueries={setSearchQueries} />
+            <ValidationSearchPopup setSearchQueries={setSearchQueries} />
           </div>
-
-          {/* Plan List */}
-
           <div className="d-flex flex-column min-vh-100">
             <div className="flex-grow-2">
               <Row className="mt-4">
-                {data.length === 0 ? (
-                  <div>No data available</div>
-                ) : (
+                {data && data.length > 0 ? (
                   data.map((item, i) => (
                     <Col key={i} xs={12} sm={6} md={4} lg={3} className="mb-4">
                       <div className="bg-info p-2 rounded-3 h-100">
-                        {/* Plan Details */}
                         <div
-                          style={{ cursor: "pointer" }}
-                          onClick={() => navigate(`/api-list/${item._id}`)}
+                          className="cursor-pointer"
+                          onClick={() =>
+                            navigate(`/pre-validation/${item._id}`)
+                          }
                         >
                           <h6>{item.name}</h6>
-                          <p className="line-clamp">{item.des}</p>
-                          <b>${item.pricing}</b>
-                          <div>
-                            {item.apiId &&
-                              item.apiId.map((field, index) => (
-                                <p key={index}>
-                                  {field.apiId}: {field.discoutedPrice}
-                                </p>
-                              ))}
-                          </div>
+                          <p className="line-clamp">
+                            {item.des || "No Description"}
+                          </p>
                         </div>
-
-                        {/* Action Buttons */}
-                        <div className="mt-3">
+                        <div className="mt-3 d-flex justify-content-between">
                           <Button
                             variant="danger"
-                            onClick={() => dispatch(deleteplanAction(item._id))}
-                            className="me-2"
+                            size="sm"
+                            onClick={() => handleDelete(item._id)}
                           >
                             Delete
                           </Button>
                           <Button
-                            variant="secondary"
-                            onClick={() => navigate(`/plan/edit/${item._id}`)}
+                            variant="warning"
+                            size="sm"
+                            onClick={() =>
+                              navigate(`/pre-validation/edit/${item._id}`)
+                            }
                           >
                             Edit
                           </Button>
@@ -129,10 +132,14 @@ function PlanList() {
                       </div>
                     </Col>
                   ))
+                ) : (
+                  <div className="text-center w-100 mt-4">
+                    <h5>No validations found.</h5>
+                  </div>
                 )}
               </Row>
             </div>
-
+            {/* Pagination */}
             <div className="mt-auto">
               <Pagination className="d-flex justify-content-center">
                 <Pagination.Prev
@@ -161,4 +168,4 @@ function PlanList() {
   );
 }
 
-export default PlanList;
+export default PreValidationList;

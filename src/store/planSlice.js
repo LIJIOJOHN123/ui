@@ -110,27 +110,32 @@ export const {
 export const planReducer = planSlice.reducer;
 
 // Fetch API Group List
-export const planAction = () => async (dispatch) => {
-  try {
-    dispatch(request());
-    const token = getLocalStorage("authToken");
-    const res = await axios.get(`${process.env.REACT_APP_Base_WEB_URL}/plan`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+export const planAction =
+  (page = 1, limit = 5, searchQueries) =>
+  async (dispatch) => {
+    try {
+      dispatch(request());
+      const token = getLocalStorage("authToken");
+      const res = await axios.get(
+        `${process.env.REACT_APP_Base_WEB_URL}/plan?page=${page}&limit=${limit}&${searchQueries}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
 
-    const { status, data, count } = res.data;
-    if (status === "ok") {
-      dispatch(listResponseSuccess({ data, status, count }));
+      const { status, data, count } = res.data;
+      if (status === "ok") {
+        dispatch(listResponseSuccess({ data, status, count }));
+      }
+    } catch (error) {
+      const payload = {
+        message: error?.response?.data?.message || "An error occurred",
+        status: error?.response?.status || 500,
+      };
+      dispatch(listResponseFail(payload));
+      toast.error(payload.message);
     }
-  } catch (error) {
-    const payload = {
-      message: error?.response?.data?.message || "An error occurred",
-      status: error?.response?.status || 500,
-    };
-    dispatch(listResponseFail(payload));
-    toast.error(payload.message);
-  }
-};
+  };
 
 // Fetch Plan By ID
 export const getByIdPlanAction = (id) => async (dispatch) => {

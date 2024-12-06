@@ -17,7 +17,6 @@ export const productSlice = createSlice({
   name: "product_management",
   initialState: productInitialState,
   reducers: {
-
     // List
     listResponseSuccess: (state, action) => {
       state.loading = false;
@@ -91,40 +90,39 @@ export const {
 export const productReducer = productSlice.reducer;
 
 // Fetch API Group List
-export const productAction = () => async (dispatch) => {
-  try {
-    const token = getLocalStorage("authToken");
-    const res = await axios.get(
-      `${backendAPIList.productManagement}`,
-      {
-        headers: { Authorization: `Bearer ${token}` },
-      }
-    );
+export const productAction =
+  (page = 1, limit = 5, searchQueries) =>
+  async (dispatch) => {
+    try {
+      const token = getLocalStorage("authToken");
+      const res = await axios.get(
+        `${backendAPIList.productManagement}?page=${page}&limit=${limit}&${searchQueries}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
 
-    const { status, data, count } = res.data;
-    if (status === "ok") {
-      dispatch(listResponseSuccess({ data, status, count }));
+      const { status, data, count } = res.data;
+      if (status === "ok") {
+        dispatch(listResponseSuccess({ data, status, count }));
+      }
+    } catch (error) {
+      const payload = {
+        message: error?.response?.data?.message || "An error occurred",
+        status: error?.response?.status || 500,
+      };
+      dispatch(listResponseFail(payload));
+      toast.error(payload.message);
     }
-  } catch (error) {
-    const payload = {
-      message: error?.response?.data?.message || "An error occurred",
-      status: error?.response?.status || 500,
-    };
-    dispatch(listResponseFail(payload));
-    toast.error(payload.message);
-  }
-};
+  };
 
 // Fetch API By ID
 export const getByIdAPIAction = (id) => async (dispatch) => {
   try {
     const token = getLocalStorage("authToken");
-    const res = await axios.get(
-      `${backendAPIList.productManagement}/${id}`,
-      {
-        headers: { Authorization: `Bearer ${token}` },
-      }
-    );
+    const res = await axios.get(`${backendAPIList.productManagement}/${id}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
 
     const { status, data } = res.data;
 
@@ -172,7 +170,7 @@ export const addproductAction = (id, formData) => async (dispatch) => {
 // Update API Group
 export const updateproductAction = (id, formData) => async (dispatch) => {
   try {
-    console.log(id, formData,"id, formData")
+    console.log(id, formData, "id, formData");
     const token = getLocalStorage("authToken");
     const res = await axios.put(
       `${backendAPIList.productManagement}/${id}`,
@@ -183,7 +181,7 @@ export const updateproductAction = (id, formData) => async (dispatch) => {
     );
 
     const { status, message, data } = res.data;
-    console.log(res.data,"res.data")
+    console.log(res.data, "res.data");
     if (status === "ok") {
       toast.success("Updated Successfully!");
       dispatch(editproductResponseSuccess({ status, data }));

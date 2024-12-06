@@ -7,6 +7,8 @@ import { productReducer } from "./productManagementSlice";
 import { transactionReducer } from "./transactionSlice";
 import { apiGroupManagementReducer } from "./apiGroupManagementSlice";
 import { planReducer } from "./planSlice";
+import { validationReducer } from "./prevalidationSlice";
+import { postValidationReducer } from "./postvalidationSlice";
 
 const store = configureStore({
   reducer: {
@@ -18,6 +20,8 @@ const store = configureStore({
     apiGroupManagement: apiGroupManagementReducer,
     productManagement: productReducer,
     plan: planReducer,
+    prevalidation: validationReducer,
+    postvalidation: postValidationReducer,
   },
 });
 
