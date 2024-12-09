@@ -1,3 +1,5 @@
+import Select from "react-select";
+
 import React, { useEffect, useState } from "react";
 import { Alert, Form as BootstrapForm, Button, Table } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
@@ -11,6 +13,8 @@ import {
   getByIdPlanAction,
   updateplanAction,
 } from "../../store/planSlice";
+import { fetchValidations } from "../../store/prevalidationSlice";
+import { fetchPostValidations } from "../../store/postvalidationSlice";
 
 function PlanForm() {
   const navigate = useNavigate();
@@ -22,11 +26,18 @@ function PlanForm() {
     des: "",
     apigroupId: "",
     api: [],
+    preValidation: [],
+    postValidation: [],
   });
 
   const [apiList, setApiList] = useState([]);
   const [formError, setFormError] = useState(false);
-
+  const { data: preValidationData } = useSelector(
+    (state) => state.prevalidation
+  );
+  const { data: postValidationData } = useSelector(
+    (state) => state.postvalidation
+  );
   const apiGroupData = useSelector((state) => state.apiGroupManagement.data);
   const apiGroupdataById = useSelector(
     (state) => state.apiGroupManagement.dataById
@@ -35,6 +46,8 @@ function PlanForm() {
   console.log(dataById, "dataById");
 
   useEffect(() => {
+    dispatch(fetchValidations());
+    dispatch(fetchPostValidations());
     dispatch(ApiGroupAction());
   }, [dispatch]);
 
@@ -98,6 +111,34 @@ function PlanForm() {
     }));
   };
 
+  const handleSelectChange = (selected, field) => {
+    const selectedIds = selected?.map((item) => item.value) || [];
+    setFormData((prevData) => ({ ...prevData, [field]: selectedIds }));
+  };
+
+  const renderSelect = (label, options, value = [], field) => (
+    <BootstrapForm.Group className="mt-3">
+      <BootstrapForm.Label>{label}</BootstrapForm.Label>
+      <Select
+        isMulti
+        options={options}
+        value={options.filter((opt) => value.includes(opt.value))}
+        onChange={(selected) => handleSelectChange(selected, field)}
+        placeholder={`Select ${label}...`}
+      />
+    </BootstrapForm.Group>
+  );
+
+  const validationOptions = preValidationData.map((item) => ({
+    value: item._id,
+    label: item.name,
+  }));
+  console.log(validationOptions, "validationOptions");
+  const postValidationOptions = postValidationData.map((item) => ({
+    value: item._id,
+    label: item.name,
+  }));
+
   const validateForm = () => {
     const requiredFields = ["name", "apigroupId"];
     const isValid = requiredFields.every((field) => formData[field]?.trim());
@@ -115,7 +156,7 @@ function PlanForm() {
     };
 
     if (id) {
-      dispatch(updateplanAction( id, updatedFormData ));
+      dispatch(updateplanAction(id, updatedFormData));
     } else {
       dispatch(addplanAction(updatedFormData));
     }
@@ -200,7 +241,7 @@ function PlanForm() {
           </BootstrapForm.Group>
 
           <BootstrapForm.Group className="mt-3" controlId="formCategoryId">
-            <BootstrapForm.Label>Product</BootstrapForm.Label>
+            <BootstrapForm.Label>Api Group</BootstrapForm.Label>
 
             <BootstrapForm.Select
               name="apigroupId"
@@ -209,11 +250,13 @@ function PlanForm() {
               isInvalid={formError && !formData.apigroupId}
               required
             >
-              <option value="">Select a product</option>
+              <option disabled value="">
+                Select a Api Group
+              </option>
               {Array.isArray(apiGroupData) ? (
-                apiGroupData.map((product) => (
-                  <option key={product._id} value={product._id}>
-                    {product.name}
+                apiGroupData.map((group) => (
+                  <option key={group._id} value={group._id}>
+                    {group.name}
                   </option>
                 ))
               ) : (
@@ -221,6 +264,20 @@ function PlanForm() {
               )}
             </BootstrapForm.Select>
           </BootstrapForm.Group>
+
+          {renderSelect(
+            "Pre-Validations",
+            validationOptions,
+            formData?.preValidation,
+
+            "preValidation"
+          )}
+          {renderSelect(
+            "Post-Validations",
+            postValidationOptions,
+            formData?.postValidation,
+            "postValidation"
+          )}
 
           {apiList.length > 0 && (
             <div className="mt-3">

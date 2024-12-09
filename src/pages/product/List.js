@@ -7,6 +7,7 @@ import {
   productAction,
 } from "../../store/productManagementSlice";
 import ProductSearchPopup from "./SearchInput";
+import ConfirmationModal from "../../utils/ConfirmationModal ";
 
 function ApiGroup() {
   const dispatch = useDispatch();
@@ -15,11 +16,11 @@ function ApiGroup() {
     (state) => state.productManagement
   );
 
-  // /////////
-
   const [searchQueries, setSearchQueries] = useState({});
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(25);
+  const [limit, setLimit] = useState(5);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [apiToDelete, setApiToDelete] = useState({ id: null, name: "" });
 
   const queryString = Object.entries(searchQueries)
     .filter(([_, value]) => value !== "")
@@ -37,8 +38,18 @@ function ApiGroup() {
     setLimit(value);
     setPage(1);
   };
+  const handleDelete = () => {
+    if (apiToDelete.id) {
+      dispatch(deleteproductAction(apiToDelete.id));
+    }
+    setShowDeleteModal(false);
+    setApiToDelete({ id: null, name: "" });
+  };
 
-  // ///////////
+  const openDeleteModal = (id, name) => {
+    setApiToDelete({ id, name });
+    setShowDeleteModal(true);
+  };
 
   return (
     <div>
@@ -96,9 +107,7 @@ function ApiGroup() {
                         </div>
                         <div className="mt-3 " style={{ zIndex: 10 }}>
                           <Button
-                            onClick={() =>
-                              dispatch(deleteproductAction(item._id))
-                            }
+                            onClick={() => openDeleteModal(item._id, item.name)}
                           >
                             Delete
                           </Button>
@@ -139,6 +148,12 @@ function ApiGroup() {
           </div>
         </div>
       )}
+      <ConfirmationModal
+        show={showDeleteModal}
+        onHide={() => setShowDeleteModal(false)}
+        onConfirm={handleDelete}
+        message={`${apiToDelete.name} Product`}
+      />
     </div>
   );
 }

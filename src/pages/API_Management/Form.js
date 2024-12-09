@@ -151,7 +151,7 @@ function Form() {
               onChange={handleInputChange}
               required
             >
-              <option value="">Select API type</option>
+              <option disabled value="">Select API type</option>
               <option value="LIVE">Live</option>
               <option value="DEMO">Demo</option>
               <option value="INTERNAL">Internal</option>
@@ -209,7 +209,7 @@ function Form() {
           </BootstrapForm.Group>
 
           <Button variant="primary" type="submit" className="mt-4">
-          Submit
+           Submit
           </Button>
         </BootstrapForm>
       </div>
