@@ -26,7 +26,7 @@ function ValidationForm() {
     loading,
     status: submissionStatus,
     dataById,
-  } = useSelector((state) => state.postPostValidationList);
+  } = useSelector((state) => state.prevalidation);
 
   useEffect(() => {
     if (id) {

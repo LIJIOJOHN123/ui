@@ -7,6 +7,7 @@ import {
   fetchPostValidations,
 } from "../../store/postvalidationSlice";
 import PostValidationSearchPopup from "./SearchInput";
+import ConfirmationModal from "../../utils/ConfirmationModal ";
 
 function PostValidationList() {
   const dispatch = useDispatch();
@@ -16,13 +17,12 @@ function PostValidationList() {
     (state) => state.postvalidation
   );
 
-  // /////////
-
   const [searchQueries, setSearchQueries] = useState({});
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(5);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [apiToDelete, setApiToDelete] = useState({ id: null, name: "" });
 
-  console.log(searchQueries);
   const queryString = Object.entries(searchQueries)
     .filter(([_, value]) => value !== "")
     .map(([key, value]) => `${key}=${value}`)
@@ -40,12 +40,18 @@ function PostValidationList() {
     setPage(1);
   };
 
-  // ///////////
-
-  const handleDelete = (id) => {
-    dispatch(deletePostValidation(id));
+  const handleDelete = () => {
+    if (apiToDelete.id) {
+      dispatch(deletePostValidation(apiToDelete.id));
+    }
+    setShowDeleteModal(false);
+    setApiToDelete({ id: null, name: "" });
   };
 
+  const openDeleteModal = (id, name) => {
+    setApiToDelete({ id, name });
+    setShowDeleteModal(true);
+  };
   return (
     <div>
       {loading ? (
@@ -115,9 +121,9 @@ function PostValidationList() {
                           <Button
                             variant="danger"
                             size="sm"
-                            onClick={() => handleDelete(item._id)}
+                            onClick={() => openDeleteModal(item._id, item.name)}
                           >
-                            Delete
+                            Delete  
                           </Button>
                           <Button
                             variant="warning"
@@ -164,6 +170,13 @@ function PostValidationList() {
           </div>
         </div>
       )}
+
+      <ConfirmationModal
+        show={showDeleteModal}
+        onHide={() => setShowDeleteModal(false)}
+        onConfirm={handleDelete}
+        message={`${apiToDelete.name} Post Validation`}
+      />
     </div>
   );
 }

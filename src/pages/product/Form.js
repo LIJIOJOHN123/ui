@@ -1,3 +1,4 @@
+import Select from "react-select";
 import React, { useEffect, useState } from "react";
 import { Form as BootstrapForm, Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
@@ -9,6 +10,8 @@ import {
   updateproductAction,
 } from "../../store/productManagementSlice";
 import { ApiGroupAction } from "../../store/apiGroupManagementSlice";
+import { fetchValidations } from "../../store/prevalidationSlice";
+import { fetchPostValidations } from "../../store/postvalidationSlice";
 
 function GroupApiForm() {
   const navigate = useNavigate();
@@ -21,6 +24,8 @@ function GroupApiForm() {
     des: "",
     apiGroupId: "",
     api: [],
+    preValidation: [],
+    postValidation: [],
   });
 
   const [apiList, setApiList] = useState([]);
@@ -28,20 +33,33 @@ function GroupApiForm() {
   const { loading, status, dataById } = useSelector(
     (state) => state.productManagement
   );
-  console.log(dataById,"dataById")
+
   const clientData = useSelector((state) => state.clientManagement.data);
   const apiGroupData = useSelector((state) => state.apiGroupManagement.data);
 
+  const { data: preValidationData } = useSelector(
+    (state) => state.prevalidation
+  );
+  const { data: postValidationData } = useSelector(
+    (state) => state.postvalidation
+  );
   // Fetch necessary data when the component loads
   useEffect(() => {
     if (id) {
       dispatch(getByIdAPIAction(id));
     }
+
+    dispatch(fetchValidations());
+    dispatch(fetchPostValidations());
     dispatch(clientManagementListAction());
     dispatch(ApiGroupAction());
   }, [id, dispatch]);
 
-  // Populate form data when editing
+  const handleSelectChange = (selected, field) => {
+    const selectedIds = selected?.map((item) => item.value) || [];
+    setFormData((prevData) => ({ ...prevData, [field]: selectedIds }));
+  };
+
   useEffect(() => {
     if (id && dataById) {
       setFormData({
@@ -49,6 +67,8 @@ function GroupApiForm() {
         apiGroupId: dataById.apiGroupId || "",
         name: dataById.name || "",
         des: dataById.des || "",
+        preValidation: dataById.preValidation || [],
+        postValidation: dataById.postValidation || [],
       });
 
       if (dataById?.api?.length) {
@@ -97,7 +117,7 @@ function GroupApiForm() {
       navigate("/products");
     }
   };
- 
+
   // Handle row form submission (for API specific details)
   const handleRowSubmit = (e, index, id) => {
     e.preventDefault();
@@ -139,6 +159,30 @@ function GroupApiForm() {
     });
   };
 
+  const renderSelect = (label, options = [], value, field) => (
+    <BootstrapForm.Group className="mt-3">
+      <BootstrapForm.Label>{label}</BootstrapForm.Label>
+      <Select
+        isMulti
+        options={options}
+        value={options.filter((opt) => value?.includes(opt.value))}
+        onChange={(selected) => handleSelectChange(selected, field)}
+        placeholder={`Select ${label}...`}
+      />
+    </BootstrapForm.Group>
+  );
+
+  const validationOptions = preValidationData.map((item) => ({
+    value: item._id,
+    label: item.name,
+  }));
+
+  const postValidationOptions = postValidationData.map((item) => ({
+    value: item._id,
+    label: item.name,
+  }));
+
+  console.log(formData.preValidation, "sformData.preValidation");
   return (
     <div>
       <div className="d-flex justify-content-between">
@@ -171,7 +215,9 @@ function GroupApiForm() {
               onChange={handleInputChange}
               required
             >
-              <option value="">Select API Group</option>
+              <option disabled value="">
+                Select API Group
+              </option>
               {apiGroupData.map((group) => (
                 <option key={group._id} value={group._id}>
                   {group.name}
@@ -179,6 +225,19 @@ function GroupApiForm() {
               ))}
             </BootstrapForm.Control>
           </BootstrapForm.Group>
+
+          {renderSelect(
+            "Pre-Validations",
+            validationOptions,
+            formData.preValidation,
+            "preValidation"
+          )}
+          {renderSelect(
+            "Post-Validations",
+            postValidationOptions,
+            formData.postValidation,
+            "postValidation"
+          )}
 
           {!id && (
             <BootstrapForm.Group controlId="formClient">

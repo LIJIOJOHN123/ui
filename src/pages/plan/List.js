@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { deleteplanAction, planAction } from "../../store/planSlice";
 import PlanSearchPopup from "./SearchInput";
+import ConfirmationModal from "../../utils/ConfirmationModal ";
 
 function PlanList() {
   const dispatch = useDispatch();
@@ -11,13 +12,12 @@ function PlanList() {
 
   const { data, loading, count } = useSelector((state) => state.plan);
 
-  // /////////
-
   const [searchQueries, setSearchQueries] = useState({});
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(5);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [apiToDelete, setApiToDelete] = useState({ id: null, name: "" });
 
-  console.log(searchQueries);
   const queryString = Object.entries(searchQueries)
     .filter(([_, value]) => value !== "")
     .map(([key, value]) => `${key}=${value}`)
@@ -34,8 +34,18 @@ function PlanList() {
     setLimit(value);
     setPage(1);
   };
+  const handleDelete = () => {
+    if (apiToDelete.id) {
+      dispatch(deleteplanAction(apiToDelete.id));
+    }
+    setShowDeleteModal(false);
+    setApiToDelete({ id: null, name: "" });
+  };
 
-  // ///////////
+  const openDeleteModal = (id, name) => {
+    setApiToDelete({ id, name });
+    setShowDeleteModal(true);
+  };
 
   return (
     <div>
@@ -114,7 +124,7 @@ function PlanList() {
                         <div className="mt-3">
                           <Button
                             variant="danger"
-                            onClick={() => dispatch(deleteplanAction(item._id))}
+                            onClick={() => openDeleteModal(item._id, item.name)}
                             className="me-2"
                           >
                             Delete
@@ -157,6 +167,12 @@ function PlanList() {
           </div>
         </div>
       )}
+      <ConfirmationModal
+        show={showDeleteModal}
+        onHide={() => setShowDeleteModal(false)}
+        onConfirm={handleDelete}
+        message={`${apiToDelete.name} Plan`}
+      />
     </div>
   );
 }

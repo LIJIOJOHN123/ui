@@ -85,6 +85,8 @@ export const {
   editproductResponseSuccess,
   getByIdResponseFail,
   getByIdResponseSuccess,
+  deleteAPIGroupResponseFail,
+  deleteAPIGroupResponseSuccess,
 } = productSlice.actions;
 
 export const productReducer = productSlice.reducer;
@@ -211,8 +213,9 @@ export const deleteproductAction = (id) => async (dispatch) => {
     );
 
     const { status, message } = res.data;
+    
     if (status === "ok") {
-      dispatch(deleteproductResponseSuccess({ id, status }));
+      dispatch(deleteAPIGroupResponseSuccess({ id, status }));
       toast.success(message);
     }
   } catch (error) {
@@ -220,7 +223,8 @@ export const deleteproductAction = (id) => async (dispatch) => {
       message: error?.response?.data?.message || "An error occurred",
       status: error?.response?.status || 500,
     };
-    dispatch(deleteproductResponseFail(payload));
+
+    dispatch(deleteAPIGroupResponseFail(payload));
     toast.error(payload.message);
   }
 };

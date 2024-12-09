@@ -7,6 +7,7 @@ import {
   ApiGroupAction,
 } from "../../store/apiGroupManagementSlice";
 import APiGroupSearch from "./APiGroupSearch";
+import ConfirmationModal from "../../utils/ConfirmationModal ";
 
 function APIGroupList() {
   const dispatch = useDispatch();
@@ -14,9 +15,12 @@ function APIGroupList() {
   const { data, loading, count } = useSelector(
     (state) => state.apiGroupManagement
   );
+
   const [searchQueries, setSearchQueries] = useState({});
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(5);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [apiToDelete, setApiToDelete] = useState({ id: null, name: "" });
 
   const queryString = Object.entries(searchQueries)
     .filter(([_, value]) => value !== "")
@@ -25,13 +29,26 @@ function APIGroupList() {
 
   useEffect(() => {
     dispatch(ApiGroupAction(page, limit, queryString));
-  }, [page, limit, dispatch, queryString]);
+  }, [page, limit, dispatch, queryString, data]);
 
   const totalPages = Math.ceil(count / limit);
   const handleLimitChange = (e) => {
     const value = parseInt(e.target.value, 10);
     setLimit(value);
     setPage(1);
+  };
+
+  const handleDelete = () => {
+    if (apiToDelete.id) {
+      dispatch(deleteApiGroupAction(apiToDelete.id));
+    }
+    setShowDeleteModal(false);
+    setApiToDelete({ id: null, name: "" });
+  };
+
+  const openDeleteModal = (id, name) => {
+    setApiToDelete({ id, name });
+    setShowDeleteModal(true);
   };
   return (
     <div>
@@ -91,9 +108,7 @@ function APIGroupList() {
                         </div>
                         <div className="mt-3 " style={{ zIndex: 10 }}>
                           <Button
-                            onClick={() =>
-                              dispatch(deleteApiGroupAction(item._id))
-                            }
+                            onClick={() => openDeleteModal(item._id, item.name)}
                           >
                             Delete
                           </Button>
@@ -134,6 +149,13 @@ function APIGroupList() {
           </div>
         </div>
       )}
+
+      <ConfirmationModal
+        show={showDeleteModal}
+        onHide={() => setShowDeleteModal(false)}
+        onConfirm={handleDelete}
+        message={`${apiToDelete.name} Api Group`}
+      />
     </div>
   );
 }

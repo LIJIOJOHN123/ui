@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { apiListAction, deleteApiAction } from "../../store/apiManagementSlice";
 import SearchPopup from "./SearchInput";
+import ConfirmationModal from "../../utils/ConfirmationModal ";
 
 function ApiList() {
   const dispatch = useDispatch();
@@ -12,6 +13,8 @@ function ApiList() {
   const [searchQueries, setSearchQueries] = useState({});
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(5);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [apiToDelete, setApiToDelete] = useState({ id: null, name: "" });
 
   const queryString = Object.entries(searchQueries)
     .filter(([_, value]) => value !== "")
@@ -28,6 +31,19 @@ function ApiList() {
     const value = parseInt(e.target.value, 10);
     setLimit(value);
     setPage(1);
+  };
+
+  const handleDelete = () => {
+    if (apiToDelete.id) {
+      dispatch(deleteApiAction(apiToDelete.id));
+    }
+    setShowDeleteModal(false);
+    setApiToDelete({ id: null, name: "" });
+  };
+
+  const openDeleteModal = (id, name) => {
+    setApiToDelete({ id, name });
+    setShowDeleteModal(true);
   };
 
   return (
@@ -112,7 +128,9 @@ function ApiList() {
                         </div>
                         <div className="mt-3  d-flex justify-content-between">
                           <Button
-                            onClick={() => dispatch(deleteApiAction(item._id))}
+                            onClick={() =>
+                              openDeleteModal(item._id, item.apiname)
+                            }
                             className="ml-5 btn-danger"
                           >
                             Delete
@@ -157,6 +175,13 @@ function ApiList() {
           </div>
         </div>
       )}
+
+      <ConfirmationModal
+        show={showDeleteModal}
+        onHide={() => setShowDeleteModal(false)}
+        onConfirm={handleDelete}
+        message={`${apiToDelete.name} Api`}
+      />
     </div>
   );
 }

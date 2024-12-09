@@ -3,81 +3,74 @@ import { Form as BootstrapForm, Button, Col, Row } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import Select from "react-select";
-import { apiListAction } from "../../store/apiManagementSlice";
 import {
   getByIdAPIAction,
   addApiGroupAction,
-  updateApiGroupAction
+  updateApiGroupAction,
 } from "../../store/apiGroupManagementSlice";
-import {  } from "../../store/productManagementSlice";
+import { apiListAction } from "../../store/apiManagementSlice";
+import { fetchValidations } from "../../store/prevalidationSlice";
+import { fetchPostValidations } from "../../store/postvalidationSlice";
 
 function CategoryForm() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { id } = useParams();
 
-  const [selectedValues, setSelectedValues] = useState([]);
   const [formData, setFormData] = useState({
     name: "",
     description: "",
     fields: [""],
     field_active: false,
     apiId: [],
+    preValidation: [],
+    postValidation: [],
   });
   const [error, setError] = useState(false);
 
-  const { loading, status, dataById } = useSelector((state) => state.apiGroupManagement);
   const { data: apiData } = useSelector((state) => state.apiManagement);
-  console.log(apiData);
-  useEffect(() => {
-    if (id) dispatch(getByIdAPIAction(id));
-  }, [id]);
-
-  const filteredData = apiData.filter((item) =>
-    dataById?.apiId?.includes(item._id)
+  const { data: preValidationData } = useSelector(
+    (state) => state.prevalidation
   );
+  const { data: postValidationData } = useSelector(
+    (state) => state.postvalidation
+  );
+  const { dataById, loading } = useSelector(
+    (state) => state.apiGroupManagement
+  );
+
+  // Fetch Data on Mount
+  useEffect(() => {
+    dispatch(fetchValidations());
+    dispatch(fetchPostValidations());
+    if (!apiData.length) dispatch(apiListAction());
+    if (id) dispatch(getByIdAPIAction(id));
+  }, [id, dispatch]);
+
+  // Populate Form Data for Edit
   useEffect(() => {
     if (id && dataById) {
       setFormData({
         name: dataById.name || "",
         description: dataById.description || "",
-        fields: !dataById.fields?.length
-          ? [""]
-          : (dataById.fields || [""]).filter((field) => field.trim() !== ""),
-        apiId: dataById?.apiId?.map((item) => item) || [],
-        field_active: dataById?.field_active,
+        fields: dataById.fields?.length ? dataById.fields : [""],
+        field_active: dataById.field_active || false,
+        apiId: dataById.apiId || [],
+        preValidation: dataById.preValidation || [],
+        postValidation: dataById.postValidation || [],
       });
-
-      setSelectedValues(
-        filteredData?.map((item) => ({
-          value: item._id,
-          label: item.apiname,
-        })) || []
-      );
     }
   }, [id, dataById]);
-
-  useEffect(() => {
-    if (!apiData.length && !loading) dispatch(apiListAction());
-  }, [apiData, loading, dispatch]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
-  const handleSelectChange = (selected) => {
-    const selectedIds = selected?.map((item) => item.value) || [];
-    setSelectedValues(selected);
-    setFormData((prevData) => ({ ...prevData, apiId: selectedIds }));
-    setError(selectedIds.length === 0);
-  };
-
   const handleFieldChange = (index, value) => {
     const updatedFields = [...formData.fields];
     updatedFields[index] = value;
     setFormData((prevData) => ({ ...prevData, fields: updatedFields }));
-    if (value) setError(false);
   };
 
   const addField = () => {
@@ -89,6 +82,14 @@ function CategoryForm() {
       ...prevData,
       fields: [...prevData.fields, ""],
     }));
+  };
+
+  const handleSelectChange = (selected, field) => {
+    console.log(selected, field, "selected, field");
+    const selectedIds = selected?.map((item) => item.value) || [];
+
+    console.log(selectedIds)
+    setFormData((prevData) => ({ ...prevData, [field]: selectedIds }));
   };
 
   const handleSubmit = async (e) => {
@@ -103,12 +104,48 @@ function CategoryForm() {
     } else {
       dispatch(addApiGroupAction(formData));
     }
-    if (status === "ok") navigate("/api-groups");
+    navigate("/api-groups");
   };
 
-  const options = apiData?.map((item) => ({
+  const renderFieldInputs = () =>
+    formData.fields.map((field, index) => (
+      <Row key={index} className="mb-2">
+        <Col xs={10}>
+          <BootstrapForm.Control
+            type="text"
+            placeholder="Enter field"
+            value={field}
+            onChange={(e) => handleFieldChange(index, e.target.value)}
+            isInvalid={error && index === formData.fields.length - 1 && !field}
+          />
+        </Col>
+      </Row>
+    ));
+
+  const renderSelect = (label, options, value, field) => (
+    <BootstrapForm.Group className="mt-3">
+      <BootstrapForm.Label>{label}</BootstrapForm.Label>
+      <Select
+        isMulti
+        options={options}
+        value={options.filter((opt) => value.includes(opt.value))}
+        onChange={(selected) => handleSelectChange(selected, field)}
+        placeholder={`Select ${label}...`}
+      />
+    </BootstrapForm.Group>
+  );
+
+  const apiOptions = apiData.map((item) => ({
     value: item._id,
     label: item.apiname,
+  }));
+  const validationOptions = preValidationData.map((item) => ({
+    value: item._id,
+    label: item.name,
+  }));
+  const postValidationOptions = postValidationData.map((item) => ({
+    value: item._id,
+    label: item.name,
   }));
 
   return (
@@ -121,16 +158,15 @@ function CategoryForm() {
       </div>
       <div className="mt-4 bg-body-secondary rounded-2 p-3">
         <BootstrapForm onSubmit={handleSubmit}>
-          <BootstrapForm.Group controlId="formCategoryName">
+          <BootstrapForm.Group controlId="formName">
             <BootstrapForm.Label>Name</BootstrapForm.Label>
             <BootstrapForm.Control
               type="text"
-              placeholder="Enter API group name"
               name="name"
               value={formData.name}
               onChange={handleInputChange}
-              required
               isInvalid={error && !formData.name}
+              required
             />
             <BootstrapForm.Control.Feedback type="invalid">
               Name is required.
@@ -142,27 +178,25 @@ function CategoryForm() {
             <BootstrapForm.Control
               as="textarea"
               rows={3}
-              placeholder="Enter description"
               name="description"
               value={formData.description}
               onChange={handleInputChange}
             />
           </BootstrapForm.Group>
-          <BootstrapForm.Group className="mt-3" controlId="formAddFields">
-            <div className="d-flex ">
+
+          <BootstrapForm.Group className="mt-3">
+            <div className="d-flex align-items-center">
               <BootstrapForm.Label className="me-2">
                 Add Fields
               </BootstrapForm.Label>
               <BootstrapForm.Check
                 type="switch"
-                id="AddFieldsToggle"
                 name="field_active"
-                // label={formData.field_active ? "Enabled" : "Disabled"}
                 checked={formData.field_active}
                 onChange={(e) =>
                   setFormData((prevData) => ({
                     ...prevData,
-                    field_active: e.target.checked ? true : false,
+                    field_active: e.target.checked,
                   }))
                 }
               />
@@ -170,49 +204,34 @@ function CategoryForm() {
           </BootstrapForm.Group>
 
           {formData.field_active && (
-            <BootstrapForm.Group className="mt-3" controlId="formFields">
-              <BootstrapForm.Label>Fields</BootstrapForm.Label>
-              {formData.fields.map((field, index) => (
-                <Row key={index}>
-                  <Col xs={9}>
-                    <BootstrapForm.Control
-                      // disabled={!formData.field_active}
-                      type="text"
-                      placeholder="Enter field"
-                      value={field}
-                      onChange={(e) => handleFieldChange(index, e.target.value)}
-                      required={!id && !formData.field_active}
-                      isInvalid={
-                        error &&
-                        index === formData.fields.length - 1 &&
-                        field === ""
-                      }
-                    />
-                  </Col>
-                </Row>
-              ))}
-              <Button className="mt-2" onClick={addField}>
-                Add Field
-              </Button>
+            <BootstrapForm.Group className="mt-3">
+              {renderFieldInputs()}
             </BootstrapForm.Group>
           )}
-          <BootstrapForm.Group className="mt-3" controlId="formApiSelect">
-            <BootstrapForm.Label>Select APIs</BootstrapForm.Label>
-            <Select
-              isMulti
-              options={options}
-              value={selectedValues}
-              onChange={handleSelectChange}
-              placeholder="Select APIs..."
-            />
-          </BootstrapForm.Group>
+
+          {formData.field_active && (
+            <Button className="mt-2" onClick={addField}>
+              Add Field
+            </Button>
+          )}
+
+          {renderSelect("APIs", apiOptions, formData.apiId, "apiId")}
+          {renderSelect(
+            "Pre-Validations",
+            validationOptions,
+            formData.preValidation,
+            "preValidation"
+          )}
+          {renderSelect(
+            "Post-Validations",
+            postValidationOptions,
+            formData.postValidation,
+            "postValidation"
+          )}
+          
 
           <Button type="submit" className="mt-4" variant="primary">
-            {loading ? (
-              <span className="spinner-border spinner-border-sm" />
-            ) : (
-              "Submit"
-            )}
+            Submit
           </Button>
         </BootstrapForm>
       </div>

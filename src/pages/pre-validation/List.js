@@ -7,6 +7,7 @@ import {
   fetchValidations,
 } from "../../store/prevalidationSlice";
 import ValidationSearchPopup from "./SearchInput";
+import ConfirmationModal from "../../utils/ConfirmationModal ";
 
 function PreValidationList() {
   const dispatch = useDispatch();
@@ -16,13 +17,12 @@ function PreValidationList() {
     (state) => state.prevalidation
   );
 
-  // /////////
-
   const [searchQueries, setSearchQueries] = useState({});
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(5);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [apiToDelete, setApiToDelete] = useState({ id: null, name: "" });
 
-  console.log(searchQueries);
   const queryString = Object.entries(searchQueries)
     .filter(([_, value]) => value !== "")
     .map(([key, value]) => `${key}=${value}`)
@@ -40,10 +40,17 @@ function PreValidationList() {
     setPage(1);
   };
 
-  // ///////////
+  const handleDelete = () => {
+    if (apiToDelete.id) {
+      dispatch(deleteValidation(apiToDelete.id));
+    }
+    setShowDeleteModal(false);
+    setApiToDelete({ id: null, name: "" });
+  };
 
-  const handleDelete = (id) => {
-    dispatch(deleteValidation(id));
+  const openDeleteModal = (id, name) => {
+    setApiToDelete({ id, name });
+    setShowDeleteModal(true);
   };
 
   return (
@@ -115,7 +122,7 @@ function PreValidationList() {
                           <Button
                             variant="danger"
                             size="sm"
-                            onClick={() => handleDelete(item._id)}
+                            onClick={() => openDeleteModal(item._id, item.name)}
                           >
                             Delete
                           </Button>
@@ -164,6 +171,13 @@ function PreValidationList() {
           </div>
         </div>
       )}
+
+      <ConfirmationModal
+        show={showDeleteModal}
+        onHide={() => setShowDeleteModal(false)}
+        onConfirm={handleDelete}
+        message={`${apiToDelete.name} Pre Validation`}
+      />
     </div>
   );
 }
