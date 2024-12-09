@@ -28,7 +28,6 @@ function CategoryForm() {
 
   const { loading, status, dataById } = useSelector((state) => state.apiGroupManagement);
   const { data: apiData } = useSelector((state) => state.apiManagement);
-  console.log(apiData);
   useEffect(() => {
     if (id) dispatch(getByIdAPIAction(id));
   }, [id]);
@@ -208,11 +207,7 @@ function CategoryForm() {
           </BootstrapForm.Group>
 
           <Button type="submit" className="mt-4" variant="primary">
-            {loading ? (
-              <span className="spinner-border spinner-border-sm" />
-            ) : (
-              "Submit"
-            )}
+          Submit
           </Button>
         </BootstrapForm>
       </div>

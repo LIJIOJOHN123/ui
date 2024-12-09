@@ -23,7 +23,7 @@ function Form() {
     category_type: "",
   });
   const [error, setError] = useState(false);
-  const { loading, status, dataById } = useSelector(
+  const { status, dataById } = useSelector(
     (state) => state.apiManagement
   );
   useEffect(() => {
@@ -209,7 +209,7 @@ function Form() {
           </BootstrapForm.Group>
 
           <Button variant="primary" type="submit" className="mt-4">
-            {!loading ? <div className="spinner-border" /> : <div>Submit</div>}
+          Submit
           </Button>
         </BootstrapForm>
       </div>

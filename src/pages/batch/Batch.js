@@ -1,20 +1,31 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-
 import { useNavigate } from "react-router-dom";
-import { apiBatchingAction } from "../../store/api_Batching";
+import { batchListAction } from "../../store/apiResponseManagement";
 import { updateTransactionAction } from "../../store/transactionSlice";
 
 const Batch = () => {
   const dispatch = useDispatch();
-  const { data } = useSelector((state) => state.apiBatching);
-  React.useEffect(() => {
-    dispatch(apiBatchingAction());
-  }, []);
   const navigate = useNavigate();
+
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(25);
+  const [searchQueries, setSearchQueries] = useState({});
+
+  const queryString = Object.entries(searchQueries)
+    .filter(([_, value]) => value !== "")
+    .map(([key, value]) => `${key}=${value}`)
+    .join("&"); 
+
+  useEffect(() => {
+    dispatch(batchListAction(page, limit, queryString));
+  }, [dispatch, page, limit, queryString]);
+
   const handleButton = (id, data) => {
     dispatch(updateTransactionAction(id, data));
   };
+
+  const { batchList } = useSelector((state) => state.apiResponseManagement);;
   return (
     <Fragment>
       <h3>Client list</h3>
@@ -31,7 +42,7 @@ const Batch = () => {
           </tr>
         </thead>
         <tbody>
-          {data?.map((item) => {
+          {batchList?.map((item) => {
             return (
               <tr key={item._id}>
                 <td>
@@ -42,7 +53,7 @@ const Batch = () => {
                 </td>
                 <td>{item._id}</td>
                 <td>{item.type}</td>
-                <td>{item.numberofrequest}</td>
+                <td>{item.records}</td>
                 <td>{item.apiGroupId}</td>
 
                 <td>

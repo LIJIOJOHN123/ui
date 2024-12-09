@@ -19,9 +19,8 @@ function ApiGroup() {
 
   const [searchQueries, setSearchQueries] = useState({});
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(5);
+  const [limit, setLimit] = useState(25);
 
-  console.log(searchQueries);
   const queryString = Object.entries(searchQueries)
     .filter(([_, value]) => value !== "")
     .map(([key, value]) => `${key}=${value}`)
@@ -75,9 +74,9 @@ function ApiGroup() {
                 value={limit}
                 onChange={handleLimitChange}
               >
-                <option value={5}>5</option>
-                <option value={10}>10</option>
-                <option value={20}>20</option>
+                <option value={25}>25</option>
+                <option value={50}>50</option>
+                <option value={100}>100</option>
               </Form.Select>
             </div>
 
