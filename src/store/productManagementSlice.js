@@ -93,7 +93,7 @@ export const productReducer = productSlice.reducer;
 
 // Fetch API Group List
 export const productAction =
-  (page = 1, limit = 5, searchQueries) =>
+  (page, limit, searchQueries) =>
   async (dispatch) => {
     try {
       const token = getLocalStorage("authToken");
@@ -127,7 +127,7 @@ export const getByIdAPIAction = (id) => async (dispatch) => {
     });
 
     const { status, data } = res.data;
-
+    console.log(status,data)
     if (status === "ok") {
       dispatch(getByIdResponseSuccess({ status, data }));
     }

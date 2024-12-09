@@ -23,7 +23,7 @@ function Form() {
     category_type: "",
   });
   const [error, setError] = useState(false);
-  const { loading, status, dataById } = useSelector(
+  const { status, dataById } = useSelector(
     (state) => state.apiManagement
   );
   useEffect(() => {

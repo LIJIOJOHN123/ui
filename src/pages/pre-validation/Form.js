@@ -23,7 +23,6 @@ function ValidationForm() {
   const [validationErrors, setValidationErrors] = useState({});
 
   const {
-    loading,
     status: submissionStatus,
     dataById,
   } = useSelector((state) => state.prevalidation);
@@ -149,7 +148,7 @@ function ValidationForm() {
 
           {/* Submit Button */}
           <Button variant="primary" type="submit" className="mt-4">
-            {loading ? <div className="spinner-border" /> : "Submit"}
+            Submit
           </Button>
         </BootstrapForm>
 

@@ -10,5 +10,6 @@ apiGroupManagement:`${WEB_BACKEND_API_URL}/api_group_management`,
 productManagement:`${WEB_BACKEND_API_URL}/product_management`,
 validations:`${WEB_BACKEND_API_URL}/prevalidation`,
 postValidations:`${WEB_BACKEND_API_URL}/postvalidation`,
+apiResponseManagement:`${WEB_BACKEND_API_URL}/api_response_management`,
 };
 export default backendAPIList;

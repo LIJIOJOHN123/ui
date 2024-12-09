@@ -23,7 +23,7 @@ import ForgotPassword from "../pages/auth/ForgotPassword";
 import Login from "../pages/auth/Login";
 import Register from "../pages/auth/Register";
 import RestePassword from "../pages/auth/RestePassword";
-import BatchEnrichment from "../pages/batch-enrichment/BatchEnrichment";
+// import APIResponseManagement from "../pages/API_Response_Management";
 import Dashboard from "../pages/dashboard/Dashboard";
 import Documentation from "../pages/documentation/Documentation";
 import ApiGroup from "../pages/product/List";
@@ -31,7 +31,7 @@ import GroupApiForm from "../pages/product/Form";
 import PrivateRoute from "../pages/layout/ProctedRoutes";
 import Plans from "../pages/plans/Plans";
 import Settings from "../pages/settings/Settings";
-import GroupApiView from "../pages/product/Details";
+import ProductDetails from "../pages/product/Details";
 import ApiListView from "../pages/API_Management/Details";
 import ClientManagement from "../pages/clientmanagement/List";
 import ClientDetails from "../pages/clientmanagement/Details";
@@ -105,7 +105,7 @@ function RoutesPage() {
         <Route path="/">
           <Route element={<PrivateRoute />}>
             <Route path="dashboard" element={<Dashboard />} />
-            <Route path="batch-enrichment" element={<BatchEnrichment />} />
+            {/* <Route path="batch-enrichment" element={<APIResponseManagement />} /> */}
             {/* //////// */}
             <Route path="api-list" element={<ApiList />} />
             <Route path="api-list/:id" element={<ApiListView />} />
@@ -134,7 +134,7 @@ function RoutesPage() {
             {/* //////// */}
             <Route path="products" element={<ApiGroup />} />
             <Route path="products/create" element={<GroupApiForm />} />
-            <Route path="products/:id" element={<GroupApiView />} />
+            <Route path="products/:id" element={<ProductDetails />} />
             <Route path="products/edit/:id" element={<GroupApiForm />} />
             {/* ////// */}\{/* ////// */}
             <Route path="plan" element={<PlanList />} />

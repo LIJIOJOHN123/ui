@@ -26,7 +26,6 @@ function APIGroupList() {
     .filter(([_, value]) => value !== "")
     .map(([key, value]) => `${key}=${value}`)
     .join("&");
-
   useEffect(() => {
     dispatch(ApiGroupAction(page, limit, queryString));
   }, [page, limit, dispatch, queryString, data]);
@@ -85,9 +84,9 @@ function APIGroupList() {
                 value={limit}
                 onChange={handleLimitChange}
               >
-                <option value={5}>5</option>
-                <option value={10}>10</option>
-                <option value={20}>20</option>
+                <option value={25}>25</option>
+                <option value={50}>50</option>
+                <option value={100}>100</option>
               </Form.Select>
             </div>
 
@@ -114,7 +113,7 @@ function APIGroupList() {
                           </Button>
                           <Button
                             onClick={() =>
-                              navigate(`/category/edit/${item._id}`)
+                              navigate(`/api-groups/edit/${item._id}`)
                             }
                           >
                             Edit

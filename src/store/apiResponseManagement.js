@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { getLocalStorage } from "../utils/LocalStorage";
+import backendAPIList from "../services/apiList";
 
 const apiBatchingInitialState = {
   loading: false,
@@ -9,10 +10,12 @@ const apiBatchingInitialState = {
   status: null,
   count: null,
   dataById: {},
+  batchList:[],
+  batchCount:0,
 };
 
 // Create API Batching slice
-export const apiBatchingSlice = createSlice({
+export const apiResponseManagementSlice = createSlice({
   name: "api_Batching",
   initialState: apiBatchingInitialState,
   reducers: {
@@ -26,6 +29,16 @@ export const apiBatchingSlice = createSlice({
       state.count = action.payload.count;
     },
     listResponseFail: (state, action) => {
+      state.loading = false;
+      state.status = action.payload.status;
+    },
+    batchlistResponseSuccess: (state, action) => {
+      state.loading = false;
+      state.batchList = action.payload.data;
+      state.status = action.payload.status;
+      state.batchCount = action.payload.count;
+    },
+    batchlistResponseFail: (state, action) => {
       state.loading = false;
       state.status = action.payload.status;
     },
@@ -84,15 +97,17 @@ export const {
   editAPIBatchingResponseSuccess,
   getByIdResponseFail,
   getByIdResponseSuccess,
-} = apiBatchingSlice.actions;
+  batchlistResponseSuccess,
+  batchlistResponseFail
+} = apiResponseManagementSlice.actions;
 
-export const apiBatchingReducer = apiBatchingSlice.reducer;
+export const apiReponseManagementReducer = apiResponseManagementSlice.reducer;
 
 // Fetch API Batching List
 export const apiBatchingAction = () => async (dispatch) => {
   try {
     const token = getLocalStorage("authToken");
-    const res = await axios.get(`${process.env.REACT_APP_Base_WEB_URL}/apis`, {
+    const res = await axios.get(`${backendAPIList.apiResponseManagement}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
 
@@ -109,13 +124,37 @@ export const apiBatchingAction = () => async (dispatch) => {
     toast.error(payload.message);
   }
 };
+export const batchListAction =
+  (page, limit, searchQueries) =>
+  async (dispatch) => {
+    try {
+      const token = getLocalStorage("authToken");
+      const res = await axios.get(
+        `${backendAPIList.apiResponseManagement}/batch?page=${page}&limit=${limit}&${searchQueries}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
 
+      const { status, data, count } = res.data;
+      if (status === "ok") {
+        dispatch(batchlistResponseSuccess({ data, status, count }));
+      }
+    } catch (error) {
+      const payload = {
+        message: error?.response?.data?.message || "An error occurred",
+        status: error?.response?.status || 500,
+      };
+      dispatch(batchlistResponseFail(payload));
+      toast.error(payload.message);
+    }
+  };
 // Fetch API By ID
 export const getByIdAPIAction = (id) => async (dispatch) => {
   try {
     const token = getLocalStorage("authToken");
     const res = await axios.get(
-      `${process.env.REACT_APP_Base_WEB_URL}/apis/${id}`,
+      `${backendAPIList.apiResponseManagement}/${id}`,
       {
         headers: { Authorization: `Bearer ${token}` },
       }
@@ -139,7 +178,7 @@ export const addAPIBatchingAction = (formData) => async (dispatch) => {
   try {
     const token = getLocalStorage("authToken");
     const res = await axios.post(
-      `${process.env.REACT_APP_Base_WEB_URL}/apis`,
+      `${backendAPIList.apiResponseManagement}`,
       formData,
       {
         headers: { Authorization: `Bearer ${token}` },
@@ -170,7 +209,7 @@ export const uploadCSVFileAPIBatchingAction =
 
       const token = getLocalStorage("authToken");
       const res = await axios.post(
-        `${process.env.REACT_APP_Base_WEB_URL}/apis/upload/${formData.apiGroupId}`,
+        `${backendAPIList.apiResponseManagement}/upload/${formData.apiGroupId}`,
         formData.formData,
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -199,7 +238,7 @@ export const updateAPIBatchingAction = (id, formData) => async (dispatch) => {
   try {
     const token = getLocalStorage("authToken");
     const res = await axios.put(
-      `${process.env.REACT_APP_Base_WEB_URL}/apis/${id}`,
+      `${backendAPIList.apiResponseManagement}/${id}`,
       formData,
       {
         headers: { Authorization: `Bearer ${token}` },
@@ -229,7 +268,7 @@ export const deleteAPIBatchingAction = (id) => async (dispatch) => {
   try {
     const token = getLocalStorage("authToken");
     const res = await axios.delete(
-      `${process.env.REACT_APP_Base_WEB_URL}/apis/${id}`,
+      `${backendAPIList.apiResponseManagement}/${id}`,
       {
         headers: { Authorization: `Bearer ${token}` },
       }

@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { getByIdAPIAction } from "../../store/apiManagementSlice";
-import { apiBatchingAction } from "../../store/api_Batching";
+import { apiBatchingAction } from "../../store/apiResponseManagement";
 
 function ApiListView() {
   const { id } = useParams();
