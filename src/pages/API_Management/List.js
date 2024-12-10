@@ -152,25 +152,60 @@ function ApiList() {
 
             {/* Pagination */}
             <div className="mt-auto">
-              <Pagination className="d-flex justify-content-center">
-                <Pagination.Prev
-                  disabled={page === 1}
-                  onClick={() => setPage(page - 1)}
-                />
-                {[...Array(totalPages)].map((_, idx) => (
-                  <Pagination.Item
-                    key={idx}
-                    active={page === idx + 1}
-                    onClick={() => setPage(idx + 1)}
-                  >
-                    {idx + 1}
-                  </Pagination.Item>
-                ))}
-                <Pagination.Next
-                  disabled={page === totalPages}
-                  onClick={() => setPage(page + 1)}
-                />
-              </Pagination>
+            <Pagination className="d-flex justify-content-center">
+          <Pagination.Prev
+            disabled={page === 1}
+            onClick={() => setPage(page - 1)}
+          />
+
+          {/* First three pages */}
+          {[1, 2, 3].map((num) =>
+            num <= totalPages ? (
+              <Pagination.Item
+                key={num}
+                active={page === num}
+                onClick={() => setPage(num)}
+              >
+                {num}
+              </Pagination.Item>
+            ) : null
+          )}
+
+          {/* Ellipsis if necessary */}
+          {page > 4 && page < totalPages - 2 && <Pagination.Ellipsis disabled />}
+
+          {/* Current page, if not in the first three */}
+          {page > 3 && page < totalPages - 2 && (
+            <Pagination.Item
+              key={page}
+              active
+              onClick={() => setPage(page)}
+            >
+              {page}
+            </Pagination.Item>
+          )}
+
+          {/* Ellipsis before the last two pages */}
+          {page < totalPages - 3 && totalPages > 5 && <Pagination.Ellipsis disabled />}
+
+          {/* Last two pages */}
+          {[totalPages - 1, totalPages].map((num) =>
+            num > 3 ? (
+              <Pagination.Item
+                key={num}
+                active={page === num}
+                onClick={() => setPage(num)}
+              >
+                {num}
+              </Pagination.Item>
+            ) : null
+          )}
+
+          <Pagination.Next
+            disabled={page === totalPages}
+            onClick={() => setPage(page + 1)}
+          />
+        </Pagination>
             </div>
           </div>
         </div>
