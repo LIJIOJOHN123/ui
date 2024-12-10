@@ -72,29 +72,22 @@ const Transaction = () => {
           <table className="table">
             <thead>
               <tr>
-                <th scope="col">View</th>
                 <th scope="col">id</th>
                 <th scope="col">Type</th>
                 <th scope="col">mode</th>
                 <th scope="col">Amount</th>
-                <th scope="col">decription</th>
+                <th scope="col">description</th>
               </tr>
             </thead>
             <tbody>
               {data?.map((item) => {
                 return (
                   <tr key={item._id}>
-                    <td>
-                      <i
-                        className="bi bi-eye-fill"
-                        onClick={() => navigate(`/client/${item._id}`)}
-                      ></i>
-                    </td>
                     <td>{item._id}</td>
                     <td>{item.type}</td>
                     <td>{item.mode}</td>
                     <td>{item.amount}</td>
-                    <td>{item.decription}</td>
+                    <td>{item.description}</td>
                   </tr>
                 );
               })}
@@ -102,25 +95,61 @@ const Transaction = () => {
           </table>
         </div>
         <div className="mt-auto">
-          <Pagination className="d-flex justify-content-center">
-            <Pagination.Prev
-              disabled={page === 1}
-              onClick={() => setPage(page - 1)}
-            />
-            {/* {[...Array(totalPages)].map((_, idx) => (
+        <Pagination className="d-flex justify-content-center">
+          <Pagination.Prev
+            disabled={page === 1}
+            onClick={() => setPage(page - 1)}
+          />
+
+          {/* First three pages */}
+          {[1, 2, 3].map((num) =>
+            num <= totalPages ? (
               <Pagination.Item
-                key={idx}
-                active={page === idx + 1}
-                onClick={() => setPage(idx + 1)}
+                key={num}
+                active={page === num}
+                onClick={() => setPage(num)}
               >
-                {idx + 1}
+                {num}
               </Pagination.Item>
-            ))} */}
-            <Pagination.Next
-              disabled={page === totalPages}
-              onClick={() => setPage(page + 1)}
-            />
-          </Pagination>
+            ) : null
+          )}
+
+          {/* Ellipsis if necessary */}
+          {page > 4 && page < totalPages - 2 && <Pagination.Ellipsis disabled />}
+
+          {/* Current page, if not in the first three */}
+          {page > 3 && page < totalPages - 2 && (
+            <Pagination.Item
+              key={page}
+              active
+              onClick={() => setPage(page)}
+            >
+              {page}
+            </Pagination.Item>
+          )}
+
+          {/* Ellipsis before the last two pages */}
+          {page < totalPages - 3 && totalPages > 5 && <Pagination.Ellipsis disabled />}
+
+          {/* Last two pages */}
+          {[totalPages - 1, totalPages].map((num) =>
+            num > 3 ? (
+              <Pagination.Item
+                key={num}
+                active={page === num}
+                onClick={() => setPage(num)}
+              >
+                {num}
+              </Pagination.Item>
+            ) : null
+          )}
+
+          <Pagination.Next
+            disabled={page === totalPages}
+            onClick={() => setPage(page + 1)}
+          />
+        </Pagination>
+
         </div>
       </div>
     </Fragment>
