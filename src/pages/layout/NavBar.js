@@ -22,27 +22,23 @@ function NavBar({ children }) {
   };
   const navItems = [
     { label: "Dashboard", path: "/dashboard" },
-    { label: "Documentation", path: "/documentation" },
     { label: "Products", path: "/products" },
     { label: "Transaction", path: "/transaction" },
     { label: "Plan", path: "/plan" },
-    { label: "Pre-Validation", path: "/pre-validation" },
-    { label: "Post-Validation", path: "/post-validation" },
     { label: "Settings", path: "/settings" },
     { label: "Logout", path: "/" },
   ];
   const navAdminItems = [
     { label: "Dashboard", path: "/dashboard" },
-    { label: "Documentation", path: "/documentation" },
+    { label: "Clients", path: "/clients" },
     { label: "Api List", path: "/api-list" },
     { label: "Api Group", path: "/api-groups" },
     { label: "Products", path: "/products" },
-    { label: "Transaction", path: "/transaction" },
-    { label: "Clients", path: "/clients" },
     { label: "Batch", path: "/batch" },
-    { label: "Plan", path: "/plan" },
     { label: "Pre-Validation", path: "/pre-validation" },
     { label: "Post-Validation", path: "/post-validation" },
+    { label: "Transaction", path: "/transaction" },
+    { label: "Plan", path: "/plan" },
     { label: "Settings", path: "/settings" },
     { label: "Logout", path: "/" },
   ];
