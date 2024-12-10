@@ -23,6 +23,7 @@ function NavBar({ children }) {
   const navItems = [
     { label: "Dashboard", path: "/dashboard" },
     { label: "Products", path: "/products" },
+    { label: "Api Response", path: "/api-response" },
     { label: "Transaction", path: "/transaction" },
     { label: "Plan", path: "/plan" },
     { label: "Settings", path: "/settings" },
@@ -35,6 +36,7 @@ function NavBar({ children }) {
     { label: "Api Group", path: "/api-groups" },
     { label: "Products", path: "/products" },
     { label: "Batch", path: "/batch" },
+    { label: "Api Response", path: "/api-response" },
     { label: "Pre-Validation", path: "/pre-validation" },
     { label: "Post-Validation", path: "/post-validation" },
     { label: "Transaction", path: "/transaction" },

@@ -47,6 +47,9 @@ import PostValidationList from "../pages/post-validation/List";
 import PostValidationForm from "../pages/post-validation/Form";
 import PreValidationList from "../pages/pre-validation/List";
 import ValidationForm from "../pages/pre-validation/Form";
+import BatchDeatils from "../pages/product/BatchDeatils";
+import BatchView from "../pages/product/BatchView";
+import ApiResponse from "../pages/api-response/ApiResponse";
 
 function RoutesPage() {
   return (
@@ -148,6 +151,8 @@ function RoutesPage() {
             <Route path="api-groups/:id" element={<APIGroupDetails />} />
             <Route path="api-groups/edit/:id" element={<APIGroupForm />} />
             {/* ////// */}
+            <Route path="api-response" element={<ApiResponse />} />
+            {/* ////// */}
             <Route path="clients" element={<ClientManagement />} />
             <Route path="transaction" element={<Transaction />} />
             <Route path="batch" element={<Batch />} />
@@ -155,6 +160,14 @@ function RoutesPage() {
             <Route path="documentation" element={<Documentation />} />
             <Route path="plans" element={<Plans />} />
             <Route path="settings" element={<Settings />} />
+            <Route
+              path="products/batch-deatils/:id"
+              element={<BatchDeatils />}
+            />
+            <Route
+              path="products/batch-details-view/:id"
+              element={<BatchView />}
+            />
           </Route>
         </Route>
       </Routes>
