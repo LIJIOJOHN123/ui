@@ -151,36 +151,36 @@ function ApiResponse() {
 
           {/* Current page, if not in the first three */}
           {page > 3 && page < totalPages - 2 && (
+              <Pagination.Item
+                key={page}
+                active
+                onClick={() => setPage(page)}
+              >
+                {page}
+              </Pagination.Item>
+            )}
+
+            {/* Ellipsis before the last two pages */}
+            {page < totalPages - 3 && totalPages > 5 && <Pagination.Ellipsis disabled />}
+
+            {/* Last two pages */}
+            {[totalPages - 1, totalPages].map((num) =>
+              num > 3 ? (
                 <Pagination.Item
-                  key={page}
-                  active
-                  onClick={() => setPage(page)}
+                  key={num}
+                  active={page === num}
+                  onClick={() => setPage(num)}
                 >
-                  {page}
+                  {num}
                 </Pagination.Item>
-              )}
+              ) : null
+            )}
 
-              {/* Ellipsis before the last two pages */}
-              {page < totalPages - 3 && totalPages > 5 && <Pagination.Ellipsis disabled />}
-
-              {/* Last two pages */}
-              {[totalPages - 1, totalPages].map((num) =>
-                num > 3 ? (
-                  <Pagination.Item
-                    key={num}
-                    active={page === num}
-                    onClick={() => setPage(num)}
-                  >
-                    {num}
-                  </Pagination.Item>
-                ) : null
-              )}
-
-              <Pagination.Next
-                disabled={page === totalPages}
-                onClick={() => setPage(page + 1)}
-              />
-            </Pagination>
+            <Pagination.Next
+              disabled={page === totalPages}
+              onClick={() => setPage(page + 1)}
+            />
+          </Pagination>
           </div>
         )}
       </div>
