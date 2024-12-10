@@ -10,8 +10,8 @@ const apiBatchingInitialState = {
   status: null,
   count: null,
   dataById: {},
-  batchList:[],
-  batchCount:0,
+  batchList: [],
+  batchCount: 0,
 };
 
 // Create API Batching slice
@@ -20,7 +20,7 @@ export const apiResponseManagementSlice = createSlice({
   initialState: apiBatchingInitialState,
   reducers: {
     // Request
-  
+
     // List
     listResponseSuccess: (state, action) => {
       state.loading = false;
@@ -98,35 +98,39 @@ export const {
   getByIdResponseFail,
   getByIdResponseSuccess,
   batchlistResponseSuccess,
-  batchlistResponseFail
+  batchlistResponseFail,
 } = apiResponseManagementSlice.actions;
 
 export const apiReponseManagementReducer = apiResponseManagementSlice.reducer;
 
 // Fetch API Batching List
-export const apiBatchingAction = () => async (dispatch) => {
-  try {
-    const token = getLocalStorage("authToken");
-    const res = await axios.get(`${backendAPIList.apiResponseManagement}`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-
-    const { status, data, count } = res.data;
-    if (status === "ok") {
-      dispatch(listResponseSuccess({ data, status, count }));
-    }
-  } catch (error) {
-    const payload = {
-      message: error?.response?.data?.message || "An error occurred",
-      status: error?.response?.status || 500,
-    };
-    dispatch(listResponseFail(payload));
-    toast.error(payload.message);
-  }
-};
-export const batchListAction =
-  (page, limit, searchQueries) =>
+export const apiBatchingAction =
+  (page = 1, limit = 5, searchQueries) =>
   async (dispatch) => {
+    try {
+      const token = getLocalStorage("authToken");
+      const res = await axios.get(
+        `${backendAPIList.apiResponseManagement}?page=${page}&limit=${limit}&${searchQueries}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      const { status, data, count } = res.data;
+      if (status === "ok") {
+        dispatch(listResponseSuccess({ data, status, count }));
+      }
+    } catch (error) {
+      const payload = {
+        message: error?.response?.data?.message || "An error occurred",
+        status: error?.response?.status || 500,
+      };
+      dispatch(listResponseFail(payload));
+      toast.error(payload.message);
+    }
+  };
+export const batchListAction =
+  (page, limit, searchQueries) => async (dispatch) => {
     try {
       const token = getLocalStorage("authToken");
       const res = await axios.get(
@@ -174,7 +178,7 @@ export const getByIdAPIAction = (id) => async (dispatch) => {
 };
 // Add API Batching
 export const addAPIBatchingAction = (formData) => async (dispatch) => {
-  console.log(formData);
+  console.log(formData, "????????????????");
   try {
     const token = getLocalStorage("authToken");
     const res = await axios.post(
@@ -206,7 +210,6 @@ export const uploadCSVFileAPIBatchingAction =
   (formData) => async (dispatch) => {
     console.log(formData);
     try {
-
       const token = getLocalStorage("authToken");
       const res = await axios.post(
         `${backendAPIList.apiResponseManagement}/upload/${formData.apiGroupId}`,

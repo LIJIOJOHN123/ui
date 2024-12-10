@@ -1,5 +1,3 @@
-
-
 import { CSVLink } from "react-csv";
 import { Check, Download, Search, Settings, Trash2 } from "lucide-react";
 import { Button, Col, Form } from "react-bootstrap";
@@ -16,13 +14,14 @@ import {
 
 function ProductView() {
   const dispatch = useDispatch();
-
+  const navigate = useNavigate();
   const { id } = useParams();
+  
   const [error, setError] = useState(false);
   const { dataById } = useSelector((state) => state.productManagement);
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(25);
-  const [searchQueries, setSearchQueries] = useState({ productId:id});
+  const [searchQueries, setSearchQueries] = useState({ productId: id });
   const queryString = Object.entries(searchQueries)
     .filter(([_, value]) => value !== "")
     .map(([key, value]) => `${key}=${value}`)
@@ -31,19 +30,20 @@ function ProductView() {
   const {
     data: api,
     loading,
-    batchList
+    batchList,
   } = useSelector((state) => state.apiResponseManagement);
   const [formData, setFormData] = useState({});
   const [selectedFile, setSelectedFile] = useState([]);
 
-  const fields =dataById?.apiGroupId?.field_active?dataById?.apiGroupId?.fields.flat() || [] :dataById?.api?.map((item) => item?.apiId.fields).flat() || []
+  const fields = dataById?.apiGroupId?.field_active
+    ? dataById?.apiGroupId?.fields.flat() || []
+    : dataById?.api?.map((item) => item?.apiId.fields).flat() || [];
   useEffect(() => {
-    dispatch(getByIdAPIAction(id))
-  
+    dispatch(getByIdAPIAction(id));
   }, [id]);
   useEffect(() => {
-    dispatch(batchListAction(page,limit,queryString))
-  }, [id,page, limit,queryString]);
+    dispatch(batchListAction(page, limit, queryString));
+  }, [id, page, limit, queryString]);
 
   if (error) {
     return <p>Something went wrong. Please try again later.</p>;
@@ -86,14 +86,15 @@ function ProductView() {
 
     alert("CSV file uploaded successfully!");
   };
-  const downloadTextFile = (content,id) => {
-    const data = JSON.stringify(content)
+  const downloadTextFile = (content, id) => {
+    const data = JSON.stringify(content);
     const blob = new Blob([data], { type: "text/plain" });
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
     link.download = `${id}.json`;
     link.click();
   };
+
   return (
     <div>
       {loading && <p>Loading...</p>}
@@ -147,7 +148,11 @@ function ProductView() {
                     />
                   </Form.Group>
                 ))}
-                <Button variant="primary" type="submit" onClick={()=>handleSubmit()}>
+                <Button
+                  variant="primary"
+                  type="submit"
+                  onClick={() => handleSubmit()}
+                >
                   Submit
                 </Button>
               </Form>
@@ -202,6 +207,7 @@ function ProductView() {
               <table className="table table-striped table-bordered mt-2">
                 <thead className="thead-dark">
                   <tr>
+                    <th className="text-center">View</th>
                     <th className="text-center">Date</th>
                     <th className="text-center">Batch id</th>
                     <th className="text-center">Type</th>
@@ -212,7 +218,6 @@ function ProductView() {
                     {/* <th className="text-center">API name</th>
                     <th className="text-center">API status</th>
                     <th className="text-center">Download</th> */}
-
                   </tr>
                 </thead>
                 <tbody>
@@ -220,7 +225,21 @@ function ProductView() {
                     batchList &&
                     batchList?.map((item, i) => (
                       <tr key={i}>
-                        <td className="text-center align-middle">{item.createdAt}</td>
+                        <td className="text-center align-middle">
+                          {" "}
+                          <i
+                            className="bi bi-eye-fill"
+                            style={{ cursor: "pointer" }}
+                            onClick={() =>
+                              navigate(
+                                `/products/batch-deatils/${item._id}`
+                              )
+                            }
+                          ></i>
+                        </td>
+                        <td className="text-center align-middle">
+                          {item.createdAt}
+                        </td>
                         {/* <td className="text-center align-middle">
                           <div
                             className="rounded-circle bg-primary text-white text-center"
@@ -229,9 +248,14 @@ function ProductView() {
                             {item.numberofrequest}
                           </div>
                         </td> */}
+
                         <td className="text-center align-middle">{item._id}</td>
-                        <td className="text-center align-middle">{item.type}</td>
-                        <td className="text-center align-middle">{item.records}</td>
+                        <td className="text-center align-middle">
+                          {item.type}
+                        </td>
+                        <td className="text-center align-middle">
+                          {item.records}
+                        </td>
                         {/* <td className="text-center align-middle">{item.job_id}</td>
                         <td className="text-center align-middle">{item.unique_id}</td>
                         <td className="text-center align-middle">{item.backend_api_key_name}</td>
@@ -245,12 +269,10 @@ function ProductView() {
                         {/* <td className="text-center align-middle">
                           <Download onClick={()=>downloadTextFile(item.apiresponse,item.unique_id)} />
                         </td> */}
-    
                       </tr>
                     ))}
                 </tbody>
               </table>
-             
             </div>
           </div>
         </>
@@ -260,3 +282,48 @@ function ProductView() {
 }
 
 export default ProductView;
+
+// import React from "react";
+// import { useEffect } from "react";
+// import { useDispatch } from "react-redux";
+// import { useLocation, useNavigate, useParams } from "react-router-dom";
+// import {
+//   apiBatchingAction,
+//   getByIdAPIAction,
+// } from "../../store/apiResponseManagement";
+// import { useState } from "react";
+
+// function BatchDeatils() {
+//   const { id } = useParams();
+//   const dispatch = useDispatch();
+//   const navigate = useNavigate();
+//   const table = ["Item", "name", "des"];
+
+//   const [page, setPage] = useState(1);
+//   const [limit, setLimit] = useState(25);
+//   const [searchQueries, setSearchQueries] = useState({});
+//   const queryString = Object.entries(searchQueries)
+//     .filter(([_, value]) => value !== "")
+//     .map(([key, value]) => `${key}=${value}`)
+//     .join("&");
+
+//   console.log(queryString, "queryString");
+//   useEffect(() => {
+//     setSearchQueries({ batchId: id });
+//     dispatch(apiBatchingAction(page, limit, queryString));
+//   }, [id, page, limit, queryString]);
+//   return (
+//     <div className=" ">
+//       <h2>Batch Deatils</h2>
+//       <table>
+//         <thead>
+//           {table.map((item, i) => (
+//             <tr key={i}>{item}</tr>
+//           ))}
+//         </thead>
+//       </table>
+//     </div>
+//   );
+// }
+
+// export default BatchDeatils;

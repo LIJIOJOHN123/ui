@@ -93,8 +93,7 @@ export const productReducer = productSlice.reducer;
 
 // Fetch API Group List
 export const productAction =
-  (page, limit, searchQueries) =>
-  async (dispatch) => {
+  (page, limit, searchQueries) => async (dispatch) => {
     try {
       const token = getLocalStorage("authToken");
       const res = await axios.get(
@@ -127,7 +126,7 @@ export const getByIdAPIAction = (id) => async (dispatch) => {
     });
 
     const { status, data } = res.data;
-    console.log(status,data)
+
     if (status === "ok") {
       dispatch(getByIdResponseSuccess({ status, data }));
     }
@@ -172,7 +171,6 @@ export const addproductAction = (id, formData) => async (dispatch) => {
 // Update API Group
 export const updateproductAction = (id, formData) => async (dispatch) => {
   try {
-    console.log(id, formData, "id, formData");
     const token = getLocalStorage("authToken");
     const res = await axios.put(
       `${backendAPIList.productManagement}/${id}`,
@@ -183,7 +181,7 @@ export const updateproductAction = (id, formData) => async (dispatch) => {
     );
 
     const { status, message, data } = res.data;
-    console.log(res.data, "res.data");
+
     if (status === "ok") {
       toast.success("Updated Successfully!");
       dispatch(editproductResponseSuccess({ status, data }));
@@ -213,7 +211,7 @@ export const deleteproductAction = (id) => async (dispatch) => {
     );
 
     const { status, message } = res.data;
-    
+
     if (status === "ok") {
       dispatch(deleteAPIGroupResponseSuccess({ id, status }));
       toast.success(message);
