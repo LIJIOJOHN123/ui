@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect, useState } from "react";
-import { Form, Pagination } from "react-bootstrap";
+import { Form, Pagination, Card, Button, Row, Col } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import {
@@ -36,6 +36,7 @@ const ClientManagement = () => {
     setLimit(value);
     setPage(1);
   };
+
   const totalPages = Math.ceil(count / limit);
 
   return (
@@ -49,7 +50,7 @@ const ClientManagement = () => {
       <div className="d-flex justify-content-between align-items-center mb-4">
         <p className="mb-0">Total: <b>{count}</b></p>
         <div className="d-flex align-items-center">
-          <ClientSearchPopup/>
+          <ClientSearchPopup />
           <label htmlFor="limit" className="me-2 mb-0">
             Records per Page:
           </label>
@@ -66,38 +67,27 @@ const ClientManagement = () => {
         </div>
       </div>
 
-      {/* Client Table */}
-      <div className="table-responsive">
-        <table className="table table-striped table-hover align-middle">
-          <thead className="table-primary">
-            <tr>
-              <th scope="col">View</th>
-              <th scope="col">Client ID</th>
-              <th scope="col">Name</th>
-              <th scope="col">Email</th>
-              <th scope="col">Backend API Key</th>
-              <th scope="col">Account Balance</th>
-              <th scope="col">Role</th>
-              <th scope="col">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {data?.length > 0 ? (
-              data.map((item) => (
-                <tr key={item._id}>
-                  <td>
-                    <i
-                      className="bi bi-eye-fill text-primary"
-                      style={{ cursor: "pointer" }}
-                      onClick={() => navigate(`/client/${item._id}`)}
-                    ></i>
-                  </td>
-                  <td>{item?.clientId?._id || "N/A"}</td>
-                  <td>{item.name}</td>
-                  <td>{item.email}</td>
-                  <td>{item?.clientId?.backend_apikey || "N/A"}</td>
-                  <td>{item?.clientId?.account_balance || "N/A"}</td>
-                  <td>
+      {/* Client Cards */}
+      <Row className="g-4">
+        {data?.length > 0 ? (
+          data.map((item) => (
+            <Col md={4} key={item._id}>
+              <Card className="shadow-sm">
+                <Card.Body>
+                  <Card.Title>{item.name}</Card.Title>
+                  <Card.Text>
+                    <strong>Email:</strong> {item.email}
+                  </Card.Text>
+                  <Card.Text>
+                    <strong>Client ID:</strong> {item?.clientId?._id || "N/A"}
+                  </Card.Text>
+                  <Card.Text>
+                    <strong>Account Balance:</strong> {item?.clientId?.account_balance || "N/A"}
+                  </Card.Text>
+                  <Card.Text>
+                    <strong>Backend API Key:</strong> {item?.clientId?.backend_apikey || "N/A"}
+                  </Card.Text>
+                  <Card.Text>
                     <span
                       className={`badge ${
                         item.role === "ADMIN" ? "bg-success" : "bg-secondary"
@@ -105,66 +95,62 @@ const ClientManagement = () => {
                     >
                       {item.role}
                     </span>
-                  </td>
-                  <td>
-                    <div className="d-flex gap-2">
-                      {item.status === "ACTIVE" ? (
-                        <button
-                          type="button"
-                          className="btn btn-warning btn-sm"
-                          onClick={() =>
-                            handleButton(item._id, { status: "INACTIVE" })
-                          }
-                        >
-                          Block
-                        </button>
-                      ) : (
-                        <button
-                          type="button"
-                          className="btn btn-success btn-sm"
-                          onClick={() =>
-                            handleButton(item._id, { status: "ACTIVE" })
-                          }
-                        >
-                          Unblock
-                        </button>
-                      )}
-                      {item.role === "ADMIN" ? (
-                        <button
-                          type="button"
-                          className="btn btn-danger btn-sm"
-                          onClick={() =>
-                            handleButton(item._id, { role: "USER" })
-                          }
-                        >
-                          Remove Admin
-                        </button>
-                      ) : (
-                        <button
-                          type="button"
-                          className="btn btn-primary btn-sm"
-                          onClick={() =>
-                            handleButton(item._id, { role: "ADMIN" })
-                          }
-                        >
-                          Make Admin
-                        </button>
-                      )}
-                      <FundForm id={item._id} />
-                    </div>
-                  </td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="8" className="text-center text-muted">
-                  No clients found.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+                  </Card.Text>
+                  <div className="d-flex gap-2">
+                    {item.status === "ACTIVE" ? (
+                      <Button
+                        variant="warning"
+                        size="sm"
+                        onClick={() =>
+                          handleButton(item._id, { status: "INACTIVE" })
+                        }
+                      >
+                        Block
+                      </Button>
+                    ) : (
+                      <Button
+                        variant="success"
+                        size="sm"
+                        onClick={() =>
+                          handleButton(item._id, { status: "ACTIVE" })
+                        }
+                      >
+                        Unblock
+                      </Button>
+                    )}
+                    {item.role === "ADMIN" ? (
+                      <Button
+                        variant="danger"
+                        size="sm"
+                        onClick={() =>
+                          handleButton(item._id, { role: "USER" })
+                        }
+                      >
+                        Remove Admin
+                      </Button>
+                    ) : (
+                      <Button
+                        variant="primary"
+                        size="sm"
+                        onClick={() =>
+                          handleButton(item._id, { role: "ADMIN" })
+                        }
+                      >
+                        Make Admin
+                      </Button>
+                    )}
+                    <FundForm id={item._id} />
+                  </div>
+                </Card.Body>
+              </Card>
+            </Col>
+          ))
+        ) : (
+          <div className="text-center text-muted" style={{ width: "100%" }}>
+            No clients found.
+          </div>
+        )}
+      </Row>
 
       {/* Pagination */}
       <div className="d-flex justify-content-center mt-4">
@@ -173,7 +159,6 @@ const ClientManagement = () => {
             disabled={page === 1}
             onClick={() => setPage(page - 1)}
           />
-
           {[1, 2, 3].map((num) =>
             num <= totalPages ? (
               <Pagination.Item
@@ -185,17 +170,13 @@ const ClientManagement = () => {
               </Pagination.Item>
             ) : null
           )}
-
           {page > 4 && page < totalPages - 2 && <Pagination.Ellipsis disabled />}
-
           {page > 3 && page < totalPages - 2 && (
             <Pagination.Item key={page} active onClick={() => setPage(page)}>
               {page}
             </Pagination.Item>
           )}
-
           {page < totalPages - 3 && totalPages > 5 && <Pagination.Ellipsis disabled />}
-
           {[totalPages - 1, totalPages].map((num) =>
             num > 3 ? (
               <Pagination.Item
@@ -207,7 +188,6 @@ const ClientManagement = () => {
               </Pagination.Item>
             ) : null
           )}
-
           <Pagination.Next
             disabled={page === totalPages}
             onClick={() => setPage(page + 1)}

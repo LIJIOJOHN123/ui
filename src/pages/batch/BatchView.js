@@ -232,7 +232,7 @@ function BatchView() {
             <Card className="shadow-lg border-0 rounded-3">
               <Card.Body>
                 <Card.Title className="fs-4 mb-3">API Response</Card.Title>
-                {apiresponse && apiresponse.data ? (
+                {apiresponse ? (
                   <div>
                     <h5>Raw JSON Data</h5>
                     <pre
@@ -250,7 +250,7 @@ function BatchView() {
                           "0 2px 5px rgba(0, 0, 0, 0.1)" /* Optional shadow */,
                       }}
                     >
-                      {JSON.stringify(apiresponse.data, null, 2)}
+                      {JSON.stringify(apiresponse, null, 2)}
                     </pre>
                   </div>
                 ) : (
