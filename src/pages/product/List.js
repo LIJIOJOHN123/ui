@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Col, Form, Pagination, Row } from "react-bootstrap";
+import { Button, Col, Form, Pagination, Row, Card, Modal } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import {
@@ -9,7 +9,7 @@ import {
 import ProductSearchPopup from "./SearchInput";
 import ConfirmationModal from "../../utils/ConfirmationModal ";
 
-function ApiGroup() {
+function Product() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { data, loading, count } = useSelector(
@@ -38,6 +38,7 @@ function ApiGroup() {
     setLimit(value);
     setPage(1);
   };
+
   const handleDelete = () => {
     if (apiToDelete.id) {
       dispatch(deleteproductAction(apiToDelete.id));
@@ -52,7 +53,7 @@ function ApiGroup() {
   };
 
   return (
-    <div>
+    <div className="container-fluid py-4">
       {loading ? (
         <div className="d-flex justify-content-center align-items-center mt-5">
           <div className="spinner-grow" role="status">
@@ -61,8 +62,8 @@ function ApiGroup() {
         </div>
       ) : (
         <div>
-          <div className="d-flex justify-content-between align-items-center">
-            <h3>Products</h3>
+          <div className="d-flex justify-content-between align-items-center mb-4">
+            <h3 className="fw-bold">Products</h3>
             <Button
               onClick={() => navigate("/products/create")}
               variant="primary"
@@ -71,13 +72,13 @@ function ApiGroup() {
               Add a product
             </Button>
           </div>
-          <div className="d-flex align-items-center mt-3">
+          <div className="d-flex align-items-center mb-4">
             <p className="mb-0 me-3">
               Total: <b>{count}</b>
             </p>
             <div className="d-flex align-items-center me-3">
               <label htmlFor="limit" className="me-2">
-                Record(s) per Page :
+                Records per Page:
               </label>
               <Form.Select
                 id="limit"
@@ -90,95 +91,92 @@ function ApiGroup() {
                 <option value={100}>100</option>
               </Form.Select>
             </div>
-
             <ProductSearchPopup setSearchQueries={setSearchQueries} />
           </div>
 
           <div className="d-flex flex-column min-vh-100">
-            <div className="flex-grow-2">
-              <Row className="mt-4">
-                {data &&
-                  data.map((item, i) => (
-                    <Col key={i} xs={12} sm={6} md={4} lg={3} className="mb-4">
-                      <div className="bg-info p-2 rounded-3 h-100">
-                        <div onClick={() => navigate(`/products/${item._id}`)}>
-                          <h6>{item.name}</h6>
-                          <p className="line-clamp">{item.des}</p>
-                        </div>
-                        <div className="mt-3 " style={{ zIndex: 10 }}>
+            <Row className="mt-4">
+              {data &&
+                data.map((item, i) => (
+                  <Col key={i} xs={12} sm={6} md={4} lg={3} className="mb-4">
+                    <Card className="h-100" 
+                     
+                    >
+                      <Card.Body  >
+                        <Card.Title
+                          className="text-truncate"
+                          onClick={() => navigate(`/products/${item._id}`)}
+                          style={{ cursor: "pointer" }}
+                        >
+                          {item.name}
+                        </Card.Title>
+                        <Card.Text className="line-clamp">{item.des}</Card.Text>
+                        <div className="d-flex justify-content-between">
                           <Button
+                            variant="danger"
+                            size="sm"
                             onClick={() => openDeleteModal(item._id, item.name)}
                           >
                             Delete
                           </Button>
                           <Button
-                            onClick={() =>
-                              navigate(`/products/edit/${item._id}`)
-                            }
+                            variant="warning"
+                            size="sm"
+                            onClick={() => navigate(`/products/edit/${item._id}`)}
                           >
                             Edit
                           </Button>
                         </div>
-                      </div>
-                    </Col>
-                  ))}
-              </Row>
-            </div>
+                      </Card.Body>
+                    </Card>
+                  </Col>
+                ))}
+            </Row>
+
             <div className="mt-auto">
-            <Pagination className="d-flex justify-content-center">
-            <Pagination.Prev
-              disabled={page === 1}
-              onClick={() => setPage(page - 1)}
-            />
-
-            {/* First three pages */}
-            {[1, 2, 3].map((num) =>
-              num <= totalPages ? (
-                <Pagination.Item
-                  key={num}
-                  active={page === num}
-                  onClick={() => setPage(num)}
-                >
-                  {num}
-                </Pagination.Item>
-              ) : null
-            )}
-
-            {/* Ellipsis if necessary */}
-            {page > 4 && page < totalPages - 2 && <Pagination.Ellipsis disabled />}
-
-            {/* Current page, if not in the first three */}
-            {page > 3 && page < totalPages - 2 && (
-              <Pagination.Item
-                key={page}
-                active
-                onClick={() => setPage(page)}
-              >
-                {page}
-              </Pagination.Item>
-            )}
-
-            {/* Ellipsis before the last two pages */}
-            {page < totalPages - 3 && totalPages > 5 && <Pagination.Ellipsis disabled />}
-
-            {/* Last two pages */}
-            {[totalPages - 1, totalPages].map((num) =>
-              num > 3 ? (
-                <Pagination.Item
-                  key={num}
-                  active={page === num}
-                  onClick={() => setPage(num)}
-                >
-                  {num}
-                </Pagination.Item>
-              ) : null
-            )}
-
-            <Pagination.Next
-              disabled={page === totalPages}
-              onClick={() => setPage(page + 1)}
-            />
-          </Pagination>
+              <Pagination className="d-flex justify-content-center">
+                <Pagination.Prev
+                  disabled={page === 1}
+                  onClick={() => setPage(page - 1)}
+                />
+                {[1, 2, 3].map((num) =>
+                  num <= totalPages ? (
+                    <Pagination.Item
+                      key={num}
+                      active={page === num}
+                      onClick={() => setPage(num)}
+                    >
+                      {num}
+                    </Pagination.Item>
+                  ) : null
+                )}
+                {page > 4 && page < totalPages - 2 && (
+                  <Pagination.Ellipsis disabled />
+                )}
+                {page > 3 && page < totalPages - 2 && (
+                  <Pagination.Item key={page} active onClick={() => setPage(page)}>
+                    {page}
+                  </Pagination.Item>
+                )}
+                {page < totalPages - 3 && totalPages > 5 && (
+                  <Pagination.Ellipsis disabled />
+                )}
+                {[totalPages - 1, totalPages].map((num) =>
+                  num > 3 ? (
+                    <Pagination.Item
+                      key={num}
+                      active={page === num}
+                      onClick={() => setPage(num)}
+                    >
+                      {num}
+                    </Pagination.Item>
+                  ) : null
+                )}
+                <Pagination.Next
+                  disabled={page === totalPages}
+                  onClick={() => setPage(page + 1)}
+                />
+              </Pagination>
             </div>
           </div>
         </div>
@@ -187,10 +185,10 @@ function ApiGroup() {
         show={showDeleteModal}
         onHide={() => setShowDeleteModal(false)}
         onConfirm={handleDelete}
-        message={`${apiToDelete.name} Product`}
+        message={`Are you sure you want to delete ${apiToDelete.name} Product?`}
       />
     </div>
   );
 }
 
-export default ApiGroup;
+export default Product;

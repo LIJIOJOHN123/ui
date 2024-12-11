@@ -1,23 +1,18 @@
 import React, { Fragment, useEffect, useState } from "react";
-
 import { useDispatch, useSelector } from "react-redux";
-
 import { useNavigate } from "react-router-dom";
 import {
   transactionListAction,
   updateTransactionAction,
 } from "../../store/transactionSlice";
-import { Form, Pagination } from "react-bootstrap";
+import { Form, Pagination, Card } from "react-bootstrap";
 import TransactionSearchPopup from "./TransactionSearchPopup";
 
 const Transaction = () => {
   const dispatch = useDispatch();
   const { data, count } = useSelector((state) => state.transaction);
-  const { user: userData } = useSelector((state) => state.auth)
+  const { user: userData } = useSelector((state) => state.auth);
   const navigate = useNavigate();
-  // const handleButton = (id, data) => {
-  //   dispatch(updateTransactionAction(id, data));
-  // };
 
   const [searchQueries, setSearchQueries] = useState({});
   const [page, setPage] = useState(1);
@@ -27,74 +22,81 @@ const Transaction = () => {
     .filter(([_, value]) => value !== "")
     .map(([key, value]) => `${key}=${value}`)
     .join("&");
+
   useEffect(() => {
     dispatch(transactionListAction(page, limit, queryString));
   }, [page, limit, dispatch, queryString]);
+
   const handleLimitChange = (e) => {
     const value = parseInt(e.target.value, 10);
     setLimit(value);
     setPage(1);
   };
+
   const totalPages = count && limit ? Math.ceil(count / limit) : 1;
+
   return (
     <Fragment>
-      <h3>Client list</h3>
+      <h3 className="mb-4">Client Transactions</h3>
 
-      <div className="d-flex align-items-center mt-3">
-        <p className="mb-0 me-3">
-          Total: <b>{count}</b>
-        </p>
-        <div className="d-flex align-items-center me-3">
-          <label htmlFor="limit" className="me-2">
-            Record(s) per Page :
-          </label>
-          <Form.Select
-            id="limit"
-            className="form-select w-auto"
-            value={limit}
-            onChange={handleLimitChange}
-          >
-                <option value={25}>25</option>
-                <option value={50}>50</option>
-                <option value={100}>100</option>
-          </Form.Select>
+      <div className="d-flex justify-content-between align-items-center mb-4">
+        <div className="d-flex align-items-center">
+          <p className="mb-0 me-3">
+            Total Transactions: <b>{count}</b>
+          </p>
+          <div className="d-flex align-items-center me-3">
+            <label htmlFor="limit" className="me-2">
+              Records per Page:
+            </label>
+            <Form.Select
+              id="limit"
+              className="form-select w-auto"
+              value={limit}
+              onChange={handleLimitChange}
+            >
+              <option value={25}>25</option>
+              <option value={50}>50</option>
+              <option value={100}>100</option>
+            </Form.Select>
+          </div>
+          <TransactionSearchPopup setSearchQueries={setSearchQueries} />
         </div>
 
-        <TransactionSearchPopup setSearchQueries={setSearchQueries} />
         {userData.role === "USER" && (
-          <p className="ms-auto">
-            Blance:<span className="fw-bold">{userData.account_balance}</span>
-          </p>
+          <Card className="d-flex justify-content-center align-items-center p-3 shadow-sm">
+            <p className="mb-0">
+              <strong>Balance:</strong> <span className="fw-bold">{userData.account_balance}</span>
+            </p>
+          </Card>
         )}
       </div>
-      <div className="d-flex flex-column min-vh-100">
-        <div className="flex-grow-2">
-          <table className="table">
-            <thead>
-              <tr>
-                <th scope="col">id</th>
-                <th scope="col">Type</th>
-                <th scope="col">mode</th>
-                <th scope="col">Amount</th>
-                <th scope="col">description</th>
+
+      <div className="table-responsive">
+        <table className="table table-striped table-hover">
+          <thead className="table-dark">
+            <tr>
+              <th scope="col">ID</th>
+              <th scope="col">Type</th>
+              <th scope="col">Mode</th>
+              <th scope="col">Amount</th>
+              <th scope="col">Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            {data?.map((item) => (
+              <tr key={item._id}>
+                <td>{item._id}</td>
+                <td>{item.type}</td>
+                <td>{item.mode}</td>
+                <td>{item.amount}</td>
+                <td>{item.description}</td>
               </tr>
-            </thead>
-            <tbody>
-              {data?.map((item) => {
-                return (
-                  <tr key={item._id}>
-                    <td>{item._id}</td>
-                    <td>{item.type}</td>
-                    <td>{item.mode}</td>
-                    <td>{item.amount}</td>
-                    <td>{item.description}</td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
-        <div className="mt-auto">
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <div className="mt-4">
         <Pagination className="d-flex justify-content-center">
           <Pagination.Prev
             disabled={page === 1}
@@ -149,8 +151,6 @@ const Transaction = () => {
             onClick={() => setPage(page + 1)}
           />
         </Pagination>
-
-        </div>
       </div>
     </Fragment>
   );

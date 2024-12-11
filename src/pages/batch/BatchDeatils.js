@@ -42,15 +42,24 @@ function BatchDetails() {
 
   return (
     <div style={{ width: "80vw", minWidth: "600px" }}>
-      <h2>Batch Details</h2>
+      <div className="d-flex justify-content-between align-items-center mb-4">
+        <button
+          onClick={() => navigate(-1)}
+          className="btn btn-secondary rounded-pill px-4 py-2"
+          aria-label="Go back"
+        >
+          Back
+        </button>
+        <h2>Batch Details</h2>
+      </div>
 
-      <div className="d-flex align-items-center mt-3">
+      <div className="d-flex align-items-center mt-3 mb-4">
         <p className="mb-0 me-3">
           Total: <b>{count}</b>
         </p>
         <div className="d-flex align-items-center me-3">
           <label htmlFor="limit" className="me-2">
-            Record(s) per Page:
+            Records per Page:
           </label>
           <Form.Select
             id="limit"
@@ -72,7 +81,7 @@ function BatchDetails() {
         <div className="flex-grow-1">
           <div className="table-responsive">
             <table className="table table-striped table-bordered mt-2">
-              <thead>
+              <thead className="table-light">
                 <tr>
                   <th scope="col">View</th>
                   <th scope="col">Job ID</th>
@@ -97,24 +106,12 @@ function BatchDetails() {
                           }
                         ></i>
                       </td>
-                      <td className="text-center align-middle">
-                        {item.job_id}
-                      </td>
-                      <td className="text-center align-middle">
-                        {item.apiType}
-                      </td>
-                      <td className="text-center align-middle">
-                        {item.backend_api_key_name}
-                      </td>
-                      <td className="text-center align-middle">
-                        {item.unique_id}
-                      </td>
-                      <td className="text-center align-middle">
-                        {item.pricing}
-                      </td>
-                      <td className="text-center align-middle">
-                        {item.apiStatus}
-                      </td>
+                      <td className="text-center align-middle">{item.job_id}</td>
+                      <td className="text-center align-middle">{item.apiType}</td>
+                      <td className="text-center align-middle">{item.backend_api_key_name}</td>
+                      <td className="text-center align-middle">{item.unique_id}</td>
+                      <td className="text-center align-middle">{item.pricing}</td>
+                      <td className="text-center align-middle">{item.apiStatus}</td>
                     </tr>
                   ))
                 ) : (

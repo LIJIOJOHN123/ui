@@ -16,7 +16,7 @@ const ClientManagement = () => {
   const [searchQueries, setSearchQueries] = useState({});
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(25);
-  console.log(searchQueries);
+
   const queryString = Object.entries(searchQueries)
     .filter(([_, value]) => value !== "")
     .map(([key, value]) => `${key}=${value}`)
@@ -25,6 +25,7 @@ const ClientManagement = () => {
   useEffect(() => {
     dispatch(clientManagementListAction(page, limit, queryString));
   }, [page, limit, dispatch, queryString]);
+
   const navigate = useNavigate();
   const handleButton = (id, data) => {
     dispatch(updateClientAction(id, data));
@@ -39,14 +40,18 @@ const ClientManagement = () => {
 
   return (
     <Fragment>
-      <h3>Client list</h3>
-      <div className="d-flex align-items-center mt-3">
-        <p className="mb-0 me-3">
-          Total: <b>{count}</b>
-        </p>
-        <div className="d-flex align-items-center me-3">
-          <label htmlFor="limit" className="me-2">
-            Record(s) per Page :
+      {/* Header Section */}
+      <div className="d-flex justify-content-center mb-4">
+        <h3>Client List</h3>
+      </div>
+
+      {/* Filters and Actions */}
+      <div className="d-flex justify-content-between align-items-center mb-4">
+        <p className="mb-0">Total: <b>{count}</b></p>
+        <div className="d-flex align-items-center">
+          <ClientSearchPopup/>
+          <label htmlFor="limit" className="me-2 mb-0">
+            Records per Page:
           </label>
           <Form.Select
             id="limit"
@@ -54,108 +59,121 @@ const ClientManagement = () => {
             value={limit}
             onChange={handleLimitChange}
           >
-                <option value={25}>25</option>
-                <option value={50}>50</option>
-                <option value={100}>100</option>
+            <option value={25}>25</option>
+            <option value={50}>50</option>
+            <option value={100}>100</option>
           </Form.Select>
         </div>
-
-        <ClientSearchPopup setSearchQueries={setSearchQueries} />
       </div>
 
-      <div className="d-flex flex-column min-vh-100">
-        <div className="flex-grow-2">
-          <table className="table">
-            <thead>
-              <tr>
-                <th scope="col">View</th>
-                <th scope="col">clientId</th>
-                <th scope="col">Name</th>
-                <th scope="col">email</th>
-                <th scope="col">backend api key</th>
-                <th scope="col">account balance</th>
-                <th scope="col">role</th>
-                <th scope="col">actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {data?.map((item) => {
-                return (
-                  <tr key={item._id}>
-                    <td>
-                      <i
-                        className="bi bi-eye-fill"
-                        onClick={() => navigate(`/client/${item._id}`)}
-                      ></i>
-                    </td>
-                    <td>{item?.clientId?._id}</td>
-                    <td>{item.name}</td>
-                    <td>{item.email}</td>
-                    <td>{item?.clientId?.backend_apikey}</td>
-                    <td>{item?.clientId?.account_balance}</td>
-                    <td>{item.role}</td>
-                    <td>
-                      {item.status === "ACTIVE" && (
+      {/* Client Table */}
+      <div className="table-responsive">
+        <table className="table table-striped table-hover align-middle">
+          <thead className="table-primary">
+            <tr>
+              <th scope="col">View</th>
+              <th scope="col">Client ID</th>
+              <th scope="col">Name</th>
+              <th scope="col">Email</th>
+              <th scope="col">Backend API Key</th>
+              <th scope="col">Account Balance</th>
+              <th scope="col">Role</th>
+              <th scope="col">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {data?.length > 0 ? (
+              data.map((item) => (
+                <tr key={item._id}>
+                  <td>
+                    <i
+                      className="bi bi-eye-fill text-primary"
+                      style={{ cursor: "pointer" }}
+                      onClick={() => navigate(`/client/${item._id}`)}
+                    ></i>
+                  </td>
+                  <td>{item?.clientId?._id || "N/A"}</td>
+                  <td>{item.name}</td>
+                  <td>{item.email}</td>
+                  <td>{item?.clientId?.backend_apikey || "N/A"}</td>
+                  <td>{item?.clientId?.account_balance || "N/A"}</td>
+                  <td>
+                    <span
+                      className={`badge ${
+                        item.role === "ADMIN" ? "bg-success" : "bg-secondary"
+                      }`}
+                    >
+                      {item.role}
+                    </span>
+                  </td>
+                  <td>
+                    <div className="d-flex gap-2">
+                      {item.status === "ACTIVE" ? (
                         <button
                           type="button"
-                          className="btn btn-primary"
+                          className="btn btn-warning btn-sm"
                           onClick={() =>
                             handleButton(item._id, { status: "INACTIVE" })
                           }
                         >
-                          Block<i className="far fa-eye"></i>
+                          Block
                         </button>
-                      )}
-                      {item.status === "INACTIVE" && (
+                      ) : (
                         <button
                           type="button"
-                          className="btn btn-primary"
+                          className="btn btn-success btn-sm"
                           onClick={() =>
                             handleButton(item._id, { status: "ACTIVE" })
                           }
                         >
-                          Unblock<i className="far fa-eye"></i>
+                          Unblock
                         </button>
                       )}
-                      {item.role == "ADMIN" && (
+                      {item.role === "ADMIN" ? (
                         <button
                           type="button"
-                          className="btn btn-primary mr-1"
+                          className="btn btn-danger btn-sm"
                           onClick={() =>
                             handleButton(item._id, { role: "USER" })
                           }
                         >
-                          Remove as admin<i className="far fa-eye"></i>
+                          Remove Admin
                         </button>
-                      )}
-                      {item.role == "USER" && (
+                      ) : (
                         <button
                           type="button"
-                          className="btn btn-primary mr-1"
+                          className="btn btn-primary btn-sm"
                           onClick={() =>
                             handleButton(item._id, { role: "ADMIN" })
                           }
                         >
-                          Add as admin<i className="far fa-eye"></i>
+                          Make Admin
                         </button>
                       )}
                       <FundForm id={item._id} />
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
+                    </div>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="8" className="text-center text-muted">
+                  No clients found.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
 
-        <div className="mt-auto">
-        <Pagination className="d-flex justify-content-center">
+      {/* Pagination */}
+      <div className="d-flex justify-content-center mt-4">
+        <Pagination>
           <Pagination.Prev
             disabled={page === 1}
             onClick={() => setPage(page - 1)}
           />
 
-          {/* First three pages */}
           {[1, 2, 3].map((num) =>
             num <= totalPages ? (
               <Pagination.Item
@@ -168,24 +186,16 @@ const ClientManagement = () => {
             ) : null
           )}
 
-          {/* Ellipsis if necessary */}
           {page > 4 && page < totalPages - 2 && <Pagination.Ellipsis disabled />}
 
-          {/* Current page, if not in the first three */}
           {page > 3 && page < totalPages - 2 && (
-            <Pagination.Item
-              key={page}
-              active
-              onClick={() => setPage(page)}
-            >
+            <Pagination.Item key={page} active onClick={() => setPage(page)}>
               {page}
             </Pagination.Item>
           )}
 
-          {/* Ellipsis before the last two pages */}
           {page < totalPages - 3 && totalPages > 5 && <Pagination.Ellipsis disabled />}
 
-          {/* Last two pages */}
           {[totalPages - 1, totalPages].map((num) =>
             num > 3 ? (
               <Pagination.Item
@@ -203,7 +213,6 @@ const ClientManagement = () => {
             onClick={() => setPage(page + 1)}
           />
         </Pagination>
-        </div>
       </div>
     </Fragment>
   );

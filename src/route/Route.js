@@ -47,9 +47,10 @@ import PostValidationList from "../pages/post-validation/List";
 import PostValidationForm from "../pages/post-validation/Form";
 import PreValidationList from "../pages/pre-validation/List";
 import ValidationForm from "../pages/pre-validation/Form";
-import BatchDeatils from "../pages/product/BatchDeatils";
-import BatchView from "../pages/product/BatchView";
+import BatchDeatils from "../pages/batch/BatchDeatils";
+import BatchView from "../pages/batch/BatchView";
 import ApiResponse from "../pages/api-response/ApiResponse";
+import AddInput from "../pages/product/AddInput";
 
 function RoutesPage() {
   return (
@@ -139,6 +140,7 @@ function RoutesPage() {
             <Route path="products/create" element={<GroupApiForm />} />
             <Route path="products/:id" element={<ProductDetails />} />
             <Route path="products/edit/:id" element={<GroupApiForm />} />
+            <Route path="product/addbatch/:id" element={<AddInput />} />
             {/* ////// */}\{/* ////// */}
             <Route path="plan" element={<PlanList />} />
             <Route path="plan/create" element={<PlanForm />} />
