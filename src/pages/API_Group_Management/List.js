@@ -53,7 +53,7 @@ function APIGroupList() {
   };
 
   return (
-    <div className="p-4 bg-light">
+    <div className="bg-body-secondary w-100 min-vh-100 p-4">
       {loading ? (
         <div className="d-flex justify-content-center align-items-center mt-5">
           <div className="spinner-grow text-primary" role="status">

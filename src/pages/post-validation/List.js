@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Alert, Button, Col, Form, Pagination, Row } from "react-bootstrap";
+import { Alert, Button, Col, Form, Pagination, Row, Card, Spinner } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import {
-  deletePostValidation,
-  fetchPostValidations,
-} from "../../store/postvalidationSlice";
+import { FaEdit, FaTrashAlt } from 'react-icons/fa';
+import { deletePostValidation, fetchPostValidations } from "../../store/postvalidationSlice";
 import PostValidationSearchPopup from "./SearchInput";
 import ConfirmationModal from "../../utils/ConfirmationModal ";
 
@@ -13,9 +11,7 @@ function PostValidationList() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { data, loading, count, error } = useSelector(
-    (state) => state.postvalidation
-  );
+  const { data, loading, count, error } = useSelector((state) => state.postvalidation);
 
   const [searchQueries, setSearchQueries] = useState({});
   const [page, setPage] = useState(1);
@@ -52,13 +48,14 @@ function PostValidationList() {
     setApiToDelete({ id, name });
     setShowDeleteModal(true);
   };
+
   return (
-    <div>
+    <div className="container-fluid">
       {loading ? (
         <div className="d-flex justify-content-center align-items-center mt-5">
-          <div className="spinner-grow" role="status">
+          <Spinner animation="border" role="status" variant="primary">
             <span className="visually-hidden">Loading...</span>
-          </div>
+          </Spinner>
         </div>
       ) : error ? (
         <Alert variant="danger" className="mt-3">
@@ -66,18 +63,19 @@ function PostValidationList() {
         </Alert>
       ) : (
         <div>
-          <div className="d-flex justify-content-between align-items-center">
-            <h3>Post-Validation</h3>
+          <div className="d-flex justify-content-between align-items-center mb-4">
+            <h3 className="font-weight-bold text-primary">Post-Validation</h3>
             <Button
               onClick={() => navigate("/post-validation/create")}
-              variant="primary"
-              className="fw-bold"
+              variant="success"
+              className="fw-bold d-flex align-items-center"
             >
+              <i className="bi bi-plus-circle me-2"></i>
               Add Post Validation
             </Button>
           </div>
 
-          <div className="d-flex align-items-center mt-3">
+          <div className="d-flex align-items-center mt-3 mb-4">
             <p className="mb-0 me-3">
               Total: <b>{count}</b>
             </p>
@@ -99,61 +97,55 @@ function PostValidationList() {
 
             <PostValidationSearchPopup setSearchQueries={setSearchQueries} />
           </div>
-          <div className="d-flex flex-column min-vh-100">
-            <div className="flex-grow-2">
-              <Row className="mt-4">
-                {data && data.length > 0 ? (
-                  data.map((item, i) => (
-                    <Col key={i} xs={12} sm={6} md={4} lg={3} className="mb-4">
-                      <div className="bg-info p-2 rounded-3 h-100">
-                        <div
-                          className="cursor-pointer"
-                          onClick={() =>
-                            navigate(`/post-validation/${item._id}`)
-                          }
+
+          <Row className="mt-4">
+            {data && data.length > 0 ? (
+              data.map((item, i) => (
+                <Col key={i} xs={12} sm={6} md={4} lg={3} className="mb-4">
+                  <Card className="shadow-sm border-light rounded-lg">
+                    <Card.Body>
+                      <Card.Title className="h5 text-primary">{item.name}</Card.Title>
+                      <Card.Text className="text-muted">{item.des || "No Description"}</Card.Text>
+                      <Card.Text className="text-muted">
+                        <small>Validation Key: {item.validation_key || "No Key"}</small>
+                      </Card.Text>
+                      <div className="d-flex justify-content-between mt-3">
+                        <Button
+                          variant="danger"
+                          size="sm"
+                          className="d-flex align-items-center"
+                          onClick={() => openDeleteModal(item._id, item.name)}
                         >
-                          <h6>{item.name}</h6>
-                          <p className="line-clamp">
-                            {item.des || "No Description"}
-                          </p>
-                        </div>
-                        <div className="mt-3 d-flex justify-content-between">
-                          <Button
-                            variant="danger"
-                            size="sm"
-                            onClick={() => openDeleteModal(item._id, item.name)}
-                          >
-                            Delete  
-                          </Button>
-                          <Button
-                            variant="warning"
-                            size="sm"
-                            onClick={() =>
-                              navigate(`/post-validation/edit/${item._id}`)
-                            }
-                          >
-                            Edit
-                          </Button>
-                        </div>
+                          <FaTrashAlt className="me-1" /> Delete
+                        </Button>
+                        <Button
+                          variant="warning"
+                          size="sm"
+                          className="d-flex align-items-center"
+                          onClick={() => navigate(`/post-validation/edit/${item._id}`)}
+                        >
+                          <FaEdit className="me-1" /> Edit
+                        </Button>
                       </div>
-                    </Col>
-                  ))
-                ) : (
-                  <div className="text-center w-100 mt-4">
-                    <h5>No Post validations found.</h5>
-                  </div>
-                )}
-              </Row>
-            </div>
-            {/* Pagination */}
-            <div className="mt-auto">
-            <Pagination className="d-flex justify-content-center">
+                    </Card.Body>
+                  </Card>
+                </Col>
+              ))
+            ) : (
+              <div className="text-center w-100 mt-4">
+                <h5>No Post validations found.</h5>
+              </div>
+            )}
+          </Row>
+
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <Pagination className="d-flex justify-content-center mt-4">
               <Pagination.Prev
                 disabled={page === 1}
                 onClick={() => setPage(page - 1)}
               />
 
-              {/* First three pages */}
               {[1, 2, 3].map((num) =>
                 num <= totalPages ? (
                   <Pagination.Item
@@ -166,24 +158,16 @@ function PostValidationList() {
                 ) : null
               )}
 
-              {/* Ellipsis if necessary */}
               {page > 4 && page < totalPages - 2 && <Pagination.Ellipsis disabled />}
 
-              {/* Current page, if not in the first three */}
               {page > 3 && page < totalPages - 2 && (
-                <Pagination.Item
-                  key={page}
-                  active
-                  onClick={() => setPage(page)}
-                >
+                <Pagination.Item key={page} active onClick={() => setPage(page)}>
                   {page}
                 </Pagination.Item>
               )}
 
-              {/* Ellipsis before the last two pages */}
               {page < totalPages - 3 && totalPages > 5 && <Pagination.Ellipsis disabled />}
 
-              {/* Last two pages */}
               {[totalPages - 1, totalPages].map((num) =>
                 num > 3 ? (
                   <Pagination.Item
@@ -201,16 +185,16 @@ function PostValidationList() {
                 onClick={() => setPage(page + 1)}
               />
             </Pagination>
-            </div>
-          </div>
+          )}
         </div>
       )}
 
+      {/* Confirmation Modal for Delete */}
       <ConfirmationModal
         show={showDeleteModal}
         onHide={() => setShowDeleteModal(false)}
         onConfirm={handleDelete}
-        message={`${apiToDelete.name} Post Validation`}
+        message={`Are you sure you want to delete "${apiToDelete.name}" Post Validation?`}
       />
     </div>
   );
