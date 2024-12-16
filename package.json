@@ -16,6 +16,7 @@
     "crypto-js": "^4.2.0",
     "emailjs-com": "^3.2.0",
     "lucide-react": "^0.428.0",
+    "razorpay": "^2.9.5",
     "react": "^18.3.1",
     "react-bootstrap": "^2.10.5",
     "react-calendly": "^4.3.1",

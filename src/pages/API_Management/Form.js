@@ -23,9 +23,7 @@ function Form() {
     category_type: "",
   });
   const [error, setError] = useState(false);
-  const { status, dataById } = useSelector(
-    (state) => state.apiManagement
-  );
+  const { status, dataById } = useSelector((state) => state.apiManagement);
   useEffect(() => {
     id && dispatch(getByIdAPIAction(id));
   }, [id]);
@@ -151,7 +149,9 @@ function Form() {
               onChange={handleInputChange}
               required
             >
-              <option disabled value="">Select API type</option>
+              <option disabled value="">
+                Select API type
+              </option>
               <option value="LIVE">Live</option>
               <option value="DEMO">Demo</option>
               <option value="INTERNAL">Internal</option>
@@ -202,6 +202,7 @@ function Form() {
               placeholder="Enter pricing"
               name="pricing"
               value={formData.pricing}
+              min={0}
               onChange={handleInputChange}
               required
               autoComplete="off"
@@ -209,7 +210,7 @@ function Form() {
           </BootstrapForm.Group>
 
           <Button variant="primary" type="submit" className="mt-4">
-           Submit
+            Submit
           </Button>
         </BootstrapForm>
       </div>
