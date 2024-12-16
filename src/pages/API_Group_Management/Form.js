@@ -213,23 +213,8 @@ function CategoryForm() {
           )}
 
           {renderSelect("APIs", apiOptions, formData.apiId, "apiId")}
-<<<<<<< HEAD
 
           
-=======
-          {renderSelect(
-            "Pre-Validations",
-            validationOptions,
-            formData.preValidation,
-            "preValidation"
-          )}
-          {renderSelect(
-            "Post-Validations",
-            postValidationOptions,
-            formData.postValidation,
-            "postValidation"
-          )}
->>>>>>> f325a65314ca746fbfd422c5144fdcbaa094788d
 
           <Button type="submit" className="mt-4" variant="primary">
             Submit
