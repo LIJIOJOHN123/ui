@@ -38,7 +38,7 @@ function CategoryForm() {
   const { dataById, loading } = useSelector(
     (state) => state.apiGroupManagement
   );
-
+  
   // Fetch Data on Mount
   useEffect(() => {
     dispatch(fetchValidations());
@@ -55,7 +55,7 @@ function CategoryForm() {
         description: dataById.description || "",
         fields: dataById.fields?.length ? dataById.fields : [""],
         field_active: dataById.field_active || false,
-        apiId: dataById.apiId || [],
+        apiId: dataById.apiId?.map((api) => api._id) || [],
         preValidation: dataById.preValidation || [],
         postValidation: dataById.postValidation || [],
       });
@@ -83,12 +83,9 @@ function CategoryForm() {
       fields: [...prevData.fields, ""],
     }));
   };
-
+ 
   const handleSelectChange = (selected, field) => {
-    console.log(selected, field, "selected, field");
     const selectedIds = selected?.map((item) => item.value) || [];
-
-    console.log(selectedIds)
     setFormData((prevData) => ({ ...prevData, [field]: selectedIds }));
   };
 
@@ -216,8 +213,23 @@ function CategoryForm() {
           )}
 
           {renderSelect("APIs", apiOptions, formData.apiId, "apiId")}
+<<<<<<< HEAD
 
           
+=======
+          {renderSelect(
+            "Pre-Validations",
+            validationOptions,
+            formData.preValidation,
+            "preValidation"
+          )}
+          {renderSelect(
+            "Post-Validations",
+            postValidationOptions,
+            formData.postValidation,
+            "postValidation"
+          )}
+>>>>>>> f325a65314ca746fbfd422c5144fdcbaa094788d
 
           <Button type="submit" className="mt-4" variant="primary">
             Submit

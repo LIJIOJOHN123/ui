@@ -3,8 +3,8 @@ import { Button, Col, Form, Pagination, Row } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { deleteplanAction, planAction } from "../../store/planSlice";
-import PlanSearchPopup from "./SearchInput";
 import ConfirmationModal from "../../utils/ConfirmationModal ";
+import PlanSearchPopup from "./SearchInput";
 
 function PlanList() {
   const dispatch = useDispatch();
@@ -27,7 +27,7 @@ function PlanList() {
     dispatch(planAction(page, limit, queryString));
   }, [page, limit, dispatch, queryString]);
 
-  const totalPages = Math.ceil(count / limit);
+  const totalPages = Math.ceil(count / limit) ?? 1;
 
   const handleLimitChange = (e) => {
     const value = parseInt(e.target.value, 10);
@@ -147,7 +147,9 @@ function PlanList() {
               <Pagination className="d-flex justify-content-center">
                 <Pagination.Prev
                   disabled={page === 1}
-                  onClick={() => setPage(page - 1)}
+                  onClick={() => {
+                    if (page < totalPages) setPage(page + 1);
+                  }}
                 />
                 {[...Array(totalPages)].map((_, idx) => (
                   <Pagination.Item

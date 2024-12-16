@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { batchListAction } from "../../store/apiResponseManagement";
 import { updateTransactionAction } from "../../store/transactionSlice";
+import { Button, Col, Form, Pagination, Row } from "react-bootstrap";
+import BatchSearch from "./SearchInput";
 
 const Batch = () => {
   const dispatch = useDispatch();
@@ -15,7 +17,7 @@ const Batch = () => {
   const queryString = Object.entries(searchQueries)
     .filter(([_, value]) => value !== "")
     .map(([key, value]) => `${key}=${value}`)
-    .join("&"); 
+    .join("&");
 
   useEffect(() => {
     dispatch(batchListAction(page, limit, queryString));
@@ -24,11 +26,40 @@ const Batch = () => {
   const handleButton = (id, data) => {
     dispatch(updateTransactionAction(id, data));
   };
+  const handleLimitChange = (e) => {
+    const value = parseInt(e.target.value, 10);
+    setLimit(value);
+    setPage(1);
+  };
 
-  const { batchList } = useSelector((state) => state.apiResponseManagement);;
+  const { batchList, count } = useSelector(
+    (state) => state.apiResponseManagement
+  );
   return (
     <Fragment>
-      <h3>Client list</h3>
+      <h3>Batch list</h3>
+
+      <div className="d-flex align-items-center mb-4">
+        <p className="mb-0 me-3">
+          Total: <strong>{count}</strong>
+        </p>
+        <div className="d-flex align-items-center me-3">
+          <label htmlFor="limit" className="me-2">
+            Records per Page:
+          </label>
+          <Form.Select
+            id="limit"
+            className="form-select w-auto"
+            value={limit}
+            onChange={handleLimitChange}
+          >
+            <option value={25}>25</option>
+            <option value={50}>50</option>
+            <option value={100}>100</option>
+          </Form.Select>
+        </div>
+        <BatchSearch setSearchQueries={setSearchQueries} />
+      </div>
       <table className="table">
         <thead>
           <tr>
@@ -37,8 +68,6 @@ const Batch = () => {
             <th scope="col">Type</th>
             <th scope="col">numberofrequest</th>
             <th scope="col">apiGroupId</th>
-
-            <th scope="col">actions</th>
           </tr>
         </thead>
         <tbody>
@@ -57,7 +86,7 @@ const Batch = () => {
                 <td>{item.apiGroupId}</td>
 
                 <td>
-                  {item.status === "ACTIVE" && (
+                  {/* {item.status === "ACTIVE" && (
                     <button
                       type="button"
                       className="btn btn-primary"
@@ -67,7 +96,7 @@ const Batch = () => {
                     >
                       Block<i className="far fa-eye"></i>
                     </button>
-                  )}
+                  )} */}
                   {item.status === "INACTIVE" && (
                     <button
                       type="button"

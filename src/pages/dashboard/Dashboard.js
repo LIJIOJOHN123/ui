@@ -7,22 +7,52 @@ import {
   Title,
   Tooltip,
 } from "chart.js";
-import React from "react";
-import { Button, Col, Row } from "react-bootstrap";
+import React, { useEffect, useState } from "react";
+import { Button, Col, Row, Modal } from "react-bootstrap";
 import { Bar } from "react-chartjs-2";
 import NavBar from "../layout/NavBar";
+import { getLocalStorage, removeLocalStorage } from "../../utils/LocalStorage";
+import { useNavigate } from "react-router-dom";
 
-// Register the necessary components
 ChartJS.register(
   Title,
   Tooltip,
   Legend,
-  BarElement, // Register BarElement
+  BarElement,
   CategoryScale,
   LinearScale
 );
 
 function Dashboard() {
+  const [showModal, setShowModal] = useState(false);
+  const navigate = useNavigate();
+  useEffect(() => {
+    const payment = getLocalStorage("payment");
+    if (payment) {
+      setShowModal(true);
+    }
+  }, []);
+
+  const handleUpgradeClick = () => {
+    setShowModal(true);
+  };
+
+  const handleModalClose = () => {
+    removeLocalStorage("payment");
+    setShowModal(false);
+  };
+
+  const handlePay = () => {
+    removeLocalStorage("payment");
+    setShowModal(false);
+    navigate("/plans");
+  };
+
+  const handleNoPay = () => {
+    removeLocalStorage("payment");
+    setShowModal(false);
+  };
+
   const data = {
     labels: [
       "2024-08-04",
@@ -30,26 +60,19 @@ function Dashboard() {
       "2024-08-06",
       "2024-08-07",
       "2024-08-08",
-    ], // Dates as labels
+    ],
     datasets: [
       {
         label: "Account Usage Summary",
-        data: [10, 20, 15, 25, 10], // Sample values
+        data: [10, 20, 15, 25, 10],
         backgroundColor: [
-          "rgba(75, 192, 192, 0.2)", // Color for 2024-08-04
-          "rgba(255, 99, 132, 0.2)", // Color for 2024-08-05
-          "rgba(255, 159, 64, 0.2)", // Color for 2024-08-06
-          "rgba(75, 192, 192, 0.2)", // Color for 2024-08-07
-          "rgba(153, 102, 255, 0.2)", // Color for 2024-08-08
-        ], // Background color of bars
-        //  borderColor: [
-        //    "rgb(75, 192, 192)", // Border color for 2024-08-04
-        //    "rgb(255, 99, 132)", // Border color for 2024-08-05
-        //    "rgb(255, 159, 64)", // Border color for 2024-08-06
-        //    "rgb(75, 192, 192)", // Border color for 2024-08-07
-        //    "rgb(153, 102, 255)", // Border color for 2024-08-08
-        //  ], // Border color of bars
-        borderWidth: 1,
+          "rgba(75, 192, 192, 0.2)",
+          "rgba(255, 99, 132, 0.2)",
+          "rgba(255, 159, 64, 0.2)",
+          "rgba(75, 192, 192, 0.2)",
+          "rgba(153, 102, 255, 0.2)",
+        ],
+        borderWidth: 2,
       },
     ],
   };
@@ -80,7 +103,7 @@ function Dashboard() {
           display: true,
           text: "Value",
         },
-        beginAtZero: true, // Ensure the y-axis starts at zero
+        beginAtZero: true,
       },
     },
   };
@@ -194,6 +217,22 @@ function Dashboard() {
           </Button>
         </Col>
       </Row>
+      <Modal show={showModal} onHide={handleModalClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Upgrade Plan</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Do you want to Buy a plan? Shall we proceed to payment?
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="danger" onClick={handleNoPay}>
+            No
+          </Button>
+          <Button variant="success" onClick={handlePay}>
+            Yes, Pay Now
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </>
   );
 }

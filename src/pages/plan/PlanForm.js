@@ -1,7 +1,13 @@
 import Select from "react-select";
-
 import React, { useEffect, useState } from "react";
-import { Alert, Form as BootstrapForm, Button, Table } from "react-bootstrap";
+import {
+  Alert,
+  Form as BootstrapForm,
+  Button,
+  Col,
+  Row,
+  Table,
+} from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import {
@@ -25,6 +31,12 @@ function PlanForm() {
     name: "",
     des: "",
     apigroupId: "",
+    numberofapi: "",
+    numberofsuccessfulapiResponse: "",
+    credit: "",
+    pricing: "",
+    planstatus: "",
+    indexofplan: "",
     api: [],
     preValidation: [],
     postValidation: [],
@@ -32,6 +44,8 @@ function PlanForm() {
 
   const [apiList, setApiList] = useState([]);
   const [formError, setFormError] = useState(false);
+
+  
   const { data: preValidationData } = useSelector(
     (state) => state.prevalidation
   );
@@ -43,7 +57,6 @@ function PlanForm() {
     (state) => state.apiGroupManagement.dataById
   );
   const { dataById } = useSelector((state) => state.plan);
-  console.log(dataById, "dataById");
 
   useEffect(() => {
     dispatch(fetchValidations());
@@ -133,7 +146,7 @@ function PlanForm() {
     value: item._id,
     label: item.name,
   }));
-  console.log(validationOptions, "validationOptions");
+
   const postValidationOptions = postValidationData.map((item) => ({
     value: item._id,
     label: item.name,
@@ -240,6 +253,96 @@ function PlanForm() {
             />
           </BootstrapForm.Group>
 
+          <Row className="mt-3">
+            <Col sm={6}>
+              <BootstrapForm.Group controlId="formNumberOfApi">
+                <BootstrapForm.Label>Number of APIs</BootstrapForm.Label>
+                <BootstrapForm.Control
+                  type="number"
+                  placeholder="Enter number of APIs"
+                  name="numberofapi"
+                  value={formData.numberofapi}
+                  onChange={handleInputChange}
+                  required
+                />
+              </BootstrapForm.Group>
+            </Col>
+            <Col sm={6}>
+              <BootstrapForm.Group controlId="formSuccessfulApiResponse">
+                <BootstrapForm.Label>
+                  Number of Successful API Responses
+                </BootstrapForm.Label>
+                <BootstrapForm.Control
+                  type="number"
+                  placeholder="Enter number of successful API responses"
+                  name="numberofsuccessfulapiResponse"
+                  value={formData.numberofsuccessfulapiResponse}
+                  onChange={handleInputChange}
+                  required
+                />
+              </BootstrapForm.Group>
+            </Col>
+          </Row>
+
+          <Row className="mt-3">
+            <Col sm={6}>
+              <BootstrapForm.Group controlId="formCredit">
+                <BootstrapForm.Label>Credit</BootstrapForm.Label>
+                <BootstrapForm.Control
+                  type="number"
+                  placeholder="Enter credit"
+                  name="credit"
+                  value={formData.credit}
+                  onChange={handleInputChange}
+                  required
+                />
+              </BootstrapForm.Group>
+            </Col>
+            <Col sm={6}>
+              <BootstrapForm.Group controlId="formPricing">
+                <BootstrapForm.Label>Pricing</BootstrapForm.Label>
+                <BootstrapForm.Control
+                  type="number"
+                  placeholder="Enter pricing"
+                  name="pricing"
+                  value={formData.pricing}
+                  onChange={handleInputChange}
+                  required
+                />
+              </BootstrapForm.Group>
+            </Col>
+          </Row>
+
+          <Row className="mt-3">
+            <Col sm={6}>
+              <BootstrapForm.Group controlId="formIndexOfPlan">
+                <BootstrapForm.Label>Index of Plan</BootstrapForm.Label>
+                <BootstrapForm.Control
+                  type="number"
+                  placeholder="Enter index of the plan"
+                  name="indexofplan"
+                  value={formData.indexofplan}
+                  onChange={handleInputChange}
+                  required
+                />
+              </BootstrapForm.Group>
+            </Col>
+          </Row>
+          <BootstrapForm.Group controlId="formPlanStatus">
+            <BootstrapForm.Label>Plan Status</BootstrapForm.Label>
+            <BootstrapForm.Select
+              name="planstatus"
+              value={formData.planstatus}
+              onChange={handleInputChange}
+              required
+            >
+              <option disabled value="">
+                Select Plan Status
+              </option>
+              <option value="UNPUBLISHED">UnPublished</option>
+              <option value="PUBLISHED">Published</option>
+            </BootstrapForm.Select>
+          </BootstrapForm.Group>
           <BootstrapForm.Group className="mt-3" controlId="formCategoryId">
             <BootstrapForm.Label>Api Group</BootstrapForm.Label>
 
