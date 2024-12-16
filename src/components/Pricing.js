@@ -1,13 +1,23 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Card, Col, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import { planAction } from "../store/planSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { getLocalStorage, setLocalStorage } from "../utils/LocalStorage";
 
 const Pricing = () => {
   const [monthlyPlan, setMonthlyPlan] = useState(true);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { data, loading, count } = useSelector((state) => state.plan);
+  const token = getLocalStorage("authToken");
+  useEffect(() => {
+    dispatch(planAction());
+  }, []);
   const plans = [
     {
-      name: "Free",
+      id: data[0]?._id,
+      name: data[0]?.name,
       price: "Free",
       button: "FREE 7-Days TRIAL",
       credits: "25",
@@ -27,7 +37,8 @@ const Pricing = () => {
       ],
     },
     {
-      name: "Starter",
+      id: data[1]?._id,
+      name: data[1]?.name,
       price: "$49.99",
       priceText: "Per month",
       button: "Get API Key",
@@ -47,7 +58,8 @@ const Pricing = () => {
       ],
     },
     {
-      name: "Professional",
+      id: data[2]?._id,
+      name: data[2]?.name,
       price: "$99.99",
       priceText: "Per month",
       button: "Get API Key",
@@ -67,7 +79,8 @@ const Pricing = () => {
       ],
     },
     {
-      name: "Business",
+      id: data[3]?._id,
+      name: data[3]?.name,
       price: "$199.99",
       priceText: "/month",
       button: "Get API Key",
@@ -87,7 +100,8 @@ const Pricing = () => {
       ],
     },
     {
-      name: "Enterprise",
+      id: data[4]?._id,
+      name: data[4]?.name,
       price: "Talk to us",
       button: "Talk to us",
       link: "/book-a-demo",
@@ -193,7 +207,14 @@ const Pricing = () => {
                   <Button
                     className="text-center w-100 fw-medium border-0"
                     style={{ backgroundColor: "#bf54bd" }}
-                    onClick={() => navigate(plan.link)}
+                    onClick={() => {
+                      setLocalStorage("payment", plan.id);
+                      if (token) {
+                        navigate("/dashboard");
+                      } else {
+                        navigate("/auth/login");
+                      }
+                    }}
                   >
                     {plan.button}
                   </Button>

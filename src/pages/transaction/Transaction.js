@@ -1,11 +1,10 @@
 import React, { Fragment, useEffect, useState } from "react";
+import { Card, Form, Pagination } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import {
-  transactionListAction,
-  updateTransactionAction,
+  transactionListAction
 } from "../../store/transactionSlice";
-import { Form, Pagination, Card } from "react-bootstrap";
 import TransactionSearchPopup from "./TransactionSearchPopup";
 
 const Transaction = () => {

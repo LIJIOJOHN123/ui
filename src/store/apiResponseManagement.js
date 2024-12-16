@@ -141,6 +141,7 @@ export const batchListAction =
       );
 
       const { status, data, count } = res.data;
+
       if (status === "ok") {
         dispatch(batchlistResponseSuccess({ data, status, count }));
       }
@@ -178,7 +179,7 @@ export const getByIdAPIAction = (id) => async (dispatch) => {
 };
 // Add API Batching
 export const addAPIBatchingAction = (formData) => async (dispatch) => {
-  console.log(formData, "????????????????");
+
   try {
     const token = getLocalStorage("authToken");
     const res = await axios.post(
@@ -208,7 +209,6 @@ export const addAPIBatchingAction = (formData) => async (dispatch) => {
 // Upload CSV Batching
 export const uploadCSVFileAPIBatchingAction =
   (formData) => async (dispatch) => {
-    console.log(formData);
     try {
       const token = getLocalStorage("authToken");
       const res = await axios.post(

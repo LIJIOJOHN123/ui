@@ -182,7 +182,6 @@ function GroupApiForm() {
     label: item.name,
   }));
 
-  console.log(formData.preValidation, "sformData.preValidation");
   return (
     <div>
       <div className="d-flex justify-content-between">

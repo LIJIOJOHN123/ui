@@ -92,7 +92,7 @@ function APIGroupList() {
                 <option value={100}>100</option>
               </Form.Select>
             </div>
-            <APiGroupSearch data={data} setSearchQueries={setSearchQueries} />
+            <APiGroupSearch setSearchQueries={setSearchQueries} />
           </div>
 
           <Row className="mt-4">
@@ -106,7 +106,9 @@ function APIGroupList() {
                   <div className="bg-white p-3 rounded shadow-sm h-100">
                     <div onClick={() => navigate(`/api-groups/${item._id}`)}>
                       <h6 className="text-dark">{item.name}</h6>
-                      <p className="text-muted line-clamp">{item.description}</p>
+                      <p className="text-muted line-clamp">
+                        {item.description}
+                      </p>
                       <p className="text-muted line-clamp">{`${item.apiId.length} APIs used `}</p>
                     </div>
                     <div className="mt-3 d-flex justify-content-between">
