@@ -1,10 +1,37 @@
 import React, { useEffect, useState } from "react";
-import { Form } from "react-bootstrap";
-import Pagination from "react-bootstrap/Pagination";
+import { Form, Table, Pagination, Button, Spinner } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { apiBatchingAction } from "../../store/apiResponseManagement";
 import ApiResponseSearchPopup from "./SearchInput";
+
+// Modular Table Row Component
+const BatchTableRow = ({ item, navigate }) => (
+  <tr>
+    <td className="text-center align-middle">
+      <Button
+        variant="link"
+        className="p-0 text-primary"
+        onClick={() => navigate(`/products/batch-details-view/${item._id}`)}
+        aria-label={`View details for ${item._id}`}
+      >
+        <i className="bi bi-eye-fill"></i>
+      </Button>
+    </td>
+    <td className="text-center align-middle">{item.job_id}</td>
+    <td className="text-center align-middle">{item.apiType}</td>
+    <td className="text-center align-middle">{item.backend_api_key_name}</td>
+    <td className="text-center align-middle">{item.pricing}</td>
+    <td className="text-center align-middle">{item.apiStatus}</td>
+    <td className="text-center align-middle">
+      {item.apiStatus === "API FAILED" ? (
+        <Button variant="danger" size="sm">Retrigger</Button>
+      ) : (
+        <span className="text-success">✔</span>
+      )}
+    </td>
+  </tr>
+);
 
 function ApiResponse() {
   const dispatch = useDispatch();
@@ -14,8 +41,12 @@ function ApiResponse() {
   const [limit, setLimit] = useState(25);
   const [searchQueries, setSearchQueries] = useState({});
 
-  const { data, count } = useSelector((state) => state.apiResponseManagement);
+  // Fetching data from Redux store
+  const { data = [], count = 0, loading } = useSelector(
+    (state) => state.apiResponseManagement
+  );
 
+  // Constructing query string
   const queryString = Object.entries(searchQueries)
     .filter(([_, value]) => value !== "")
     .map(([key, value]) => `${key}=${value}`)
@@ -65,44 +96,29 @@ function ApiResponse() {
       </div>
 
       {/* Table */}
-      <div className="table-responsive mb-4 flex-grow-1">
-        <table className="table table-striped table-bordered shadow-sm w-100">
-          <thead className="bg-primary text-white">
+      <div className="table-responsive">
+        <Table striped bordered hover size="sm">
+          <thead className="table-light">
             <tr>
-              <th scope="col">View</th>
-              <th scope="col">Job ID</th>
-              <th scope="col">API Type</th>
-              <th scope="col">Key Name</th>
-              <th scope="col">Unique Id</th>
-              <th scope="col">Batch Id</th>
-              <th scope="col">Status</th>
+              <th>View</th>
+              <th>Job ID</th>
+              <th>API Type</th>
+              <th>Key Name</th>
+              <th>Pricing</th>
+              <th>Status</th>
+              <th>Action</th>
             </tr>
           </thead>
           <tbody>
-            {data.length > 0 ? (
-              data.map((item, i) => (
-                <tr key={item._id || i}>
-                  <td className="text-center align-middle">
-                    <i
-                      className="bi bi-eye-fill text-info"
-                      style={{ cursor: "pointer", fontSize: "1.5rem" }}
-                      aria-label={`View details for ${item._id}`}
-                      onClick={() =>
-                        navigate(`/products/batch-details-view/${item._id}`)
-                      }
-                    ></i>
-                  </td>
-                  <td className="text-center align-middle">{item.job_id}</td>
-                  <td className="text-center align-middle">{item.apiType}</td>
-                  <td className="text-center align-middle">{item.backend_api_key_name}</td>
-                  <td className="text-center align-middle">{item.unique_id}</td>
-                  <td className="text-center align-middle">{item.batchId}</td>
-                  <td className="text-center align-middle">
-                    <span className={`badge bg-${item.apiStatus === 'Success' ? 'success' : 'danger'}`}>
-                      {item.apiStatus}
-                    </span>
-                  </td>
-                </tr>
+            {loading ? (
+              <tr>
+                <td colSpan="7" className="text-center">
+                  <Spinner animation="border" variant="primary" />
+                </td>
+              </tr>
+            ) : data.length > 0 ? (
+              data.map((item) => (
+                <BatchTableRow key={item._id} item={item} navigate={navigate} />
               ))
             ) : (
               <tr>
@@ -112,7 +128,7 @@ function ApiResponse() {
               </tr>
             )}
           </tbody>
-        </table>
+        </Table>
       </div>
 
       {/* Pagination */}
@@ -123,46 +139,29 @@ function ApiResponse() {
               disabled={page === 1}
               onClick={() => setPage(page - 1)}
             />
-
-            {/* Show first 3 pages */}
-            {[1, 2, 3].map((num) =>
-              num <= totalPages ? (
-                <Pagination.Item
-                  key={num}
-                  active={page === num}
-                  onClick={() => setPage(num)}
-                >
-                  {num}
-                </Pagination.Item>
-              ) : null
-            )}
-
-            {/* Ellipsis if necessary */}
-            {page > 4 && page < totalPages - 2 && <Pagination.Ellipsis disabled />}
-
-            {/* Current page, if not in the first three */}
-            {page > 3 && page < totalPages - 2 && (
-              <Pagination.Item key={page} active onClick={() => setPage(page)}>
-                {page}
+            {[...Array(totalPages).keys()].slice(0, 3).map((num) => (
+              <Pagination.Item
+                key={num}
+                active={page === num + 1}
+                onClick={() => setPage(num + 1)}
+              >
+                {num + 1}
               </Pagination.Item>
+            ))}
+            {page > 4 && <Pagination.Ellipsis disabled />}
+            {page > 3 && page < totalPages - 2 && (
+              <Pagination.Item active>{page}</Pagination.Item>
             )}
-
-            {/* Ellipsis before the last two pages */}
-            {page < totalPages - 3 && totalPages > 5 && <Pagination.Ellipsis disabled />}
-
-            {/* Last two pages */}
-            {[totalPages - 1, totalPages].map((num) =>
-              num > 3 ? (
-                <Pagination.Item
-                  key={num}
-                  active={page === num}
-                  onClick={() => setPage(num)}
-                >
-                  {num}
-                </Pagination.Item>
-              ) : null
-            )}
-
+            {page < totalPages - 2 && <Pagination.Ellipsis disabled />}
+            {[totalPages - 1, totalPages].map((num) => (
+              <Pagination.Item
+                key={num}
+                active={page === num}
+                onClick={() => setPage(num)}
+              >
+                {num}
+              </Pagination.Item>
+            ))}
             <Pagination.Next
               disabled={page === totalPages}
               onClick={() => setPage(page + 1)}
