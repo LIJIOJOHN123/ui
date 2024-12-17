@@ -9,7 +9,10 @@ import {
   getByIdAPIAction,
   updateproductAction,
 } from "../../store/productManagementSlice";
-import { ApiGroupAction } from "../../store/apiGroupManagementSlice";
+import {
+  ApiGroupAction,
+  getByIdAPIAction as groupPlan,
+} from "../../store/apiGroupManagementSlice";
 import { fetchValidations } from "../../store/prevalidationSlice";
 import { fetchPostValidations } from "../../store/postvalidationSlice";
 
@@ -36,14 +39,16 @@ function GroupApiForm() {
 
   const clientData = useSelector((state) => state.clientManagement.data);
   const apiGroupData = useSelector((state) => state.apiGroupManagement.data);
+  const apiData = useSelector((state) => state.apiGroupManagement.dataById);
 
+  console.log(apiData.apiId, "apiGroupData");
   const { data: preValidationData } = useSelector(
     (state) => state.prevalidation
   );
   const { data: postValidationData } = useSelector(
     (state) => state.postvalidation
   );
-  // Fetch necessary data when the component loads
+
   useEffect(() => {
     if (id) {
       dispatch(getByIdAPIAction(id));
@@ -54,6 +59,11 @@ function GroupApiForm() {
     dispatch(clientManagementListAction());
     dispatch(ApiGroupAction());
   }, [id, dispatch]);
+  useEffect(() => {
+    if (formData.apiGroupId) {
+      dispatch(groupPlan(formData.apiGroupId));
+    }
+  }, [formData.apiGroupId, dispatch]);
 
   const handleSelectChange = (selected, field) => {
     const selectedIds = selected?.map((item) => item.value) || [];
@@ -277,6 +287,34 @@ function GroupApiForm() {
             />
           </BootstrapForm.Group>
 
+          {apiData.apiId && (
+            <div className="mt-3">
+              <h5 className="text-decoration-underline">
+                List of APIs Associated with this Group
+              </h5>
+              <table className="table">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Standard Pricing</th>
+                    <th>Fields</th>
+                    <th>Backend Api key Name</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {apiData.apiId.map((item, i) => (
+                    <tr key={i} className="">
+                      <td>{item.apiname}</td>
+                      <td>{item.pricing}</td>
+                      <td>{item.fields.join(", ")}</td>
+                      <td>{item.backend_api_key_name}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+
           {apiList.length > 0 && (
             <div className="mt-3">
               <h5 className="text-decoration-underline">
@@ -347,8 +385,8 @@ function GroupApiForm() {
           )}
 
           <div className="d-flex justify-content-between mt-4">
-            <Button type="submit" className="fw-bold" disabled={loading}>
-              {loading ? "Loading..." : id ? "Update" : "Create"}
+            <Button type="submit" className="fw-bold">
+              {id ? "Update" : "Create"}
             </Button>
           </div>
         </BootstrapForm>

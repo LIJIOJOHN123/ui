@@ -8,11 +8,13 @@ import {
   Tooltip,
 } from "chart.js";
 import React, { useEffect, useState } from "react";
-import { Button, Col, Row, Modal } from "react-bootstrap";
+import { Button, Col, Modal, Row } from "react-bootstrap";
 import { Bar } from "react-chartjs-2";
-import NavBar from "../layout/NavBar";
-import { getLocalStorage, removeLocalStorage } from "../../utils/LocalStorage";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { addPaymentAction } from "../../store/paymentSlice";
+import { getLocalStorage, removeLocalStorage } from "../../utils/LocalStorage";
+import { getByIdPlanAction } from "../../store/planSlice";
 
 ChartJS.register(
   Title,
@@ -24,18 +26,24 @@ ChartJS.register(
 );
 
 function Dashboard() {
+  const dispatch = useDispatch();
   const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
+  const { dataById: plandataById } = useSelector((state) => state.plan);
+  const {
+    dataById: order,
+    loading,
+    count,
+  } = useSelector((state) => state.payment);
+  const { user } = useSelector((state) => state.auth);
+  console.log(user,"?");
   useEffect(() => {
     const payment = getLocalStorage("payment");
     if (payment) {
+      dispatch(getByIdPlanAction(payment));
       setShowModal(true);
     }
   }, []);
-
-  const handleUpgradeClick = () => {
-    setShowModal(true);
-  };
 
   const handleModalClose = () => {
     removeLocalStorage("payment");
@@ -43,9 +51,18 @@ function Dashboard() {
   };
 
   const handlePay = () => {
+    const data = {
+      amount: plandataById.pricing,
+      currency: "INR",
+      receipt: `receipt_${new Date().getTime()}`,
+      notes: { note1: "Payment for Test" },
+    };
+
+    dispatch(addPaymentAction(plandataById._id, data, user));
+
     removeLocalStorage("payment");
     setShowModal(false);
-    navigate("/plans");
+    // navigate("/plans");
   };
 
   const handleNoPay = () => {
@@ -53,7 +70,7 @@ function Dashboard() {
     setShowModal(false);
   };
 
-  const data = {
+  const datas = {
     labels: [
       "2024-08-04",
       "2024-08-05",
@@ -198,7 +215,7 @@ function Dashboard() {
           <h5>Lookups & API Calls</h5>
           <p style={{ fontSize: "14px" }}>Based on estimated activity</p>
 
-          <Bar data={data} options={options} />
+          <Bar data={datas} options={options} />
           <h6>ACCOUNT SUMMARY: THIS WEEK FOR WEB RISK MONITORING</h6>
         </Col>
         <Col

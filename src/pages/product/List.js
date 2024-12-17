@@ -1,5 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Button, Col, Form, Pagination, Row, Card, Modal } from "react-bootstrap";
+import {
+  Button,
+  Col,
+  Form,
+  Pagination,
+  Row,
+  Card,
+  Modal,
+} from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import {
@@ -21,7 +29,7 @@ function Product() {
   const [limit, setLimit] = useState(5);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [apiToDelete, setApiToDelete] = useState({ id: null, name: "" });
-
+  console.log(searchQueries, "searchQueries");
   const queryString = Object.entries(searchQueries)
     .filter(([_, value]) => value !== "")
     .map(([key, value]) => `${key}=${value}`)
@@ -99,10 +107,8 @@ function Product() {
               {data &&
                 data.map((item, i) => (
                   <Col key={i} xs={12} sm={6} md={4} lg={3} className="mb-4">
-                    <Card className="h-100" 
-                     
-                    >
-                      <Card.Body  >
+                    <Card className="h-100">
+                      <Card.Body>
                         <Card.Title
                           className="text-truncate"
                           onClick={() => navigate(`/products/${item._id}`)}
@@ -122,7 +128,9 @@ function Product() {
                           <Button
                             variant="warning"
                             size="sm"
-                            onClick={() => navigate(`/products/edit/${item._id}`)}
+                            onClick={() =>
+                              navigate(`/products/edit/${item._id}`)
+                            }
                           >
                             Edit
                           </Button>
@@ -154,7 +162,11 @@ function Product() {
                   <Pagination.Ellipsis disabled />
                 )}
                 {page > 3 && page < totalPages - 2 && (
-                  <Pagination.Item key={page} active onClick={() => setPage(page)}>
+                  <Pagination.Item
+                    key={page}
+                    active
+                    onClick={() => setPage(page)}
+                  >
                     {page}
                   </Pagination.Item>
                 )}
