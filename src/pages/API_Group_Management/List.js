@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Col, Form, Pagination, Row } from "react-bootstrap";
+import { Button, Form, Pagination, Table } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import {
@@ -54,6 +54,42 @@ function APIGroupList() {
 
   return (
     <div className="bg-body-secondary w-100 min-vh-100 p-4">
+      {/* Header */}
+      <div className="d-flex justify-content-between align-items-center mb-4">
+        <h3>API Groups</h3>
+        <Button
+          onClick={() => navigate("/api-groups/create")}
+          variant="primary"
+          className="fw-bold"
+        >
+          Add Group
+        </Button>
+      </div>
+
+      {/* Search and Filters */}
+      <div className="d-flex align-items-center mb-4">
+        <p className="mb-0 me-3">
+          Total: <strong>{count}</strong>
+        </p>
+        <div className="d-flex align-items-center me-3">
+          <label htmlFor="limit" className="me-2">
+            Records per Page:
+          </label>
+          <Form.Select
+            id="limit"
+            className="form-select w-auto"
+            value={limit}
+            onChange={handleLimitChange}
+          >
+            <option value={5}>5</option>
+            <option value={10}>10</option>
+            <option value={25}>25</option>
+          </Form.Select>
+        </div>
+        <APiGroupSearch setSearchQueries={setSearchQueries} />
+      </div>
+
+      {/* Table */}
       {loading ? (
         <div className="d-flex justify-content-center align-items-center mt-5">
           <div className="spinner-grow text-primary" role="status">
@@ -61,137 +97,92 @@ function APIGroupList() {
           </div>
         </div>
       ) : (
-        <div>
-          <div className="d-flex justify-content-between align-items-center mb-4">
-            <h3>API Group</h3>
-            <Button
-              onClick={() => navigate("/api-groups/create")}
-              variant="primary"
-              className="fw-bold"
-            >
-              Add Group
-            </Button>
-          </div>
-
-          <div className="d-flex align-items-center mb-4">
-            <p className="mb-0 me-3">
-              Total: <strong>{count}</strong>
-            </p>
-            <div className="d-flex align-items-center me-3">
-              <label htmlFor="limit" className="me-2">
-                Records per Page:
-              </label>
-              <Form.Select
-                id="limit"
-                className="form-select w-auto"
-                value={limit}
-                onChange={handleLimitChange}
-              >
-                <option value={25}>25</option>
-                <option value={50}>50</option>
-                <option value={100}>100</option>
-              </Form.Select>
-            </div>
-            <APiGroupSearch setSearchQueries={setSearchQueries} />
-          </div>
-
-          <Row className="mt-4">
-            {data.length === 0 ? (
-              <Col xs={12}>
-                <div className="text-center text-muted">No data available</div>
-              </Col>
-            ) : (
-              data.map((item, i) => (
-                <Col key={i} xs={12} sm={6} md={4} lg={3} className="mb-4">
-                  <div className="bg-white p-3 rounded shadow-sm h-100">
-                    <div onClick={() => navigate(`/api-groups/${item._id}`)}>
-                      <h6 className="text-dark">{item.name}</h6>
-                      <p className="text-muted line-clamp">
-                        {item.description}
-                      </p>
-                      <p className="text-muted line-clamp">{`${item.apiId.length} APIs used `}</p>
-                    </div>
-                    <div className="mt-3 d-flex justify-content-between">
-                      <Button
-                        variant="danger"
-                        onClick={() => openDeleteModal(item._id, item.name)}
-                      >
-                        Delete
-                      </Button>
-                      <Button
-                        variant="secondary"
-                        onClick={() => navigate(`/api-groups/edit/${item._id}`)}
-                      >
-                        Edit
-                      </Button>
-                    </div>
-                  </div>
-                </Col>
+        <Table striped bordered hover responsive>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Name</th>
+              <th>Description</th>
+              <th>APIs Used</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {data.length > 0 ? (
+              data.map((item, index) => (
+                <tr
+                  key={item._id}
+                  style={{ cursor: "pointer" }}
+                  onClick={() => navigate(`/api-groups/${item._id}`)}
+                >
+                  <td>{index + 1 + (page - 1) * limit}</td>
+                  <td>{item.name}</td>
+                  <td>{item.description}</td>
+                  <td>{item.apiId.length}</td>
+                  <td
+                    onClick={(e) => e.stopPropagation()} // Prevent row click event from triggering
+                  >
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      onClick={() => navigate(`/api-groups/edit/${item._id}`)}
+                      className="me-2"
+                    >
+                      Edit
+                    </Button>
+                    <Button
+                      variant="danger"
+                      size="sm"
+                      onClick={() => openDeleteModal(item._id, item.name)}
+                    >
+                      Delete
+                    </Button>
+                  </td>
+                </tr>
               ))
+            ) : (
+              <tr>
+                <td colSpan="5" className="text-center text-muted">
+                  No API Groups found.
+                </td>
+              </tr>
             )}
-          </Row>
+          </tbody>
+        </Table>
+      )}
 
-          {count > limit && (
-            <div className="mt-4 d-flex justify-content-center">
-              <Pagination>
-                <Pagination.Prev
-                  disabled={page === 1}
-                  onClick={() => setPage(page - 1)}
-                />
-                {[1, 2, 3].map((num) =>
-                  num <= totalPages ? (
-                    <Pagination.Item
-                      key={num}
-                      active={page === num}
-                      onClick={() => setPage(num)}
-                    >
-                      {num}
-                    </Pagination.Item>
-                  ) : null
-                )}
-
-                {page > 4 && page < totalPages - 2 && (
-                  <Pagination.Ellipsis disabled />
-                )}
-
-                {page > 3 && page < totalPages - 2 && (
-                  <Pagination.Item active onClick={() => setPage(page)}>
-                    {page}
-                  </Pagination.Item>
-                )}
-
-                {page < totalPages - 3 && totalPages > 5 && (
-                  <Pagination.Ellipsis disabled />
-                )}
-
-                {[totalPages - 1, totalPages].map((num) =>
-                  num > 3 ? (
-                    <Pagination.Item
-                      key={num}
-                      active={page === num}
-                      onClick={() => setPage(num)}
-                    >
-                      {num}
-                    </Pagination.Item>
-                  ) : null
-                )}
-
-                <Pagination.Next
-                  disabled={page === totalPages}
-                  onClick={() => setPage(page + 1)}
-                />
-              </Pagination>
-            </div>
-          )}
-
-          <ConfirmationModal
-            show={showDeleteModal}
-            onHide={() => setShowDeleteModal(false)}
-            onConfirm={handleDelete}
-            message={`${apiToDelete.name} API Group`}
-          />
+      {/* Pagination */}
+      {count > limit && (
+        <div className="d-flex justify-content-center mt-4">
+          <Pagination>
+            <Pagination.Prev
+              disabled={page === 1}
+              onClick={() => setPage(page - 1)}
+            />
+            {[...Array(totalPages).keys()].map((num) => (
+              <Pagination.Item
+                key={num + 1}
+                active={page === num + 1}
+                onClick={() => setPage(num + 1)}
+              >
+                {num + 1}
+              </Pagination.Item>
+            ))}
+            <Pagination.Next
+              disabled={page === totalPages}
+              onClick={() => setPage(page + 1)}
+            />
+          </Pagination>
         </div>
       )}
+
+      {/* Confirmation Modal */}
+      <ConfirmationModal
+        show={showDeleteModal}
+        onHide={() => setShowDeleteModal(false)}
+        onConfirm={handleDelete}
+        message={`Are you sure you want to delete the group "${apiToDelete.name}"?`}
+      />
     </div>
   );
 }

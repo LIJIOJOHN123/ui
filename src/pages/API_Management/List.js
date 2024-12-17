@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Col, Row, Pagination, Form } from "react-bootstrap";
+import { Button, Pagination, Form, Table } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { apiListAction, deleteApiAction } from "../../store/apiManagementSlice";
@@ -47,158 +47,131 @@ function ApiList() {
   };
 
   return (
-    <div style={{ backgroundColor: "#f0f0f0", display: "flex", flexDirection: "column", height: "100vh" }}>
-      {/* Loading Spinner */}
+    <div style={{ backgroundColor: "#f0f0f0", padding: "20px", minHeight: "100vh" }}>
+      {/* Header Section */}
+      <div className="d-flex justify-content-between align-items-center mb-3">
+        <h3>API List</h3>
+        <Button
+          onClick={() => navigate("/api-list/create")}
+          variant="primary"
+          className="fw-bold"
+        >
+          Add API
+        </Button>
+      </div>
+
+      {/* Filters and Total Count */}
+      <div className="d-flex align-items-center mb-3">
+        <p className="mb-0 me-3">Total: <b>{count}</b></p>
+        <div className="d-flex align-items-center me-3">
+          <label htmlFor="limit" className="me-2 mb-0">Records per Page:</label>
+          <Form.Select
+            id="limit"
+            className="form-select w-auto"
+            value={limit}
+            onChange={handleLimitChange}
+          >
+            <option value={25}>25</option>
+            <option value={50}>50</option>
+            <option value={100}>100</option>
+          </Form.Select>
+        </div>
+        <SearchPopup data={data} setSearchQueries={setSearchQueries} />
+      </div>
+
+      {/* API Table */}
       {loading ? (
-        <div className="d-flex justify-content-center align-items-center flex-grow-1">
+        <div className="d-flex justify-content-center">
           <div className="spinner-grow text-primary" role="status">
             <span className="visually-hidden">Loading...</span>
           </div>
         </div>
       ) : (
-        <div className="flex-grow-1">
-          {/* Header Section */}
-          <div className="d-flex justify-content-between align-items-center mb-3">
-            <h3>API List</h3>
-            <Button
-              onClick={() => navigate("/api-list/create")}
-              variant="primary"
-              className="fw-bold"
-            >
-              Add API
-            </Button>
-          </div>
-
-          {/* Total Count and Limit Selection */}
-          <div className="d-flex flex-wrap align-items-center mb-3">
-            <p className="mb-0 me-3">
-              Total: <b>{count}</b>
-            </p>
-            <div className="d-flex align-items-center me-3">
-              <label htmlFor="limit" className="me-2 mb-0">
-                Records per Page:
-              </label>
-              <Form.Select
-                id="limit"
-                className="form-select w-auto"
-                value={limit}
-                onChange={handleLimitChange}
-              >
-                <option value={25}>25</option>
-                <option value={50}>50</option>
-                <option value={100}>100</option>
-              </Form.Select>
-            </div>
-            <SearchPopup data={data} setSearchQueries={setSearchQueries} />
-          </div>
-
-          {/* API List */}
-          <Row className="g-4 flex-grow-1">
-            {data.length === 0 ? (
-              <Col xs={12}>
-                <div className="text-center text-muted">No data available</div>
-              </Col>
-            ) : (
-              data.map((item, i) => (
-                <Col key={i} xs={12} sm={6} md={4} lg={3}>
-                  <div className="card bg-lightgray shadow-sm h-100">
-                    <div
-                      className="card-body"
-                      style={{ cursor: "pointer" }}
-                      onClick={() => navigate(`/api-list/${item._id}`)}
-                    >
-                      <h5 className="card-title text-center">{item.apiname}</h5>
-                      <p className="card-text">{item.des}</p>
-                      <p className="card-text">
-                        <strong>API Type:</strong> {item.api_type}
-                      </p>
-                      <p className="card-text">
-                        <strong>Backend API Key:</strong> {item.backend_api_key_name}
-                      </p>
-                      <p className="card-text">
-                        <strong>₹{item.pricing}</strong> per request
-                      </p>
-                    </div>
-                    <div className="card-footer d-flex justify-content-between">
-                      <Button
-                        variant="danger"
-                        onClick={() => openDeleteModal(item._id, item.apiname)}
-                      >
-                        Delete
-                      </Button>
+        <Table striped bordered hover responsive>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>API Name</th>
+              <th>Description</th>
+              <th>API Type</th>
+              <th>Backend API Key</th>
+              <th>Pricing (₹)</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {data.length > 0 ? (
+              data.map((item, index) => (
+                <tr key={item._id}>
+                  <td>{index + 1 + (page - 1) * limit}</td>
+                  <td>{item.apiname}</td>
+                  <td>{item.des}</td>
+                  <td>{item.api_type}</td>
+                  <td>{item.backend_api_key_name}</td>
+                  <td>{item.pricing}</td>
+                  <td>
+                    <div className="d-flex gap-2">
                       <Button
                         variant="secondary"
+                        size="sm"
                         onClick={() => navigate(`/api-list/edit/${item._id}`)}
                       >
                         Edit
                       </Button>
+                      <Button
+                        variant="danger"
+                        size="sm"
+                        onClick={() => openDeleteModal(item._id, item.apiname)}
+                      >
+                        Delete
+                      </Button>
                     </div>
-                  </div>
-                </Col>
+                  </td>
+                </tr>
               ))
+            ) : (
+              <tr>
+                <td colSpan="7" className="text-center text-muted">
+                  No APIs found.
+                </td>
+              </tr>
             )}
-          </Row>
+          </tbody>
+        </Table>
+      )}
 
-          {/* Pagination */}
-          {count > limit && (
-            <div className="mt-4">
-              <Pagination className="d-flex justify-content-center">
-                <Pagination.Prev
-                  disabled={page === 1}
-                  onClick={() => setPage(page - 1)}
-                />
-                {[1, 2, 3].map((num) =>
-                  num <= totalPages ? (
-                    <Pagination.Item
-                      key={num}
-                      active={page === num}
-                      onClick={() => setPage(num)}
-                    >
-                      {num}
-                    </Pagination.Item>
-                  ) : null
-                )}
-                {page > 4 && page < totalPages - 2 && <Pagination.Ellipsis disabled />}
-                {page > 3 && page < totalPages - 2 && (
-                  <Pagination.Item
-                    key={page}
-                    active
-                    onClick={() => setPage(page)}
-                  >
-                    {page}
-                  </Pagination.Item>
-                )}
-                {page < totalPages - 3 && totalPages > 5 && (
-                  <Pagination.Ellipsis disabled />
-                )}
-                {[totalPages - 1, totalPages].map((num) =>
-                  num > 3 ? (
-                    <Pagination.Item
-                      key={num}
-                      active={page === num}
-                      onClick={() => setPage(num)}
-                    >
-                      {num}
-                    </Pagination.Item>
-                  ) : null
-                )}
-                <Pagination.Next
-                  disabled={page === totalPages}
-                  onClick={() => setPage(page + 1)}
-                />
-              </Pagination>
-            </div>
-          )}
-
-          {/* Confirmation Modal */}
-          <ConfirmationModal
-            show={showDeleteModal}
-            onHide={() => setShowDeleteModal(false)}
-            onConfirm={handleDelete}
-            message={`${apiToDelete.name} API`}
-          />
+      {/* Pagination */}
+      {count > limit && (
+        <div className="d-flex justify-content-center mt-4">
+          <Pagination>
+            <Pagination.Prev
+              disabled={page === 1}
+              onClick={() => setPage(page - 1)}
+            />
+            {[...Array(totalPages).keys()].map((num) => (
+              <Pagination.Item
+                key={num + 1}
+                active={page === num + 1}
+                onClick={() => setPage(num + 1)}
+              >
+                {num + 1}
+              </Pagination.Item>
+            ))}
+            <Pagination.Next
+              disabled={page === totalPages}
+              onClick={() => setPage(page + 1)}
+            />
+          </Pagination>
         </div>
       )}
+
+      {/* Confirmation Modal */}
+      <ConfirmationModal
+        show={showDeleteModal}
+        onHide={() => setShowDeleteModal(false)}
+        onConfirm={handleDelete}
+        message={`Are you sure you want to delete ${apiToDelete.name} API?`}
+      />
     </div>
   );
 }
