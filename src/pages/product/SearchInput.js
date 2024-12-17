@@ -1,22 +1,30 @@
-import { useState } from "react";
-import { InputGroup } from "react-bootstrap";
-import Button from "react-bootstrap/Button";
-import Form from "react-bootstrap/Form";
-import Modal from "react-bootstrap/Modal";
+import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { InputGroup, Button, Form, Modal } from "react-bootstrap";
+import { useEffect } from "react";
+import { clientManagementListAction } from "../../store/clientManagementSlice";
 
 function ProductSearchPopup({ setSearchQueries }) {
+  const dispatch = useDispatch();
   const [show, setShow] = useState(false);
-
   const [tempSearchQueries, setTempSearchQueries] = useState({
     name: "",
-    des: "",
+    description: "",
+    clientId: "",
   });
 
+  useEffect(() => {
+    dispatch(clientManagementListAction());
+  }, []);
+
+  const clientData = useSelector((state) => state.clientManagement.data);
+  console.log(clientData, "clientData");
   const handleClose = () => {
     setShow(false);
     setTempSearchQueries({
       name: "",
-      des: "",
+      description: "",
+      clientId: "",
     });
   };
 
@@ -31,7 +39,7 @@ function ProductSearchPopup({ setSearchQueries }) {
 
   const handleSearchClick = () => {
     setSearchQueries(tempSearchQueries);
-    setShow(false);
+    handleClose();
   };
 
   return (
@@ -46,7 +54,7 @@ function ProductSearchPopup({ setSearchQueries }) {
         </Modal.Header>
         <Modal.Body>
           <Form>
-            {/* Explicit Inputs */}
+            {/* Product Name Input */}
             <InputGroup className="mb-3">
               <InputGroup.Text>Product Name</InputGroup.Text>
               <Form.Control
@@ -57,17 +65,35 @@ function ProductSearchPopup({ setSearchQueries }) {
               />
             </InputGroup>
 
+            {/* Description Input */}
             <InputGroup className="mb-3">
               <InputGroup.Text>Description</InputGroup.Text>
               <Form.Control
                 type="text"
                 placeholder="Enter Description"
-                value={tempSearchQueries.des}
+                value={tempSearchQueries.description}
                 onChange={(e) =>
                   handleInputChange("description", e.target.value)
                 }
               />
             </InputGroup>
+
+            {/* Client Dropdown */}
+            <Form.Group controlId="formClient">
+              <Form.Label>Add Client</Form.Label>
+              <Form.Control
+                as="select"
+                value={tempSearchQueries.clientId}
+                onChange={(e) => handleInputChange("clientId", e.target.value)}
+              >
+                <option value="">Select Client</option>
+                {clientData.map((client) => (
+                  <option key={client.clientId._id} value={client.clientId._id}>
+                    {client.name}
+                  </option>
+                ))}
+              </Form.Control>
+            </Form.Group>
           </Form>
         </Modal.Body>
         <Modal.Footer>

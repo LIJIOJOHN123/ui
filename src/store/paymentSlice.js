@@ -213,7 +213,7 @@ export const addPaymentAction = (id, formData, user) => async (dispatch) => {
 
               const { status, data } = res.data;
               if (status === "ok") {
-                toast.success("Verified Successfully!");
+                toast.success("Plan purchased successfully!");
                 dispatch(updateResponseSuccess({ status, data }));
               } else {
                 dispatch(updateResponseFail({ status, data }));
