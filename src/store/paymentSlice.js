@@ -3,7 +3,8 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { getLocalStorage } from "../utils/LocalStorage";
 import backendAPIList from "../services/apiList";
-
+import { useSelector } from "react-redux";
+import logo from "../assets/Background_Black.png";
 const paymentInitialState = {
   loading: true,
   data: [],
@@ -35,8 +36,8 @@ export const paymentSlice = createSlice({
     createResponseSuccess: (state, action) => {
       state.loading = false;
       state.status = action.payload.status;
-      state.data = [action.payload.data, ...state.data]; // Append new item
-      state.count = state.data.length; // Update count based on the new data length
+      state.data = [action.payload.data, ...state.data];
+      state.count = state.data.length;
     },
 
     createResponseFail: (state, action) => {
@@ -55,17 +56,7 @@ export const paymentSlice = createSlice({
     },
     // Edit
     updateResponseSuccess: (state, action) => {
-      const index = state.data.findIndex(
-        (item) => item._id === action.payload.data._id
-      );
-
-      if (index !== -1) {
-        const updatedItem = { ...state.data[index], ...action.payload.data };
-        state.data[index] = updatedItem;
-      } else {
-        console.warn(`Item with id not found in state.data`);
-      }
-
+      state.dataById = action.payload.data;
       state.loading = false;
       state.status = action.payload.status;
     },
@@ -85,6 +76,21 @@ export const paymentSlice = createSlice({
       state.loading = false;
       state.status = action.payload.status;
     },
+    // verify
+    verifyResponseSuccess: (state, action) => {
+      const index = state.data.findIndex(
+        (item) => item._id === action.payload.data._id
+      );
+      if (index !== -1) {
+        state.data[index] = { ...state.data[index], ...action.payload.data };
+      }
+      state.loading = false;
+      state.status = action.payload.status;
+    },
+    verifyResponseFail: (state, action) => {
+      state.loading = false;
+      state.status = action.payload.status;
+    },
   },
 });
 
@@ -99,6 +105,8 @@ export const {
   updateResponseSuccess,
   getByIdResponseFail,
   getByIdResponseSuccess,
+  verifyResponseFail,
+  verifyResponseSuccess,
 } = paymentSlice.actions;
 
 export const paymentReducer = paymentSlice.reducer;
@@ -153,31 +161,115 @@ export const getByIdPaymentAction = (id) => async (dispatch) => {
 };
 
 // Add Payment
-export const addPaymentAction = (formData) => async (dispatch) => {
+export const addPaymentAction = (id, formData, user) => async (dispatch) => {
   try {
     const token = getLocalStorage("authToken");
+    if (!token) {
+      toast.error("Authentication token not found");
+      return;
+    }
+
     const res = await axios.post(
-      `${backendAPIList.paymentManagement}`,
+      `${backendAPIList.paymentManagement}/${id}`,
       formData,
-      {
-        headers: { Authorization: `Bearer ${token}` },
-      }
+      { headers: { Authorization: `Bearer ${token}` } }
     );
 
-    const { status, data } = res.data;
+    const { status, data: order } = res.data;
     if (status === "ok") {
-      toast.success("Created Successfully!");
-      dispatch(createResponseSuccess({ status, data }));
-    } else {
-      dispatch(createResponseFail({ status: 400 }));
-      toast.error(message);
+      const initializeRazorpay = (order) => {
+        const options = {
+          key: "rzp_test_Bl53qIogikLddf",
+          amount: order.amount,
+          currency: order.currency,
+          order_id: order.id,
+          image: logo,
+          name: "Valid X",
+          notes: {
+            address: "Ranjith Corporate Office",
+          },
+          prefill: {
+            name: user.name,
+            email: user.email,
+            contact: user.phone ?? "",
+          },
+          theme: { color: "#3399cc" },
+          handler: async (response) => {
+            const verificationData = {
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature,
+            };
+            try {
+              const res = await axios.put(
+                `${backendAPIList.paymentManagement}/verify-payment`,
+                verificationData,
+                {
+                  headers: {
+                    Authorization: `Bearer ${getLocalStorage("authToken")}`,
+                  },
+                }
+              );
+
+              const { status, data } = res.data;
+              if (status === "ok") {
+                toast.success("Verified Successfully!");
+                dispatch(updateResponseSuccess({ status, data }));
+              } else {
+                dispatch(updateResponseFail({ status, data }));
+                toast.error("Payment success, but failed to update status.");
+              }
+            } catch (error) {
+              console.error("Error updating payment status:", error);
+              toast.error(
+                "Failed to update payment status. Please contact support."
+              );
+            }
+          },
+        };
+
+        const rzp = new window.Razorpay(options);
+        rzp.on("payment.failed", (response) => {
+          console.error("Payment Failed:", response.error);
+          toast.error("Payment Failed!");
+        });
+        rzp.open();
+      };
+      toast.success("Payment initiated successfully!");
+      initializeRazorpay(order);
     }
   } catch (error) {
     const payload = {
       message: error?.response?.data?.message || "An error occurred",
       status: error?.response?.status || 500,
     };
-    dispatch(createResponseFail(payload));
+    dispatch(updateResponseFail(payload.status));
+    toast.error(payload.message);
+  }
+};
+
+// Verify Payment
+export const verifyPaymentAction = (formData) => async (dispatch) => {
+  try {
+    const token = getLocalStorage("authToken");
+    const res = await axios.put(
+      `${backendAPIList.paymentManagement}/verify-payment`,
+      formData,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
+    const { status, data } = res.data;
+    if (status === "ok") {
+      toast.success("Verified Successfully!");
+      dispatch(verifyResponseSuccess({ status, data }));
+    }
+  } catch (error) {
+    const payload = {
+      message: error?.response?.data?.message || "An error occurred",
+      status: error?.response?.status || 500,
+    };
+    dispatch(verifyResponseFail(payload));
     toast.error(payload.message);
   }
 };

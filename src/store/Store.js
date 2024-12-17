@@ -9,6 +9,7 @@ import { planReducer } from "./planSlice";
 import { validationReducer } from "./prevalidationSlice";
 import { postValidationReducer } from "./postvalidationSlice";
 import { apiReponseManagementReducer } from "./apiResponseManagement";
+import { paymentReducer } from "./paymentSlice";
 
 const store = configureStore({
   reducer: {
@@ -22,6 +23,7 @@ const store = configureStore({
     plan: planReducer,
     prevalidation: validationReducer,
     postvalidation: postValidationReducer,
+    payment:paymentReducer
   },
 });
 
