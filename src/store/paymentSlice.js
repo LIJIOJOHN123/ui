@@ -1,10 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { getLocalStorage } from "../utils/LocalStorage";
-import backendAPIList from "../services/apiList";
-import { useSelector } from "react-redux";
 import logo from "../assets/Background_Black.png";
+import backendAPIList from "../services/apiList";
+import { getLocalStorage } from "../utils/LocalStorage";
 const paymentInitialState = {
   loading: true,
   data: [],

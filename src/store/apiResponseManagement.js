@@ -129,6 +129,54 @@ export const apiBatchingAction =
       toast.error(payload.message);
     }
   };
+export const retriggerBatchingAction = (id) => async (dispatch) => {
+  try {
+    const token = getLocalStorage("authToken");
+    const res = await axios.get(
+      `${backendAPIList.apiResponseManagement}/retrigger/${id}`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
+
+    const { status, message } = res.data;
+    console.log(res.data);
+    if (status === "ok") {
+      toast.success(message);
+    }
+  } catch (error) {
+    const payload = {
+      message: error?.response?.data?.message || "An error occurred",
+      status: error?.response?.status || 500,
+    };
+    dispatch(listResponseFail(payload));
+    toast.error(payload.message);
+  }
+};
+export const SkipPrevalidationAction = (id) => async (dispatch) => {
+  try {
+    const token = getLocalStorage("authToken");
+    const res = await axios.get(
+      `${backendAPIList.apiResponseManagement}/skip-validation/${id}`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
+    const { status, message } = res.data;
+    console.log(res.data);
+    console.log(res.data);
+    if (status === "ok") {
+      toast.success(message);
+    }
+  } catch (error) {
+    const payload = {
+      message: error?.response?.data?.message || "An error occurred",
+      status: error?.response?.status || 500,
+    };
+    dispatch(listResponseFail(payload));
+    toast.error(payload.message);
+  }
+};
 export const batchListAction =
   (page, limit, searchQueries) => async (dispatch) => {
     try {
@@ -177,9 +225,35 @@ export const getByIdAPIAction = (id) => async (dispatch) => {
     toast.error(payload.message);
   }
 };
+
+// Fetch API By ID
+export const getByIdClientDataAPIAction =
+  (page = 1, limit = 5, searchQueries, id) =>
+  async (dispatch) => {
+    try {
+      const token = getLocalStorage("authToken");
+      const res = await axios.get(
+        `${backendAPIList.apiResponseManagement}/client-datas?page=${page}&limit=${limit}&${searchQueries}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      const { status, data } = res.data;
+
+      if (status === "ok") {
+        dispatch(getByIdResponseSuccess({ status, data }));
+      }
+    } catch (error) {
+      const payload = {
+        message: error?.response?.data?.message || "An error occurred",
+        status: error?.response?.status || 500,
+      };
+      dispatch(listResponseFail(payload));
+      toast.error(payload.message);
+    }
+  };
 // Add API Batching
 export const addAPIBatchingAction = (formData) => async (dispatch) => {
-
   try {
     const token = getLocalStorage("authToken");
     const res = await axios.post(

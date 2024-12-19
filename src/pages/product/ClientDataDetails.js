@@ -1,12 +1,8 @@
 import React, { useEffect, useState } from "react";
+import { Button, Form, Pagination, Spinner, Table } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import { Form, Table, Pagination, Button, Spinner } from "react-bootstrap";
-import {
-  apiBatchingAction,
-  retriggerBatchingAction,
-} from "../../store/apiResponseManagement";
-import BatchDetailsSearchPopup from "./BatchDeatilsSearch";
+import { getByIdClientDataAPIAction } from "../../store/apiResponseManagement";
 
 // Modular Components
 const LimitSelector = ({ limit, handleLimitChange }) => (
@@ -28,41 +24,43 @@ const LimitSelector = ({ limit, handleLimitChange }) => (
   </div>
 );
 
-const BatchTableRow = ({ item, navigate, dispatch, queryString }) => (
+const BatchTableRow = ({ item, navigate, id }) => (
   <tr>
     <td className="text-center align-middle">
       <i
         className="bi bi-eye-fill text-primary"
         style={{ cursor: "pointer" }}
-        aria-label={`View details for ${item._id}`}
-        onClick={() => navigate(`/products/batch-details-view/${item._id}`)}
+        aria-label={`View details for ${id}`}
+        onClick={() => navigate(`/products/batch-deatils/${id}`)}
       ></i>
     </td>
     <td className="text-center align-middle">{item.job_id}</td>
-    <td className="text-center align-middle">{item.apiType}</td>
-    <td className="text-center align-middle">{item.backend_api_key_name}</td>
-    <td className="text-center align-middle">{item.pricing}</td>
-    <td className="text-center align-middle">{item.apiStatus}</td>
+
+    <td className="">
+      {Object.entries(item.apirequestbody).map(([key, value]) => (
+        <div key={key}>
+          <strong>{key}:</strong> {value}
+        </div>
+      ))}
+    </td>
+
+    <td className="text-center align-middle">{item.dataStatus}</td>
     <td className="text-center align-middle">
-      {item.apiStatus === "API FAILED" ? (
-        <Button
-          size="sm"
-          variant="danger"
-          onClick={() => {
-            dispatch(retriggerBatchingAction(item._id));
-            dispatch(apiBatchingAction("", "", queryString));
-          }}
-        >
+      {<span className="text-success">✔</span>}
+    </td>
+    {/* <td className="text-center align-middle">
+      {item.dataStatus === "API FAILED" ? (
+        <Button size="sm" variant="danger">
           Retrigger
         </Button>
       ) : (
         <span className="text-success">✔</span>
       )}
-    </td>
+    </td> */}
   </tr>
 );
 
-function BatchDetails() {
+function ClientDataDetails() {
   const { id } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -72,11 +70,11 @@ function BatchDetails() {
   const [searchQueries, setSearchQueries] = useState({});
 
   const {
-    data = [],
+    dataById: data,
     count = 0,
     loading,
   } = useSelector((state) => state.apiResponseManagement);
-
+  console.log(data);
   const queryString = Object.entries(searchQueries)
     .filter(([_, value]) => value !== "")
     .map(([key, value]) => `${key}=${value}`)
@@ -88,7 +86,7 @@ function BatchDetails() {
 
   useEffect(() => {
     if (searchQueries?.batchId) {
-      dispatch(apiBatchingAction(page, limit, queryString));
+      dispatch(getByIdClientDataAPIAction(page, limit, queryString));
     }
   }, [dispatch, page, limit, queryString]);
 
@@ -112,7 +110,7 @@ function BatchDetails() {
         >
           Back
         </Button>
-        <h2 className="mb-0">Batch Details</h2>
+        <h2 className="mb-0">Input Details</h2>
       </div>
 
       {/* Filters Section */}
@@ -121,7 +119,7 @@ function BatchDetails() {
           Total Records: <b>{count}</b>
         </p>
         <LimitSelector limit={limit} handleLimitChange={handleLimitChange} />
-        <BatchDetailsSearchPopup setSearchQueries={setSearchQueries} />
+        {/* <BatchDetailsSearchPopup setSearchQueries={setSearchQueries} /> */}
       </div>
 
       {/* Table Section */}
@@ -131,9 +129,8 @@ function BatchDetails() {
             <tr>
               <th>View</th>
               <th>Job ID</th>
-              <th>API Type</th>
-              <th>Key Name</th>
-              <th>Pricing</th>
+              <th>Client Input</th>
+
               <th>Status</th>
               <th>Action</th>
             </tr>
@@ -151,8 +148,7 @@ function BatchDetails() {
                   key={item._id}
                   item={item}
                   navigate={navigate}
-                  dispatch={dispatch}
-                  queryString={queryString}
+                  id={id}
                 />
               ))
             ) : (
@@ -192,4 +188,4 @@ function BatchDetails() {
   );
 }
 
-export default BatchDetails;
+export default ClientDataDetails;

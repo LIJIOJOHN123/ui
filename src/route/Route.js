@@ -51,6 +51,7 @@ import BatchDeatils from "../pages/batch/BatchDeatils";
 import BatchView from "../pages/batch/BatchView";
 import ApiResponse from "../pages/api-response/ApiResponse";
 import AddInput from "../pages/product/AddInput";
+import ClientDataDetails from "../pages/product/ClientDataDetails";
 
 function RoutesPage() {
   return (
@@ -165,6 +166,10 @@ function RoutesPage() {
             <Route
               path="products/batch-deatils/:id"
               element={<BatchDeatils />}
+            />
+            <Route
+              path="products/client-deatils/:id"
+              element={<ClientDataDetails />}
             />
             <Route
               path="products/batch-details-view/:id"

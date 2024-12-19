@@ -1,7 +1,6 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { Card, Form, Pagination } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import {
   transactionListAction
 } from "../../store/transactionSlice";
@@ -11,7 +10,6 @@ const Transaction = () => {
   const dispatch = useDispatch();
   const { data, count } = useSelector((state) => state.transaction);
   const { user: userData } = useSelector((state) => state.auth);
-  const navigate = useNavigate();
 
   const [searchQueries, setSearchQueries] = useState({});
   const [page, setPage] = useState(1);
