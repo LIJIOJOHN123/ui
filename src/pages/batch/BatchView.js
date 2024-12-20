@@ -1,7 +1,10 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import { getByIdAPIAction } from "../../store/apiResponseManagement";
+import {
+  getByIdAPIAction,
+  SkipPrevalidationAction,
+} from "../../store/apiResponseManagement";
 import {
   Card,
   Button,
@@ -60,6 +63,7 @@ function BatchView() {
     updatedAt,
     prevalidation,
     apiresponse,
+    postvalidation,
   } = dataById;
 
   return (
@@ -136,10 +140,12 @@ function BatchView() {
                         case "PASSED":
                           statusStyle = "bg-success text-white";
                           statusIcon = (
-                            <FaCheckCircle
-                              className="me-2"
-                              style={{ color: "#28a745" }}
-                            />
+                            <>
+                              <FaCheckCircle
+                                className="me-2"
+                                style={{ color: "#28a745" }}
+                              />
+                            </>
                           );
                           statusBadge = "success";
                           break;
@@ -211,6 +217,144 @@ function BatchView() {
                                 {validation.result}
                               </span>
                             </p>
+                            {validation.result === "FAILED" && (
+                              <Button
+                                className="btn-success"
+                                onClick={() => {
+                                  dispatch(
+                                    SkipPrevalidationAction(dataById._id)
+                                  );
+                                  dispatch(getByIdAPIAction(id));
+                                }}
+                              >
+                                Skip
+                              </Button>
+                            )}
+                          </div>
+                        </ListGroup.Item>
+                      );
+                    })}
+                  </ListGroup>
+                ) : (
+                  <div className="text-center">
+                    <p className="fs-5 text-muted">
+                      No prevalidation results available.
+                    </p>
+                  </div>
+                )}
+              </Card.Body>
+            </Card>
+          </Col>
+          {/* Postvalidation Results Card */}
+          <Col lg={12} className="mb-4">
+            <Card className="shadow-lg border-0 rounded-3">
+              <Card.Body>
+                <Card.Title className="fs-4 mb-3 text-center">
+                  Postvalidation Results
+                </Card.Title>
+                {postvalidation && postvalidation.length > 0 ? (
+                  <ListGroup variant="flush">
+                    {postvalidation.map((validation, index) => {
+                      // Set custom styles for each result status
+                      let statusStyle = "";
+                      let statusIcon = null;
+                      let statusBadge = "";
+                      let statusColor = "";
+
+                      switch (validation.result) {
+                        case "PASSED":
+                          statusStyle = "bg-success text-white";
+                          statusIcon = (
+                            <>
+                              <FaCheckCircle
+                                className="me-2"
+                                style={{ color: "#28a745" }}
+                              />
+                            </>
+                          );
+                          statusBadge = "success";
+                          break;
+                        case "FAILED":
+                          statusStyle = "bg-danger text-white";
+                          statusIcon = (
+                            <FaTimesCircle
+                              className="me-2"
+                              style={{ color: "#dc3545" }}
+                            />
+                          );
+                          statusBadge = "danger";
+                          break;
+                        case "PENDING":
+                          statusStyle = "bg-warning text-white";
+                          statusIcon = (
+                            <FaClock
+                              className="me-2"
+                              style={{ color: "#ffc107" }}
+                            />
+                          );
+                          statusBadge = "warning";
+                          break;
+                        case "SKIPPED":
+                          statusStyle = "bg-secondary text-white";
+                          statusIcon = (
+                            <FaStopCircle
+                              className="me-2"
+                              style={{ color: "#6c757d" }}
+                            />
+                          );
+                          statusBadge = "secondary";
+                          break;
+                        default:
+                          statusStyle = "bg-info text-white";
+                          statusIcon = (
+                            <FaCheckCircle
+                              className="me-2"
+                              style={{ color: "#17a2b8" }}
+                            />
+                          );
+                          statusBadge = "info";
+                          break;
+                      }
+
+                      return (
+                        <ListGroup.Item
+                          key={index}
+                          className={`d-flex justify-content-between align-items-center ${statusStyle}`}
+                          style={{
+                            borderRadius: "0.375rem",
+                            marginBottom: "10px",
+                          }}
+                        >
+                          <div className="d-flex align-items-center">
+                            {statusIcon}
+                            <strong>{validation.message}</strong>
+                          </div>
+                          <div className="text-end">
+                            <p>
+                              Status:
+                              <Badge bg={statusBadge}>
+                                {validation.result}
+                              </Badge>
+                            </p>
+                            <p>
+                              Result:{" "}
+                              <span className="fw-bold">
+                                {validation.result}
+                              </span>
+                            </p>
+                            {validation.result === "FAILED" && (
+                              <Button
+                                className="btn-success"
+                                onClick={() => {
+                                  dispatch(
+                                    SkipPrevalidationAction(dataById._id)
+                                  );
+                                  dispatch(getByIdAPIAction(id));
+                                }}
+                              >
+                                Skip
+                              </Button>
+                            )}
                           </div>
                         </ListGroup.Item>
                       );

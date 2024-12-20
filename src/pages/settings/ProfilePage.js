@@ -68,7 +68,7 @@ const ProfileTab = () => {
     }));
   };
 
-  const { loading, isAuthenticated, user } = useSelector((state) => state.auth);
+  const { isAuthenticated, user } = useSelector((state) => state.auth);
   useEffect(() => {
     if (isAuthenticated) {
       setFormData((prev) => ({ ...prev, ...user }));
@@ -199,7 +199,7 @@ const ProfileTab = () => {
         {error && <p className="text-danger">{error}</p>}
       </Row>
       <Button type="submit">
-      <div>Submit</div>
+        <div>Submit</div>
       </Button>
     </Form>
   );
@@ -366,7 +366,6 @@ const ChangePasswordTab = () => {
                 required
                 autocomplete="off"
               />
-              
             </InputGroup>
           </Form.Group>
 
