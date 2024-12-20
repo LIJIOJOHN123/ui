@@ -42,7 +42,9 @@ const BatchTableRow = ({ item, navigate, dispatch, queryString }) => (
     <td className="text-center align-middle">{item.apiType}</td>
     <td className="text-center align-middle">{item.backend_api_key_name}</td>
     <td className="text-center align-middle">{item.pricing}</td>
+    <td className="text-center align-middle">{item.preValidationStatus}</td>
     <td className="text-center align-middle">{item.apiStatus}</td>
+    <td className="text-center align-middle">{item.postValidationStatus}</td>
     <td className="text-center align-middle">
       {item.apiStatus === "API FAILED" ? (
         <Button
@@ -134,7 +136,9 @@ function BatchDetails() {
               <th>API Type</th>
               <th>Key Name</th>
               <th>Pricing</th>
-              <th>Status</th>
+              <th>Prevalidation Status</th>
+              <th>Api Status</th>
+              <th>Postvalidation Status</th>
               <th>Action</th>
             </tr>
           </thead>

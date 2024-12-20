@@ -363,7 +363,7 @@ function BatchView() {
                 ) : (
                   <div className="text-center">
                     <p className="fs-5 text-muted">
-                      No prevalidation results available.
+                      No postvalidation results available.
                     </p>
                   </div>
                 )}

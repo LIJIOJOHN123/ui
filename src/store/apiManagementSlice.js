@@ -107,7 +107,7 @@ export const apiListReducer = apiMangementSlice.reducer;
 
 // Fetch API List
 export const apiListAction =
-  (page = 1, limit = 5, searchQueries) =>
+  (page, limit, searchQueries) =>
   async (dispatch) => {
     try {
       const token = getLocalStorage("authToken");
