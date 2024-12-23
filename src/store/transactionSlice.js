@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import { getLocalStorage } from "../utils/LocalStorage";
 
 const transactionInitialState = {
-  loading: false,
+  loading: true,
   data: [],
   status: null,
   count: null,
