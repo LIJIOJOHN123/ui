@@ -4,12 +4,10 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Spinner, Card, Row, Col, Button } from "react-bootstrap";
 import { getByIdAPIAction } from "../../../store/productManagementSlice";
 import { batchListAction } from "../../../store/apiResponseManagement";
-import { wrmReportExportAction } from "../../../store/wrmReportManagentSlice";
 import ProductDetails from "./ProductDetails";
 import ApiGroupInfo from "./ApiGroupInfo";
 import BatchList from "./BatchList";
 import ValidationAccordion from "./ValidationAccordion";
-import { CSVLink } from "react-csv";
 
 const ProductView = () => {
   const dispatch = useDispatch();
@@ -39,7 +37,7 @@ const ProductView = () => {
       {dataById && !loading && (
         <Card className="mt-4 shadow-lg border-light w-100">
           <Card.Body className="w-100">
-            <ProductDetails dataById={dataById} navigate={navigate} batchId={id} />
+            <ProductDetails dataById={dataById} navigate={navigate} id={id} />
             <ApiGroupInfo dataById={dataById} />
             <ValidationAccordion validationType="Pre" validations={dataById?.preValidation} />
             <ValidationAccordion validationType="Post" validations={dataById?.postValidation} />

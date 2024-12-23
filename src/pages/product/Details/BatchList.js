@@ -97,7 +97,7 @@ const BatchList = ({ batchList }) => {
                 <i
                   className="bi bi-eye-fill text-primary"
                   style={{ cursor: "pointer", fontSize: "1.5rem" }}
-                  onClick={() => navigate(`/products/client-details/${item._id}`)}
+                  onClick={() => navigate(`/products/client-deatils/${item._id}`)}
                 ></i>
               </td>
               <td className="text-center">{formatDate(item.createdAt)}</td>
