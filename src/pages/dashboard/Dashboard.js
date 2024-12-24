@@ -36,7 +36,7 @@ function Dashboard() {
     count,
   } = useSelector((state) => state.payment);
   const { user } = useSelector((state) => state.auth);
-  console.log(user,"?");
+
   useEffect(() => {
     const payment = getLocalStorage("payment");
     if (payment) {
