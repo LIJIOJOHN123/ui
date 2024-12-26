@@ -11,14 +11,16 @@ import {
 function AddInput() {
   const dispatch = useDispatch();
   const { id } = useParams();
-  const navigate = useNavigate();  // For navigating to previous page
-  
+  const navigate = useNavigate();
+
   const [error, setError] = useState(false);
   const [successMessage, setSuccessMessage] = useState(null);
   const [errorMessage, setErrorMessage] = useState(null);
 
   const { dataById } = useSelector((state) => state.productManagement);
-  const { data: api, loading } = useSelector((state) => state.apiResponseManagement);
+  const { data: api, loading } = useSelector(
+    (state) => state.apiResponseManagement
+  );
   const [formData, setFormData] = useState({});
   const [selectedFile, setSelectedFile] = useState(null);
 
@@ -38,13 +40,13 @@ function AddInput() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      dispatch(addAPIBatchingAction({ apiValue: formData, productId: id }));
+      dispatch(addAPIBatchingAction({ apiValue: formData }, id));
       setFormData({});
       setSuccessMessage("Batch API submitted successfully!");
-      setErrorMessage(null);  // Clear previous errors
+      setErrorMessage(null); // Clear previous errors
     } catch (err) {
       setErrorMessage("Failed to submit the batch. Please try again.");
-      setSuccessMessage(null);  // Clear previous success messages
+      setSuccessMessage(null); // Clear previous success messages
     }
   };
 
@@ -60,7 +62,9 @@ function AddInput() {
 
   const handleUpload = () => {
     if (!selectedFile) {
-      setErrorMessage("No CSV file selected. Please select a CSV file to upload.");
+      setErrorMessage(
+        "No CSV file selected. Please select a CSV file to upload."
+      );
       setSuccessMessage(null);
       return;
     }
@@ -70,7 +74,7 @@ function AddInput() {
     dispatch(uploadCSVFileAPIBatchingAction({ formData, apiGroupId: id }));
 
     setSuccessMessage("CSV file uploaded successfully!");
-    setErrorMessage(null);  // Clear any previous error messages
+    setErrorMessage(null); // Clear any previous error messages
   };
 
   const downloadTextFile = (content, id) => {
@@ -83,7 +87,7 @@ function AddInput() {
   };
 
   const goBack = () => {
-    navigate(-1);  // Navigate back to the previous page
+    navigate(-1); // Navigate back to the previous page
   };
 
   return (
@@ -92,7 +96,7 @@ function AddInput() {
       <Card className="shadow-lg border-light p-4">
         <Card.Body>
           {/* Back button in top-right corner */}
-          <div style={{ position: 'absolute', top: '10px', right: '10px' }}>
+          <div style={{ position: "absolute", top: "10px", right: "10px" }}>
             <Button variant="secondary" onClick={goBack}>
               Back
             </Button>
@@ -139,7 +143,9 @@ function AddInput() {
                 </div>
               )}
 
-              <h3 className="mt-4 mb-3">URL Risk Analysis - Batch Check CSV Files</h3>
+              <h3 className="mt-4 mb-3">
+                URL Risk Analysis - Batch Check CSV Files
+              </h3>
 
               {successMessage && (
                 <Alert variant="success" className="mb-3">
@@ -179,7 +185,9 @@ function AddInput() {
               </Form>
 
               <div className="mt-4">
-                <Form.Label className="d-block mb-2">Upload CSV File</Form.Label>
+                <Form.Label className="d-block mb-2">
+                  Upload CSV File
+                </Form.Label>
                 <input
                   className="form-control-file mb-3"
                   style={{ width: "100%" }}

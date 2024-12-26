@@ -74,7 +74,7 @@ function ClientDataDetails() {
     count = 0,
     loading,
   } = useSelector((state) => state.apiResponseManagement);
-  console.log(data);
+
   const queryString = Object.entries(searchQueries)
     .filter(([_, value]) => value !== "")
     .map(([key, value]) => `${key}=${value}`)

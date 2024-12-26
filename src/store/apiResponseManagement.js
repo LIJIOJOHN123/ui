@@ -140,7 +140,6 @@ export const retriggerBatchingAction = (id) => async (dispatch) => {
     );
 
     const { status, message } = res.data;
-    console.log(res.data);
     if (status === "ok") {
       toast.success(message);
     }
@@ -163,8 +162,7 @@ export const SkipPrevalidationAction = (id) => async (dispatch) => {
       }
     );
     const { status, message } = res.data;
-    console.log(res.data);
-    console.log(res.data);
+ 
     if (status === "ok") {
       toast.success(message);
     }
@@ -253,11 +251,11 @@ export const getByIdClientDataAPIAction =
     }
   };
 // Add API Batching
-export const addAPIBatchingAction = (formData) => async (dispatch) => {
+export const addAPIBatchingAction = (formData, id) => async (dispatch) => {
   try {
     const token = getLocalStorage("authToken");
     const res = await axios.post(
-      `${backendAPIList.apiResponseManagement}`,
+      `${backendAPIList.apiResponseManagement}/${id}`,
       formData,
       {
         headers: { Authorization: `Bearer ${token}` },

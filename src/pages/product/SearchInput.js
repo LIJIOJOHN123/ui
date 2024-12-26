@@ -18,7 +18,7 @@ function ProductSearchPopup({ setSearchQueries }) {
   }, []);
 
   const clientData = useSelector((state) => state.clientManagement.data);
-  console.log(clientData, "clientData");
+
   const handleClose = () => {
     setShow(false);
     setTempSearchQueries({

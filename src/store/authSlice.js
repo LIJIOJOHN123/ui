@@ -6,6 +6,7 @@ import {
   removeLocalStorage,
   setLocalStorage,
 } from "../utils/LocalStorage";
+import backendAPIList from "../services/apiList";
 
 const authInitialState = {
   isAuthenticated: false,
@@ -21,7 +22,7 @@ export const authSlice = createSlice({
   initialState: authInitialState,
   reducers: {
     requestSuccess: (state, action) => {
-      if(action.payload.token){
+      if (action.payload.token) {
         setLocalStorage("authToken", action.payload.token);
         setLocalStorage("user", JSON.stringify(action.payload.user));
       }
@@ -48,16 +49,15 @@ export const authSlice = createSlice({
   },
 });
 
-export const { requestSuccess, requestFail, logOut } =
-  authSlice.actions;
+export const { requestSuccess, requestFail, logOut } = authSlice.actions;
 
 export const authReducer = authSlice.reducer;
 
 // Authentication Actions
-export const registerAction = (formData) => async (dispatch) => {;
+export const registerAction = (formData) => async (dispatch) => {
   try {
     const res = await axios.post(
-      `${process.env.REACT_APP_Base_URL}/clients/save-validx-client`,
+      `${backendAPIList.authManagement}/clients/save-validx-client`,
       formData
     );
     const { status, message, data, code } = res.data;
@@ -79,7 +79,7 @@ export const registerAction = (formData) => async (dispatch) => {;
 export const loginAction = (formData) => async (dispatch) => {
   try {
     const res = await axios.post(
-      `${process.env.REACT_APP_Base_URL}/user/login`,
+      `${backendAPIList.authManagement}/user/login`,
       formData
     );
     const { status, message, data, code } = res.data;
@@ -102,7 +102,7 @@ export const loginAction = (formData) => async (dispatch) => {
 export const googleOAuthLoginAction = (token) => async (dispatch) => {
   try {
     const res = await axios.post(
-      `${process.env.REACT_APP_Base_URL}/user/oauth`,
+      `${backendAPIList.authManagement}/user/oauth`,
       { token }
     );
     const { status, message, data, code } = res.data;
@@ -132,7 +132,7 @@ export const currentUserAction = () => async (dispatch) => {
   try {
     const token = getLocalStorage("authToken");
     const res = await axios.get(
-      `${process.env.REACT_APP_Base_URL}/user/current-user`,
+      `${backendAPIList.authManagement}/user/current-user`,
       {
         headers: { Authorization: `Bearer ${token}` },
       }
@@ -154,7 +154,7 @@ export const currentUserAction = () => async (dispatch) => {
 export const forgotPasswordAction = (formData) => async (dispatch) => {
   try {
     const res = await axios.put(
-      `${process.env.REACT_APP_Base_URL}/user/forgotPassword`,
+      `${backendAPIList.authManagement}/user/forgotPassword`,
       formData
     );
     const { status } = res.data;
@@ -180,7 +180,7 @@ export const forgotPasswordAction = (formData) => async (dispatch) => {
 export const resetPasswordAction = (formData) => async (dispatch) => {
   try {
     const res = await axios.put(
-      `${process.env.REACT_APP_Base_URL}/user/resetPassword`,
+      `${backendAPIList.authManagement}/user/resetPassword`,
       formData
     );
     const { status } = res.data;
@@ -210,7 +210,7 @@ export const updateUserAction = (formData) => async (dispatch) => {
   try {
     const token = getLocalStorage("authToken");
     const res = await axios.put(
-      `${process.env.REACT_APP_Base_URL}/user/profile`,
+      `${backendAPIList.authManagement}/user/profile`,
       formData,
       {
         headers: { Authorization: `Bearer ${token}` },

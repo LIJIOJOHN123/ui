@@ -41,7 +41,6 @@ function GroupApiForm() {
   const apiGroupData = useSelector((state) => state.apiGroupManagement.data);
   const apiData = useSelector((state) => state.apiGroupManagement.dataById);
 
-  console.log(apiData.apiId, "apiGroupData");
   const { data: preValidationData } = useSelector(
     (state) => state.prevalidation
   );
@@ -60,8 +59,8 @@ function GroupApiForm() {
     dispatch(ApiGroupAction());
   }, [id, dispatch]);
   useEffect(() => {
-    if (formData.apiGroupId) {
-      dispatch(groupPlan(formData.apiGroupId));
+    if (formData.apiGroupId._id) {
+      dispatch(groupPlan(formData.apiGroupId._id));
     }
   }, [formData.apiGroupId, dispatch]);
 
@@ -77,8 +76,8 @@ function GroupApiForm() {
         apiGroupId: dataById.apiGroupId || "",
         name: dataById.name || "",
         des: dataById.des || "",
-        preValidation: dataById.preValidation || [],
-        postValidation: dataById.postValidation || [],
+        preValidation: dataById?.preValidation?.map((item) => item._id) ?? [],
+        postValidation: dataById?.postValidation?.map((item) => item._id) ?? [],
       });
 
       if (dataById?.api?.length) {
@@ -287,7 +286,7 @@ function GroupApiForm() {
             />
           </BootstrapForm.Group>
 
-          {apiData.apiId && (
+          {!id && apiData.apiId && (
             <div className="mt-3">
               <h5 className="text-decoration-underline">
                 List of APIs Associated with this Group

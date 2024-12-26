@@ -29,7 +29,7 @@ function Product() {
   const [limit, setLimit] = useState(5);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [apiToDelete, setApiToDelete] = useState({ id: null, name: "" });
-  console.log(searchQueries, "searchQueries");
+  
   const queryString = Object.entries(searchQueries)
     .filter(([_, value]) => value !== "")
     .map(([key, value]) => `${key}=${value}`)

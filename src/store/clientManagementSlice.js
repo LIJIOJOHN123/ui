@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { getLocalStorage } from "../utils/LocalStorage";
+import backendAPIList from "../services/apiList";
 
 const apiListInitialState = {
   loading: false,
@@ -81,7 +82,7 @@ export const clientManagementListAction =
     try {
       const token = getLocalStorage("authToken");
       const res = await axios.get(
-        `${process.env.REACT_APP_Base_URL}/user/clients?page=${page}&limit=${limit}&${searchQueries}`,
+        `${backendAPIList.clientManagement}/clients?page=${page}&limit=${limit}&${searchQueries}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -106,7 +107,7 @@ export const getByIdClientAction = (id) => async (dispatch) => {
   try {
     const token = getLocalStorage("authToken");
     const res = await axios.get(
-      `${process.env.REACT_APP_Base_URL}/user/client/${id}`,
+      `${backendAPIList.clientManagement}/client/${id}`,
       {
         headers: { Authorization: `Bearer ${token}` },
       }
@@ -131,7 +132,7 @@ export const updateClientAction = (id, formData) => async (dispatch) => {
   try {
     const token = getLocalStorage("authToken");
     const res = await axios.patch(
-      `${process.env.REACT_APP_Base_URL}/user/client/${id}`,
+      `${backendAPIList.clientManagement}/client/${id}`,
       formData,
       {
         headers: { Authorization: `Bearer ${token}` },
