@@ -168,7 +168,7 @@ function RoutesPage() {
               element={<BatchDeatils />}
             />
             <Route
-              path="products/client-deatils/:id"
+              path="products/data/:id"
               element={<ClientDataDetails />}
             />
             <Route
