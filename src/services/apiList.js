@@ -1,5 +1,5 @@
 const USER = process.env.REACT_APP_Base_URL;
-let WEB_BACKEND_API_URL = "http://localhost:3050/web/api/v1";
+let WEB_BACKEND_API_URL = process.env.REACT_APP_Base_WEB_URL;
 
 const backendAPIList = {
   // api management

@@ -149,7 +149,7 @@ const Batch = () => {
               <td>
                 <BsEyeFill
                   onClick={() =>
-                    navigate(`/products/client-deatils/${item._id}`)
+                    navigate(`/products/data/${item._id}`)
                   }
                 />
               </td>
