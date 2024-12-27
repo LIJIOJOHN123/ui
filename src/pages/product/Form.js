@@ -23,8 +23,6 @@ function GroupApiForm() {
 
   const [formData, setFormData] = useState({
     clientId: "",
-    name: "",
-    des: "",
     apiGroupId: "",
     api: [],
     preValidation: [],
@@ -201,17 +199,6 @@ function GroupApiForm() {
       </div>
       <div className="mt-4 bg-body-secondary rounded-2 p-3">
         <BootstrapForm onSubmit={handleSubmit}>
-          <BootstrapForm.Group controlId="formGroupName" className="mt-3">
-            <BootstrapForm.Label className="m-0">Name</BootstrapForm.Label>
-            <BootstrapForm.Control
-              type="text"
-              placeholder="Enter group name"
-              name="name"
-              value={formData.name}
-              onChange={handleInputChange}
-              required
-            />
-          </BootstrapForm.Group>
           <BootstrapForm.Group controlId="formClient">
             <BootstrapForm.Label className="m-0">
               Add API Group
@@ -268,23 +255,6 @@ function GroupApiForm() {
               </BootstrapForm.Control>
             </BootstrapForm.Group>
           )}
-
-          <BootstrapForm.Group
-            controlId="formGroupDescription"
-            className="mt-3"
-          >
-            <BootstrapForm.Label className="m-0">
-              Group Description
-            </BootstrapForm.Label>
-            <BootstrapForm.Control
-              as="textarea"
-              rows={3}
-              placeholder="Enter group description"
-              name="des"
-              value={formData.des}
-              onChange={handleInputChange}
-            />
-          </BootstrapForm.Group>
 
           {!id && apiData.apiId && (
             <div className="mt-3">

@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useCallback, useEffect, useState } from "react";
 import { Button, Form } from "react-bootstrap";
 import { CSVLink } from "react-csv";
 import { useDispatch, useSelector } from "react-redux";
@@ -8,6 +8,7 @@ import { updateTransactionAction } from "../../store/transactionSlice";
 import BatchSearch from "./SearchInput";
 import { BsEyeFill } from "react-icons/bs";
 import { Download } from "lucide-react";
+import { wrmReportExportAction } from "../../store/wrmReportManagentSlice";
 
 const Batch = () => {
   const dispatch = useDispatch();
@@ -16,10 +17,12 @@ const Batch = () => {
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(25);
   const [searchQueries, setSearchQueries] = useState({});
-  const [reportLoading, setReportLoading] = useState(false);
-  const [data, setData] = useState([]);
-  const headers = [{ label: "ID", key: "_id" }, { label: "Type", key: "type" }]; // Example headers
-
+  const [headers, setHeaders] = useState([]);
+  const {
+    data,
+    loading: reportLoading,
+    error: reportError,
+  } = useSelector((state) => state.wrmReport);
   const queryString = Object.entries(searchQueries)
     .filter(([_, value]) => value !== "")
     .map(([key, value]) => `${key}=${value}`)
@@ -29,6 +32,12 @@ const Batch = () => {
     dispatch(batchListAction(page, limit, queryString));
   }, [dispatch, page, limit, queryString]);
 
+  // Update headers when data changes
+  useEffect(() => {
+    if (data?.length) {
+      setHeaders(Object.keys(data[0]).map((key) => ({ label: key, key })));
+    }
+  }, [data]);
   const handleButton = (id, data) => {
     dispatch(updateTransactionAction(id, data));
   };
@@ -39,20 +48,31 @@ const Batch = () => {
     setPage(1);
   };
 
-  const handleBatchClick = (batchId) => {
-    setReportLoading(true);
+  const handleBatchClick = async (batchId) => {
     setSelectedBatchId(batchId);
-    // Simulate fetching data
-    setTimeout(() => {
-      setData([{ _id: batchId, type: "Example Data" }]);
-      setReportLoading(false);
-    }, 2000);
+    try {
+      await dispatch(wrmReportExportAction(batchId));
+    } catch (error) {
+      console.error("Export failed:", error);
+    }
   };
 
   const { batchList, count } = useSelector(
     (state) => state.apiResponseManagement
   );
 
+   // Handle export logic
+    const handleExport = useCallback(async (batchId) => {
+      // if (!batchId) return;
+  
+      // try {
+      //   await dispatch(wrmReportExportAction(batchId));
+      // } catch (error) {
+      //   console.error("Export failed:", error);
+      // }
+    }, [dispatch]);
+
+  // Render Export or Download button
   const renderDownloadButton = (item) => {
     const isExporting = reportLoading && item._id === selectedBatchId;
     const isReadyForDownload = selectedBatchId === item._id && data?.length;
@@ -72,7 +92,7 @@ const Batch = () => {
             target="_blank"
             className="btn btn-outline-primary btn-sm d-flex align-items-center"
           >
-            <Download className="me-2" />
+            <Download className="me-2" onClick={() => handleExport(item._id)} />
             Download
           </CSVLink>
         ) : (
@@ -129,7 +149,7 @@ const Batch = () => {
               <td>
                 <BsEyeFill
                   onClick={() =>
-                    navigate(`/products/client-details/${item._id}`)
+                    navigate(`/products/client-deatils/${item._id}`)
                   }
                 />
               </td>
