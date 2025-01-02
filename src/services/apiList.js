@@ -1,16 +1,16 @@
-const USER = process.env.REACT_APP_Base_URL;
-let WEB_BACKEND_API_URL = process.env.REACT_APP_Base_WEB_URL;
+const USER_SERVICE_API = process.env.REACT_APP_USER_SERVICE_API;
+const WEB_SERVICE_API = process.env.REACT_APP_WEB_SERVICE_API;
 
 const backendAPIList = {
   // api management
-  authManagement: `${USER}`,
-  clientManagement: `${USER}/user`,
-  apiManagement: `${WEB_BACKEND_API_URL}/api_management`,
-  apiGroupManagement: `${WEB_BACKEND_API_URL}/api_group_management`,
-  productManagement: `${WEB_BACKEND_API_URL}/product_management`,
-  validations: `${WEB_BACKEND_API_URL}/prevalidation`,
-  postValidations: `${WEB_BACKEND_API_URL}/postvalidation`,
-  apiResponseManagement: `${WEB_BACKEND_API_URL}/api_response_management`,
-  paymentManagement: `${WEB_BACKEND_API_URL}/payment`,
+  authManagement: `${USER_SERVICE_API}`,
+  clientManagement: `${USER_SERVICE_API}/user`,
+  apiManagement: `${WEB_SERVICE_API}/api_management`,
+  apiGroupManagement: `${WEB_SERVICE_API}/api_group_management`,
+  productManagement: `${WEB_SERVICE_API}/product_management`,
+  validations: `${WEB_SERVICE_API}/prevalidation`,
+  postValidations: `${WEB_SERVICE_API}/postvalidation`,
+  apiResponseManagement: `${WEB_SERVICE_API}/api_response_management`,
+  paymentManagement: `${WEB_SERVICE_API}/payment`,
 };
 export default backendAPIList;
