@@ -1,13 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  Button,
-  Col,
-  Form,
-  Pagination,
-  Row,
-  Card,
-  Modal,
-} from "react-bootstrap";
+import { Button, Col, Form, Pagination, Row, Table } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import {
@@ -29,7 +21,25 @@ function Product() {
   const [limit, setLimit] = useState(5);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [apiToDelete, setApiToDelete] = useState({ id: null, name: "" });
-  
+
+  const ClientData = useSelector((state) => state.clientManagement.data);
+  let ProductData = [];
+
+  if (ClientData && data) {
+    ProductData = data.map((item) => {
+      const client = ClientData.find(
+        (client) => client.clientId._id === item.clientId
+      );
+      return {
+        ...item,
+        clientName: client?.name ?? "Unknown Client", // Add the client's name
+      };
+    });
+  }
+
+  // Log the resulting `ProductData` array to verify
+  console.log(ProductData, "ProductData");
+
   const queryString = Object.entries(searchQueries)
     .filter(([_, value]) => value !== "")
     .map(([key, value]) => `${key}=${value}`)
@@ -102,102 +112,89 @@ function Product() {
             <ProductSearchPopup setSearchQueries={setSearchQueries} />
           </div>
 
-          <div className="d-flex flex-column min-vh-100">
-            <Row className="mt-4">
-              {data &&
-                data.map((item, i) => (
-                  <Col key={i} xs={12} sm={6} md={4} lg={3} className="mb-4">
-                    <Card className="h-100">
-                      <Card.Body>
-                        <Card.Title
-                          className="text-truncate"
-                          onClick={() => navigate(`/products/${item._id}`)}
-                          style={{ cursor: "pointer" }}
-                        >
-                          {item.name}
-                        </Card.Title>
-                        <Card.Text className="line-clamp">{item.des}</Card.Text>
-                        <div className="d-flex justify-content-between">
-                          <Button
-                            variant="danger"
-                            size="sm"
-                            onClick={() => openDeleteModal(item._id, item.name)}
-                          >
-                            Delete
-                          </Button>
-                          <Button
-                            variant="warning"
-                            size="sm"
-                            onClick={() =>
-                              navigate(`/products/edit/${item._id}`)
-                            }
-                          >
-                            Edit
-                          </Button>
-                        </div>
-                      </Card.Body>
-                    </Card>
-                  </Col>
-                ))}
-            </Row>
+          <Table striped bordered hover>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Client Name</th>
+                <th>Number of preValidation</th>
+                <th>Number of postValidation</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {ProductData && ProductData.length > 0 ? (
+                ProductData.map((item, i) => (
+                  <tr key={i}>
+                    <td>{(page - 1) * limit + i + 1}</td>
+                    <td
+                      className="text-truncate"
+                      style={{ cursor: "pointer" }}
+                      onClick={() => navigate(`/products/${item._id}`)}
+                    >
+                      {item.name}
+                    </td>
+                    <td className="line-clamp">{item.clientName}</td>
+                    <td className="line-clamp">{item.preValidation.length}</td>
+                    <td className="line-clamp">{item.postValidation.length}</td>
 
-            <div className="mt-auto">
-              <Pagination className="d-flex justify-content-center">
-                <Pagination.Prev
-                  disabled={page === 1}
-                  onClick={() => setPage(page - 1)}
-                />
-                {[1, 2, 3].map((num) =>
-                  num <= totalPages ? (
-                    <Pagination.Item
-                      key={num}
-                      active={page === num}
-                      onClick={() => setPage(num)}
-                    >
-                      {num}
-                    </Pagination.Item>
-                  ) : null
-                )}
-                {page > 4 && page < totalPages - 2 && (
-                  <Pagination.Ellipsis disabled />
-                )}
-                {page > 3 && page < totalPages - 2 && (
-                  <Pagination.Item
-                    key={page}
-                    active
-                    onClick={() => setPage(page)}
-                  >
-                    {page}
-                  </Pagination.Item>
-                )}
-                {page < totalPages - 3 && totalPages > 5 && (
-                  <Pagination.Ellipsis disabled />
-                )}
-                {[totalPages - 1, totalPages].map((num) =>
-                  num > 3 ? (
-                    <Pagination.Item
-                      key={num}
-                      active={page === num}
-                      onClick={() => setPage(num)}
-                    >
-                      {num}
-                    </Pagination.Item>
-                  ) : null
-                )}
-                <Pagination.Next
-                  disabled={page === totalPages}
-                  onClick={() => setPage(page + 1)}
-                />
-              </Pagination>
-            </div>
-          </div>
+                    <td>
+                      <div className="d-flex justify-content-between">
+                        <Button
+                          variant="danger"
+                          size="sm"
+                          onClick={() => openDeleteModal(item._id, item.name)}
+                        >
+                          Delete
+                        </Button>
+                        <Button
+                          variant="warning"
+                          size="sm"
+                          onClick={() => navigate(`/products/edit/${item._id}`)}
+                        >
+                          Edit
+                        </Button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="4" className="text-center">
+                    No products found.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </Table>
+
+          <Pagination className="d-flex justify-content-center">
+            <Pagination.Prev
+              disabled={page === 1}
+              onClick={() => setPage(page - 1)}
+            />
+            {[...Array(totalPages).keys()].map((num) => (
+              <Pagination.Item
+                key={num + 1}
+                active={page === num + 1}
+                onClick={() => setPage(num + 1)}
+              >
+                {num + 1}
+              </Pagination.Item>
+            ))}
+            <Pagination.Next
+              disabled={page === totalPages}
+              onClick={() => setPage(page + 1)}
+            />
+          </Pagination>
         </div>
       )}
       <ConfirmationModal
         show={showDeleteModal}
         onHide={() => setShowDeleteModal(false)}
         onConfirm={handleDelete}
-        message={`Are you sure you want to delete ${apiToDelete.name} Product?`}
+        message={apiToDelete.name}
       />
     </div>
   );

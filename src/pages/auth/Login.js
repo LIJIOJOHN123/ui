@@ -19,12 +19,13 @@ function Login() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const {isAuthenticated} = useSelector(state=>state.auth)
   useEffect(() => {
-    if (isAuthenticated) {
+    const user = getLocalStorage("user");
+    console.log(user);
+    if (user) {
       navigate("/dashboard");
     }
-  }, [isAuthenticated]);
+  }, []);
 
   const handleLoginSuccess = (credentialResponse) => {
     const { credential } = credentialResponse;
@@ -144,7 +145,7 @@ function Login() {
               type="submit"
               // disabled={loading}
             >
-               <div>Log In</div>
+              <div>Log In</div>
             </Button>
             <div className="mt-2 text-center">
               Don’t have an account?{" "}
@@ -185,7 +186,7 @@ function Login() {
               <GoogleLogin
                 onSuccess={handleLoginSuccess}
                 onError={() => {
-                   ("Login Failed");
+                  ("Login Failed");
                 }}
               />
             </GoogleOAuthProvider>
