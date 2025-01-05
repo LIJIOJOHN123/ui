@@ -85,11 +85,11 @@ function BatchDetails() {
     .join("&");
 
   useEffect(() => {
-    setSearchQueries({ batchId: id });
+    setSearchQueries({ job_id: id });
   }, [id]);
 
   useEffect(() => {
-    if (searchQueries?.batchId) {
+    if (searchQueries?.job_id) {
       dispatch(apiBatchingAction(page, limit, queryString));
     }
   }, [dispatch, page, limit, queryString]);

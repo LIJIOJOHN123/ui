@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { getLocalStorage } from "../utils/LocalStorage";
+import backendAPIList from "../services/apiList";
 
 const WrmReportInitialState = {
   loading: true,
@@ -44,7 +45,7 @@ export const wrmReportExportAction =
     try {
       const token = getLocalStorage("authToken");
       const res = await axios.get(
-        `${process.env.REACT_APP_WEB_SERVICE_API}/wrmreport/export/${batchId}`,
+        `${backendAPIList.wrmReportManagement}/export/${batchId}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }

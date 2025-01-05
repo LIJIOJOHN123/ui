@@ -39,7 +39,6 @@ const ClientManagement = () => {
   };
 
   const totalPages = Math.ceil(count / limit);
-
   return (
     <Fragment>
       {/* Header Section */}

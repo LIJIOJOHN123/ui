@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { getLocalStorage } from "../utils/LocalStorage";
+import backendAPIList from "../services/apiList";
 
 const transactionInitialState = {
   loading: true,
@@ -74,7 +75,7 @@ export const transactionListAction =
     try {
       const token = getLocalStorage("authToken");
       const res = await axios.get(
-        `${process.env.REACT_APP_Base_URL}/transaction?page=${page}&limit=${limit}&${searchQueries}`,
+        `${backendAPIList.transactionManagement}?page=${page}&limit=${limit}&${searchQueries}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -99,7 +100,7 @@ export const getByIdTransactionAction = (id) => async (dispatch) => {
   try {
     const token = getLocalStorage("authToken");
     const res = await axios.get(
-      `${process.env.REACT_APP_Base_URL}/transaction/${id}`,
+      `${backendAPIList.transactionManagement}/${id}`,
       {
         headers: { Authorization: `Bearer ${token}` },
       }
@@ -124,7 +125,7 @@ export const updateTransactionAction = (id, formData) => async (dispatch) => {
   try {
     const token = getLocalStorage("authToken");
     const res = await axios.patch(
-      `${process.env.REACT_APP_Base_URL}/transaction/${id}`,
+      `${backendAPIList.transactionManagement}/${id}`,
       formData,
       {
         headers: { Authorization: `Bearer ${token}` },

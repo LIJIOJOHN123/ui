@@ -49,7 +49,7 @@ import PreValidationList from "../pages/pre-validation/List";
 import ValidationForm from "../pages/pre-validation/Form";
 import BatchDeatils from "../pages/batch/BatchDeatils";
 import BatchView from "../pages/batch/BatchView";
-import ApiResponse from "../pages/api-response/ApiResponse";
+import ApiResponse from "../pages/api-response/List";
 import AddInput from "../pages/product/AddInput";
 import ClientDataDetails from "../pages/product/ClientDataDetails";
 
