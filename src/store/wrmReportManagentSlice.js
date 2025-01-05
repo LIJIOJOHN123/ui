@@ -44,7 +44,7 @@ export const wrmReportExportAction =
     try {
       const token = getLocalStorage("authToken");
       const res = await axios.get(
-        `${process.env.REACT_APP_Base_WEB_URL}/wrmreport/export/${batchId}`,
+        `${process.env.REACT_APP_WEB_SERVICE_API}/wrmreport/export/${batchId}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
