@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Pagination, Form, Table } from "react-bootstrap";
+import { Button, Pagination, Form, Table, Spinner } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { apiListAction, deleteApiAction } from "../../store/apiManagementSlice";
@@ -47,7 +47,13 @@ function ApiList() {
   };
 
   return (
-    <div style={{ backgroundColor: "#f0f0f0", padding: "20px", minHeight: "100vh" }}>
+    <div
+      style={{
+        backgroundColor: "#f0f0f0",
+        padding: "20px",
+        minHeight: "100vh",
+      }}
+    >
       {/* Header Section */}
       <div className="d-flex justify-content-between align-items-center mb-3">
         <h3>API List</h3>
@@ -62,9 +68,13 @@ function ApiList() {
 
       {/* Filters and Total Count */}
       <div className="d-flex align-items-center mb-3">
-        <p className="mb-0 me-3">Total: <b>{count}</b></p>
+        <p className="mb-0 me-3">
+          Total: <b>{count}</b>
+        </p>
         <div className="d-flex align-items-center me-3">
-          <label htmlFor="limit" className="me-2 mb-0">Records per Page:</label>
+          <label htmlFor="limit" className="me-2 mb-0">
+            Records per Page:
+          </label>
           <Form.Select
             id="limit"
             className="form-select w-auto"
@@ -80,65 +90,63 @@ function ApiList() {
       </div>
 
       {/* API Table */}
-      {loading ? (
-        <div className="d-flex justify-content-center">
-          <div className="spinner-grow text-primary" role="status">
-            <span className="visually-hidden">Loading...</span>
-          </div>
-        </div>
-      ) : (
-        <Table striped bordered hover responsive>
-          <thead>
+      <Table striped bordered hover responsive>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>API Name</th>
+            <th>Description</th>
+            <th>API Type</th>
+            <th>Backend API Key</th>
+            <th>Pricing (₹)</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {loading ? (
             <tr>
-              <th>#</th>
-              <th>API Name</th>
-              <th>Description</th>
-              <th>API Type</th>
-              <th>Backend API Key</th>
-              <th>Pricing (₹)</th>
-              <th>Actions</th>
+              <td colSpan="8" className="text-center">
+                <Spinner animation="border" variant="primary" />
+              </td>
             </tr>
-          </thead>
-          <tbody>
-            {data.length > 0 ? (
-              data.map((item, index) => (
-                <tr key={item._id}>
-                  <td>{index + 1 + (page - 1) * limit}</td>
-                  <td>{item.apiname}</td>
-                  <td>{item.des}</td>
-                  <td>{item.api_type}</td>
-                  <td>{item.backend_api_key_name}</td>
-                  <td>{item.pricing}</td>
-                  <td>
-                    <div className="d-flex gap-2">
-                      <Button
-                        variant="secondary"
-                        size="sm"
-                        onClick={() => navigate(`/api-list/edit/${item._id}`)}
-                      >
-                        Edit
-                      </Button>
-                      <Button
-                        variant="danger"
-                        size="sm"
-                        onClick={() => openDeleteModal(item._id, item.apiname)}
-                      >
-                        Delete
-                      </Button>
-                    </div>
-                  </td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="7" className="text-center text-muted">
-                  No APIs found.
+          ) : data.length > 0 ? (
+            data.map((item, index) => (
+              <tr key={item._id}>
+                <td>{index + 1 + (page - 1) * limit}</td>
+                <td>{item.apiname}</td>
+                <td>{item.des}</td>
+                <td>{item.api_type}</td>
+                <td>{item.backend_api_key_name}</td>
+                <td>{item.pricing}</td>
+                <td>
+                  <div className="d-flex gap-2">
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      onClick={() => navigate(`/api-list/edit/${item._id}`)}
+                    >
+                      Edit
+                    </Button>
+                    <Button
+                      variant="danger"
+                      size="sm"
+                      onClick={() => openDeleteModal(item._id, item.apiname)}
+                    >
+                      Delete
+                    </Button>
+                  </div>
                 </td>
               </tr>
-            )}
-          </tbody>
-        </Table>
-      )}
+            ))
+          ) : (
+            <tr>
+              <td colSpan="7" className="text-center text-muted">
+                No APIs found.
+              </td>
+            </tr>
+          )}
+        </tbody>
+      </Table>
 
       {/* Pagination */}
       {count > limit && (

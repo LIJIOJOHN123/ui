@@ -18,7 +18,6 @@ import logo3 from "../../assets/auth/logo3.png";
 import logo4 from "../../assets/auth/logo4.png";
 import logo6 from "../../assets/auth/logo6.png";
 import { registerAction } from "../../store/authSlice";
-import { getLocalStorage } from "../../utils/LocalStorage";
 
 const data = [
   { img: logo1, title: "Smart Categorization Technology" },
@@ -47,7 +46,7 @@ function Register() {
     if (isAuthenticated) {
       navigate("/dashboard");
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated,navigate]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -82,7 +81,9 @@ function Register() {
       name: formData.name,
     };
 
-    dispatch(registerAction(encryptedFormData));
+    dispatch(registerAction(encryptedFormData).then(() => {
+      navigate("/dashboard"); 
+    }));
   };
 
   return (

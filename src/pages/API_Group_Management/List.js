@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Form, Pagination, Table } from "react-bootstrap";
+import { Button, Form, Pagination, Spinner, Table } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import {
@@ -65,7 +65,6 @@ function APIGroupList() {
           Add Group
         </Button>
       </div>
-
       {/* Search and Filters */}
       <div className="d-flex align-items-center mb-4">
         <p className="mb-0 me-3">
@@ -88,69 +87,65 @@ function APIGroupList() {
         </div>
         <APiGroupSearch setSearchQueries={setSearchQueries} />
       </div>
-
       {/* Table */}
-      {loading ? (
-        <div className="d-flex justify-content-center align-items-center mt-5">
-          <div className="spinner-grow text-primary" role="status">
-            <span className="visually-hidden">Loading...</span>
-          </div>
-        </div>
-      ) : (
-        <Table striped bordered hover responsive>
-          <thead>
+      <Table striped bordered hover responsive>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>APIs Used</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {loading ? (
             <tr>
-              <th>#</th>
-              <th>Name</th>
-              <th>Description</th>
-              <th>APIs Used</th>
-              <th>Actions</th>
+              <td colSpan="8" className="text-center">
+                <Spinner animation="border" variant="primary" />
+              </td>
             </tr>
-          </thead>
-          <tbody>
-            {data.length > 0 ? (
-              data.map((item, index) => (
-                <tr
-                  key={item._id}
-                  style={{ cursor: "pointer" }}
-                  onClick={() => navigate(`/api-groups/${item._id}`)}
+          ) : data.length > 0 ? (
+            data.map((item, index) => (
+              <tr
+                key={item._id}
+                style={{ cursor: "pointer" }}
+                onClick={() => navigate(`/api-groups/${item._id}`)}
+              >
+                <td>{index + 1 + (page - 1) * limit}</td>
+                <td>{item.name}</td>
+                <td>{item.description}</td>
+                <td>{item.apiId.length}</td>
+                <td
+                  onClick={(e) => e.stopPropagation()} // Prevent row click event from triggering
                 >
-                  <td>{index + 1 + (page - 1) * limit}</td>
-                  <td>{item.name}</td>
-                  <td>{item.description}</td>
-                  <td>{item.apiId.length}</td>
-                  <td
-                    onClick={(e) => e.stopPropagation()} // Prevent row click event from triggering
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    onClick={() => navigate(`/api-groups/edit/${item._id}`)}
+                    className="me-2"
                   >
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      onClick={() => navigate(`/api-groups/edit/${item._id}`)}
-                      className="me-2"
-                    >
-                      Edit
-                    </Button>
-                    <Button
-                      variant="danger"
-                      size="sm"
-                      onClick={() => openDeleteModal(item._id, item.name)}
-                    >
-                      Delete
-                    </Button>
-                  </td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="5" className="text-center text-muted">
-                  No API Groups found.
+                    Edit
+                  </Button>
+                  <Button
+                    variant="danger"
+                    size="sm"
+                    onClick={() => openDeleteModal(item._id, item.name)}
+                  >
+                    Delete
+                  </Button>
                 </td>
               </tr>
-            )}
-          </tbody>
-        </Table>
-      )}
-
+            ))
+          ) : (
+            <tr>
+              <td colSpan="5" className="text-center text-muted">
+                No API Groups found.
+              </td>
+            </tr>
+          )}
+        </tbody>
+      </Table>
       {/* Pagination */}
       {count > limit && (
         <div className="d-flex justify-content-center mt-4">
@@ -175,7 +170,6 @@ function APIGroupList() {
           </Pagination>
         </div>
       )}
-
       {/* Confirmation Modal */}
       <ConfirmationModal
         show={showDeleteModal}

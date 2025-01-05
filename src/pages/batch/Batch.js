@@ -1,10 +1,9 @@
 import React, { Fragment, useCallback, useEffect, useState } from "react";
-import { Button, Form } from "react-bootstrap";
+import { Button, Form, Spinner } from "react-bootstrap";
 import { CSVLink } from "react-csv";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { batchListAction } from "../../store/apiResponseManagement";
-import { updateTransactionAction } from "../../store/transactionSlice";
 import BatchSearch from "./SearchInput";
 import { BsEyeFill } from "react-icons/bs";
 import { Download } from "lucide-react";
@@ -32,15 +31,12 @@ const Batch = () => {
     dispatch(batchListAction(page, limit, queryString));
   }, [dispatch, page, limit, queryString]);
 
-  // Update headers when data changes
   useEffect(() => {
     if (data?.length) {
       setHeaders(Object.keys(data[0]).map((key) => ({ label: key, key })));
     }
   }, [data]);
-  const handleButton = (id, data) => {
-    dispatch(updateTransactionAction(id, data));
-  };
+
 
   const handleLimitChange = (e) => {
     const value = parseInt(e.target.value, 10);
@@ -57,22 +53,13 @@ const Batch = () => {
     }
   };
 
-  const { batchList, count } = useSelector(
+  const { batchList, count,loading } = useSelector(
     (state) => state.apiResponseManagement
   );
 
-   // Handle export logic
     const handleExport = useCallback(async (batchId) => {
-      // if (!batchId) return;
-  
-      // try {
-      //   await dispatch(wrmReportExportAction(batchId));
-      // } catch (error) {
-      //   console.error("Export failed:", error);
-      // }
     }, [dispatch]);
 
-  // Render Export or Download button
   const renderDownloadButton = (item) => {
     const isExporting = reportLoading && item._id === selectedBatchId;
     const isReadyForDownload = selectedBatchId === item._id && data?.length;
@@ -144,7 +131,11 @@ const Batch = () => {
           </tr>
         </thead>
         <tbody>
-          {batchList?.map((item) => (
+          {loading ? <tr>
+                <td colSpan="8" className="text-center">
+                  <Spinner animation="border" variant="primary" />
+                </td>
+              </tr>:batchList.length>0 ? batchList?.map((item) => (
             <tr key={item._id}>
               <td>
                 <BsEyeFill
@@ -159,7 +150,13 @@ const Batch = () => {
               <td>{item.apiGroupId}</td>
               <td className="text-center">{renderDownloadButton(item)}</td>
             </tr>
-          ))}
+          )):(
+            <tr>
+              <td colSpan="4" className="text-center">
+                No products found.
+              </td>
+            </tr>
+          )}
         </tbody>
       </table>
     </Fragment>

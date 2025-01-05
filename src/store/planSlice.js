@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { getLocalStorage } from "../utils/LocalStorage";
+import backendAPIList from "../services/apiList";
 
 const planInitialState = {
   loading: false,
@@ -117,7 +118,7 @@ export const planAction =
       dispatch(request());
       const token = getLocalStorage("authToken");
       const res = await axios.get(
-        `${process.env.REACT_APP_Base_WEB_URL}/plan?page=${page}&limit=${limit}&${searchQueries}`,
+        `${backendAPIList.planManagement}?page=${page}&limit=${limit}&${searchQueries}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -143,7 +144,7 @@ export const getByIdPlanAction = (id) => async (dispatch) => {
     dispatch(request());
     const token = getLocalStorage("authToken");
     const res = await axios.get(
-      `${process.env.REACT_APP_Base_WEB_URL}/plan/${id}`,
+      `${backendAPIList.planManagement}/${id}`,
       {
         headers: { Authorization: `Bearer ${token}` },
       }
@@ -168,7 +169,7 @@ export const getplanApiListAPIAction = (id) => async (dispatch) => {
     dispatch(request());
     const token = getLocalStorage("authToken");
     const res = await axios.get(
-      `${process.env.REACT_APP_Base_WEB_URL}/plan/category-apilist/${id}`,
+      `${backendAPIList.planManagement}/category-apilist/${id}`,
       {
         headers: { Authorization: `Bearer ${token}` },
       }
@@ -193,7 +194,7 @@ export const addplanAction = (formData) => async (dispatch) => {
     dispatch(request());
     const token = getLocalStorage("authToken");
     const res = await axios.post(
-      `${process.env.REACT_APP_Base_WEB_URL}/plan`,
+      `${backendAPIList.planManagement}`,
       formData,
       {
         headers: { Authorization: `Bearer ${token}` },
@@ -223,7 +224,7 @@ export const updateplanAction = (id, formData) => async (dispatch) => {
     dispatch(request());
     const token = getLocalStorage("authToken");
     const res = await axios.put(
-      `${process.env.REACT_APP_Base_WEB_URL}/plan/${id}`,
+      `${backendAPIList.planManagement}/${id}`,
       formData,
       {
         headers: { Authorization: `Bearer ${token}` },
@@ -254,7 +255,7 @@ export const deleteplanAction = (id) => async (dispatch) => {
     dispatch(request());
     const token = getLocalStorage("authToken");
     const res = await axios.delete(
-      `${process.env.REACT_APP_Base_WEB_URL}/plan/${id}`,
+      `${backendAPIList.planManagement}/${id}`,
       {
         headers: { Authorization: `Bearer ${token}` },
       }

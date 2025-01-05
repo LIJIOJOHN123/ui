@@ -12,5 +12,8 @@ const backendAPIList = {
   postValidations: `${WEB_SERVICE_API}/postvalidation`,
   apiResponseManagement: `${WEB_SERVICE_API}/api_response_management`,
   paymentManagement: `${WEB_SERVICE_API}/payment`,
+  planManagement:`${WEB_SERVICE_API}/plan`,
+  transactionManagement:`${USER_SERVICE_API}/transaction`,
+  wrmReportManagement:`${WEB_SERVICE_API}/wrmreport`
 };
 export default backendAPIList;

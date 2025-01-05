@@ -2,7 +2,7 @@ import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
 import CryptoJS from "crypto-js";
 import React, { useEffect, useState } from "react";
 import { Button, Col, Container, Form, InputGroup, Row } from "react-bootstrap";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../../assets/auth/icon.png";
 import logo6 from "../../assets/auth/logo6.png";
@@ -18,18 +18,19 @@ function Login() {
   const [error, setError] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
+  const user = JSON.parse(getLocalStorage("user"));
   useEffect(() => {
-    const user = getLocalStorage("user");
-    console.log(user);
-    if (user) {
+    if (user && user.name) {
       navigate("/dashboard");
     }
-  }, []);
+  }, [user, navigate]);
+
 
   const handleLoginSuccess = (credentialResponse) => {
     const { credential } = credentialResponse;
-    dispatch(googleOAuthLoginAction(credential));
+    dispatch(googleOAuthLoginAction(credential)).then(() => {
+      navigate("/dashboard"); 
+    });
   };
 
   const handleChange = (e) => {
@@ -66,7 +67,9 @@ function Login() {
       password: encryptedPassword,
     };
 
-    dispatch(loginAction(encryptedFormData));
+    dispatch(loginAction(encryptedFormData)).then(() => {
+      navigate("/dashboard"); 
+    });
   };
 
   const data1 = [

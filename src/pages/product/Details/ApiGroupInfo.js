@@ -2,19 +2,20 @@ import React from "react";
 import { Card, Badge } from "react-bootstrap";
 
 const ApiGroupInfo = ({ dataById }) => {
+  const { apiGroupId } = dataById || {};
+
+  if (!apiGroupId) return null; // Handle case when no data is available
+
+  const { name, description} = apiGroupId;
+
   return (
-    <Card className="mb-4 w-100">
-      <Card.Header>API Group Information</Card.Header>
+    <Card className="mb-4 shadow-lg rounded">
+      <Card.Header className="bg-info text-white">
+        <h4>Product Information</h4>
+      </Card.Header>
       <Card.Body>
-        <h5>{dataById?.apiGroupId?.name}</h5>
-        <p>{dataById?.apiGroupId?.description}</p>
-        <p><strong>Fields:</strong> {dataById?.apiGroupId?.fields?.join(", ")}</p>
-        <p><strong>API Type:</strong> {dataById?.apiGroupId?.api_type}</p>
-        <p><strong>Status:</strong> 
-          <Badge bg={dataById?.apiGroupId?.status === "ACTIVE" ? "success" : "danger"}>
-            {dataById?.apiGroupId?.status}
-          </Badge>
-        </p>
+        <h5 className="mb-3">{name}</h5>
+        <p className="text-muted">{description}</p>      
       </Card.Body>
     </Card>
   );

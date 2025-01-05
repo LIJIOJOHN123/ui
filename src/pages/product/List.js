@@ -1,5 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Button, Col, Form, Pagination, Row, Table } from "react-bootstrap";
+import {
+  Button,
+  Col,
+  Form,
+  Pagination,
+  Row,
+  Spinner,
+  Table,
+} from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import {
@@ -38,7 +46,6 @@ function Product() {
   }
 
   // Log the resulting `ProductData` array to verify
-  console.log(ProductData, "ProductData");
 
   const queryString = Object.entries(searchQueries)
     .filter(([_, value]) => value !== "")
@@ -72,124 +79,122 @@ function Product() {
 
   return (
     <div className="container-fluid py-4">
-      {loading ? (
-        <div className="d-flex justify-content-center align-items-center mt-5">
-          <div className="spinner-grow" role="status">
-            <span className="visually-hidden">Loading...</span>
-          </div>
+      <div>
+        <div className="d-flex justify-content-between align-items-center mb-4">
+          <h3 className="fw-bold">Products</h3>
+          <Button
+            onClick={() => navigate("/products/create")}
+            variant="primary"
+            className="fw-bold"
+          >
+            Add a product
+          </Button>
         </div>
-      ) : (
-        <div>
-          <div className="d-flex justify-content-between align-items-center mb-4">
-            <h3 className="fw-bold">Products</h3>
-            <Button
-              onClick={() => navigate("/products/create")}
-              variant="primary"
-              className="fw-bold"
+        <div className="d-flex align-items-center mb-4">
+          <p className="mb-0 me-3">
+            Total: <b>{count}</b>
+          </p>
+          <div className="d-flex align-items-center me-3">
+            <label htmlFor="limit" className="me-2">
+              Records per Page:
+            </label>
+            <Form.Select
+              id="limit"
+              className="form-select w-auto"
+              value={limit}
+              onChange={handleLimitChange}
             >
-              Add a product
-            </Button>
+              <option value={25}>25</option>
+              <option value={50}>50</option>
+              <option value={100}>100</option>
+            </Form.Select>
           </div>
-          <div className="d-flex align-items-center mb-4">
-            <p className="mb-0 me-3">
-              Total: <b>{count}</b>
-            </p>
-            <div className="d-flex align-items-center me-3">
-              <label htmlFor="limit" className="me-2">
-                Records per Page:
-              </label>
-              <Form.Select
-                id="limit"
-                className="form-select w-auto"
-                value={limit}
-                onChange={handleLimitChange}
-              >
-                <option value={25}>25</option>
-                <option value={50}>50</option>
-                <option value={100}>100</option>
-              </Form.Select>
-            </div>
-            <ProductSearchPopup setSearchQueries={setSearchQueries} />
-          </div>
+          <ProductSearchPopup setSearchQueries={setSearchQueries} />
+        </div>
 
-          <Table striped bordered hover>
-            <thead>
+        <Table striped bordered hover>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Name</th>
+              <th>Client Name</th>
+              <th>Number of preValidation</th>
+              <th>Number of postValidation</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {loading ? (
               <tr>
-                <th>#</th>
-                <th>Name</th>
-                <th>Client Name</th>
-                <th>Number of preValidation</th>
-                <th>Number of postValidation</th>
-                <th>Actions</th>
+                <td colSpan="8" className="text-center">
+                  <Spinner animation="border" variant="primary" />
+                </td>
               </tr>
-            </thead>
-            <tbody>
-              {ProductData && ProductData.length > 0 ? (
-                ProductData.map((item, i) => (
-                  <tr key={i}>
-                    <td>{(page - 1) * limit + i + 1}</td>
-                    <td
-                      className="text-truncate"
-                      style={{ cursor: "pointer" }}
-                      onClick={() => navigate(`/products/${item._id}`)}
-                    >
-                      {item.name}
-                    </td>
-                    <td className="line-clamp">{item.clientName}</td>
-                    <td className="line-clamp">{item.preValidation.length}</td>
-                    <td className="line-clamp">{item.postValidation.length}</td>
+            ) : ProductData.length > 0 ? (
+              ProductData.map((item, i) => (
+                <tr key={i}>
+                  <td>{(page - 1) * limit + i + 1}</td>
+                  <td
+                    className="text-truncate"
+                    style={{ cursor: "pointer" }}
+                    onClick={() => navigate(`/products/${item._id}`)}
+                  >
+                    {item.name}
+                  </td>
+                  <td className="line-clamp">{item.clientName}</td>
+                  <td className="line-clamp">{item.preValidation.length}</td>
+                  <td className="line-clamp">{item.postValidation.length}</td>
 
-                    <td>
-                      <div className="d-flex justify-content-between">
-                        <Button
-                          variant="danger"
-                          size="sm"
-                          onClick={() => openDeleteModal(item._id, item.name)}
-                        >
-                          Delete
-                        </Button>
-                        <Button
-                          variant="warning"
-                          size="sm"
-                          onClick={() => navigate(`/products/edit/${item._id}`)}
-                        >
-                          Edit
-                        </Button>
-                      </div>
-                    </td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="4" className="text-center">
-                    No products found.
+                  <td>
+                    <div className="d-flex justify-content-between">
+                      <Button
+                        variant="danger"
+                        size="sm"
+                        onClick={() => openDeleteModal(item._id, item.name)}
+                      >
+                        Delete
+                      </Button>
+                      <Button
+                        variant="warning"
+                        size="sm"
+                        onClick={() => navigate(`/products/edit/${item._id}`)}
+                      >
+                        Edit
+                      </Button>
+                    </div>
                   </td>
                 </tr>
-              )}
-            </tbody>
-          </Table>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="4" className="text-center">
+                  No products found.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </Table>
 
-          <Pagination className="d-flex justify-content-center">
-            <Pagination.Prev
-              disabled={page === 1}
-              onClick={() => setPage(page - 1)}
-            />
-            {[...Array(totalPages).keys()].map((num) => (
-              <Pagination.Item
-                key={num + 1}
-                active={page === num + 1}
-                onClick={() => setPage(num + 1)}
-              >
-                {num + 1}
-              </Pagination.Item>
-            ))}
-            <Pagination.Next
-              disabled={page === totalPages}
-              onClick={() => setPage(page + 1)}
-            />
-          </Pagination>
-        </div>
-      )}
+        <Pagination className="d-flex justify-content-center">
+          <Pagination.Prev
+            disabled={page === 1}
+            onClick={() => setPage(page - 1)}
+          />
+          {[...Array(totalPages).keys()].map((num) => (
+            <Pagination.Item
+              key={num + 1}
+              active={page === num + 1}
+              onClick={() => setPage(num + 1)}
+            >
+              {num + 1}
+            </Pagination.Item>
+          ))}
+          <Pagination.Next
+            disabled={page === totalPages}
+            onClick={() => setPage(page + 1)}
+          />
+        </Pagination>
+      </div>
       <ConfirmationModal
         show={showDeleteModal}
         onHide={() => setShowDeleteModal(false)}

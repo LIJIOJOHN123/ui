@@ -31,7 +31,7 @@ const BatchTableRow = ({ item, navigate, id }) => (
         className="bi bi-eye-fill text-primary"
         style={{ cursor: "pointer" }}
         aria-label={`View details for ${id}`}
-        onClick={() => navigate(`/products/batch-deatils/${id}`)}
+        onClick={() => navigate(`/products/batch-deatils/${item.job_id}`)}
       ></i>
     </td>
     <td className="text-center align-middle">{item.job_id}</td>

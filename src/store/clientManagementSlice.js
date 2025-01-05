@@ -5,7 +5,7 @@ import { getLocalStorage } from "../utils/LocalStorage";
 import backendAPIList from "../services/apiList";
 
 const apiListInitialState = {
-  loading: false,
+  loading: true,
   data: [],
   status: null,
   count: null,

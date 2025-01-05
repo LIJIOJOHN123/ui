@@ -22,10 +22,6 @@ const ProductView = () => {
     dispatch(batchListAction(1, 25, `productId=${id}`));
   }, [id, dispatch]);
 
- 
-
-
-
   return (
     <div className="container-fluid px-4">
       {loading && (
@@ -39,8 +35,8 @@ const ProductView = () => {
           <Card.Body className="w-100">
             <ProductDetails dataById={dataById} navigate={navigate} id={id} />
             <ApiGroupInfo dataById={dataById} />
-            <ValidationAccordion validationType="Pre" validations={dataById?.preValidation} />
-            <ValidationAccordion validationType="Post" validations={dataById?.postValidation} />
+            {dataById?.preValidation.length >0 && <ValidationAccordion validationType="Pre" validations={dataById?.preValidation} />}
+            {dataById?.postValidation.length >0 && <ValidationAccordion validationType="Post" validations={dataById?.postValidation} />}
             <BatchList batchList={batchList}/>
    
           </Card.Body>
@@ -51,4 +47,3 @@ const ProductView = () => {
 };
 
 export default ProductView;
-
