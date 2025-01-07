@@ -46,7 +46,7 @@ const BatchTableRow = ({ item, navigate, dispatch, queryString }) => (
     <td className="text-center align-middle">{item.apiStatus}</td>
     <td className="text-center align-middle">{item.postValidationStatus}</td>
     <td className="text-center align-middle">
-      {item.apiStatus === "API FAILED" ? (
+      {item.apiStatus === "FAILED" ? (
         <Button
           size="sm"
           variant="danger"

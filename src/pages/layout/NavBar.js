@@ -23,7 +23,6 @@ function NavBar({ children }) {
   const navItems = [
     { label: "Dashboard", path: "/dashboard" },
     { label: "Products", path: "/products" },
-    { label: "Api Response", path: "/api-response" },
     { label: "Transaction", path: "/transaction" },
     { label: "Plan", path: "/plan" },
     { label: "Settings", path: "/settings" },

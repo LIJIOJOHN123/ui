@@ -77,7 +77,7 @@ export const clientManagementReducer = clientManagementSlice.reducer;
 
 // Fetch API List
 export const clientManagementListAction =
-  (page = 1, limit = 5, searchQueries) =>
+  (page = 1, limit, searchQueries) =>
   async (dispatch) => {
     try {
       const token = getLocalStorage("authToken");

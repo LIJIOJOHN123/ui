@@ -146,7 +146,6 @@ function Login() {
               style={{ backgroundColor: "#420394" }}
               className="w-100 py-3 mt-3"
               type="submit"
-              // disabled={loading}
             >
               <div>Log In</div>
             </Button>

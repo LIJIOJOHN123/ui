@@ -10,11 +10,10 @@ const RazorpayPaymentButton = () => {
     setError(null);
 
     try {
-      // Call your backend to get order ID
       const res = await fetch("http://localhost:5000/create-order", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ amount: 500 }), // Amount in paise
+        body: JSON.stringify({ amount: 500 }), 
       });
 
       if (!res.ok) {
@@ -24,16 +23,14 @@ const RazorpayPaymentButton = () => {
       const data = await res.json();
 
       const options = {
-        key: process.env.REACT_APP_RAZORPAY_KEY, // Razorpay API Key from environment variables
-        amount: data.amount, // Amount in paise
+        key: process.env.REACT_APP_RAZORPAY_KEY, 
+        amount: data.amount, 
         currency: "INR",
         name: "Your Company",
         description: "Payment for product",
-        order_id: data.orderId, // From backend
+        order_id: data.orderId, 
         handler: function (response) {
-          // Handle the payment response here (e.g., send the payment details to your backend)
           console.log(response);
-          // Optionally, send the response to your backend for verification
         },
         prefill: {
           name: "Customer Name",

@@ -22,6 +22,8 @@ function BatchDeatilsSearchPopup({ setSearchQueries }) {
       backend_api_key_name: "",
       unique_id: "",
       apiStatus: "",
+      preValidationStatus:"",
+      postValidationStatus:""
     });
   };
 
@@ -89,7 +91,20 @@ function BatchDeatilsSearchPopup({ setSearchQueries }) {
                 onChange={(e) => handleInputChange("unique_id", e.target.value)}
               />
             </InputGroup>
-
+            <InputGroup className="mb-3">
+              <InputGroup.Text>Pre Validation </InputGroup.Text>
+              <Form.Select
+                value={tempSearchQueries.preValidationStatus}
+                onChange={(e) => handleInputChange("preValidationStatus", e.target.value)}
+              >
+                <option value="">Select Pre Validation Status</option>
+                <option value="PENDING">PENDING</option>
+                <option value="IN PROGRESS">IN PROGRESS</option>
+                <option value="SUCCEEDED">SUCCEEDED</option>
+                <option value="FAILED">FAILED</option>
+                <option value="SKIPPED">SKIPPED</option>
+              </Form.Select>
+            </InputGroup>
             {/* Select input for apiStatus */}
             <InputGroup className="mb-3">
               <InputGroup.Text>API Status</InputGroup.Text>
@@ -98,22 +113,26 @@ function BatchDeatilsSearchPopup({ setSearchQueries }) {
                 onChange={(e) => handleInputChange("apiStatus", e.target.value)}
               >
                 <option value="">Select API Status</option>
-                <option value="PENDING FOR PREVALIDATION">
-                  PENDING FOR PREVALIDATION
-                </option>
-                <option value="PREVALIDATION UNDER PROCESS">
-                  PREVALIDATION UNDER PROCESS
-                </option>
-                <option value="PREVALIDATION SUCCESSFULL">
-                  PREVALIDATION SUCCESSFULL
-                </option>
-                <option value="PREVALIDATION FAILED">
-                  PREVALIDATION FAILED
-                </option>
-                <option value="TRIGGER API">TRIGGER API</option>
-                <option value="API UNDER PROCESS">API UNDER PROCESS</option>
-                <option value="API SUCCESSFUL">API SUCCESSFUL</option>
-                <option value="API FAILED">API FAILED</option>
+                <option value="PENDING">PENDING</option>
+                <option value="BACKEND JOB ID CREATED">BACKEND JOB ID CREATED</option>
+                <option value="IN PROGRESS">IN PROGRESS</option>
+                <option value="SUCCEEDED">SUCCEEDED</option>
+                <option value="FAILED">FAILED</option>
+                <option value="SKIPPED">SKIPPED</option>
+              </Form.Select>
+            </InputGroup>
+            <InputGroup className="mb-3">
+              <InputGroup.Text>Post Validation </InputGroup.Text>
+              <Form.Select
+                value={tempSearchQueries.postValidationStatus}
+                onChange={(e) => handleInputChange("postValidationStatus", e.target.value)}
+              >
+                <option value="">Select Post Validation Status</option>
+                <option value="PENDING">PENDING</option>
+                <option value="IN PROGRESS">IN PROGRESS</option>
+                <option value="SUCCEEDED">SUCCEEDED</option>
+                <option value="FAILED">FAILED</option>
+                <option value="SKIPPED">SKIPPED</option>
               </Form.Select>
             </InputGroup>
           </Form>
