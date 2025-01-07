@@ -1,26 +1,29 @@
 import { CSVLink } from "react-csv";
 import { Button, Col, Form, Card, Row, Alert } from "react-bootstrap";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
 import {
   addAPIBatchingAction,
   uploadCSVFileAPIBatchingAction,
 } from "../../store/apiResponseManagement";
-
+import { getByIdAPIAction } from "../../store/productManagementSlice";
 function AddInput() {
   const dispatch = useDispatch();
   const { id } = useParams();
   const navigate = useNavigate();
-
+  useEffect(() => {
+    dispatch(getByIdAPIAction(id));
+  }, [id, dispatch]);
   const [error, setError] = useState(false);
   const [successMessage, setSuccessMessage] = useState(null);
   const [errorMessage, setErrorMessage] = useState(null);
 
-  const { dataById } = useSelector((state) => state.productManagement);
-  const { data: api, loading } = useSelector(
+  const { dataById,loading } = useSelector((state) => state.productManagement);
+  const { data: api, } = useSelector(
     (state) => state.apiResponseManagement
   );
+  console.log(dataById)
   const [formData, setFormData] = useState({});
   const [selectedFile, setSelectedFile] = useState(null);
 
@@ -77,15 +80,21 @@ function AddInput() {
     setErrorMessage(null); // Clear any previous error messages
   };
 
-  const downloadTextFile = (content, id) => {
-    const data = JSON.stringify(content);
-    const blob = new Blob([data], { type: "text/plain" });
+  const downloadCsvFile = (headers, data, filename) => {
+    const convertToCSV = (headers, data) => {
+      const headerRow = headers.join(","); 
+      const rows = data.map((item) => `"${item}"`).join(","); // Escape each item in quotes for a single row
+      return [headerRow, rows].join("\n"); // Combine header and rows
+    };
+  
+    const csvContent = convertToCSV(headers, data);
+  
+    const blob = new Blob(["\uFEFF" + csvContent], { type: "text/csv;charset=utf-8;" }); // Add BOM for UTF-8
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
-    link.download = `${id}.json`;
+    link.download = `${filename}.csv`; // Set download name with .csv extension
     link.click();
   };
-
   const goBack = () => {
     navigate(-1); // Navigate back to the previous page
   };
@@ -107,7 +116,6 @@ function AddInput() {
               {`Place the URLs you wish to batch check in a CSV file with 1 URL or domain per row - placed in the first column.`}
               {`\nAdditional columns can be included such as a userID, transactionID, clickID, etc. Live results will appear on this page as the file is processed. \nYou will receive an email notice once the report has finished processing. All completed reports are saved for future reference and can be viewed below.`}
             </p>
-
             <CSVLink
               filename="sample_data.csv"
               style={{
@@ -119,7 +127,8 @@ function AddInput() {
                 textDecoration: "none",
               }}
               className="text-decoration-underline"
-              data={[]}
+              onClick={() => downloadCsvFile(fields, [], `${dataById._id}_template`)}
+              data={[]} // Empty data array as we are generating it manually
               separator=","
             >
               Download Sample CSV Template

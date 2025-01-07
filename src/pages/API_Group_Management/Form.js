@@ -206,11 +206,7 @@ function CategoryForm() {
             </BootstrapForm.Group>
           )}
 
-          {formData.field_active && (
-            <Button className="mt-2" onClick={addField}>
-              Add Field
-            </Button>
-          )}
+       
 
           {renderSelect("APIs", apiOptions, formData.apiId, "apiId")}
 

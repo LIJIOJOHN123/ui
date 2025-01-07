@@ -77,8 +77,6 @@ function RestePassword() {
     const updatedFormData = { ...formData, [name]: value };
 
     setFormData(updatedFormData);
-
-    // Check if passwords match
     if (updatedFormData.password && updatedFormData.confirmPassword) {
       setPasswordIsMatch(
         updatedFormData.password === updatedFormData.confirmPassword

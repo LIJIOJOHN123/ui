@@ -130,7 +130,6 @@ function BatchView() {
                 {prevalidation && prevalidation.length > 0 ? (
                   <ListGroup variant="flush">
                     {prevalidation.map((validation, index) => {
-                      // Set custom styles for each result status
                       let statusStyle = "";
                       let statusIcon = null;
                       let statusBadge = "";
@@ -255,7 +254,6 @@ function BatchView() {
                 {postvalidation && postvalidation.length > 0 ? (
                   <ListGroup variant="flush">
                     {postvalidation.map((validation, index) => {
-                      // Set custom styles for each result status
                       let statusStyle = "";
                       let statusIcon = null;
                       let statusBadge = "";

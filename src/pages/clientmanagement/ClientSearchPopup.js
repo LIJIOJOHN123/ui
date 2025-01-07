@@ -7,7 +7,6 @@ import Modal from "react-bootstrap/Modal";
 function ClientSearchPopup({ setSearchQueries }) {
   const [show, setShow] = useState(false);
 
-  // Initialize tempSearchQueries with predefined keys
   const [tempSearchQueries, setTempSearchQueries] = useState({
     name: "",
     email: "",
