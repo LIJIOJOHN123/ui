@@ -2,7 +2,10 @@ import React, { useEffect, useState } from "react";
 import { Form, Table, Pagination, Button, Spinner } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { apiBatchingAction, retriggerBatchingAction } from "../../store/apiResponseManagement";
+import {
+  apiBatchingAction,
+  retriggerBatchingAction,
+} from "../../store/apiResponseManagement";
 import ApiResponseSearchPopup from "./SearchInput";
 
 const LOCAL_STORAGE_LIMIT_KEY = "apiResponseLimit";
@@ -46,14 +49,17 @@ function ApiResponse() {
 
   const [page, setPage] = useState(1);
 
-  const initialLimit = parseInt(localStorage.getItem(LOCAL_STORAGE_LIMIT_KEY), 10) || 25;
+  const initialLimit =
+    parseInt(localStorage.getItem(LOCAL_STORAGE_LIMIT_KEY), 10) || 25;
   const [limit, setLimit] = useState(initialLimit);
 
   const [searchQueries, setSearchQueries] = useState({});
 
-  const { data = [], count = 0, loading } = useSelector(
-    (state) => state.apiResponseManagement
-  );
+  const {
+    data = [],
+    count = 0,
+    loading,
+  } = useSelector((state) => state.apiResponseManagement);
   const queryString = Object.entries(searchQueries)
     .filter(([_, value]) => value !== "")
     .map(([key, value]) => `${key}=${value}`)
@@ -78,7 +84,10 @@ function ApiResponse() {
     setSearchQueries({});
   };
   return (
-    <div className="container-fluid d-flex flex-column min-vh-100 py-4" style={{ margin: "0 auto" }}>
+    <div
+      className="container-fluid d-flex flex-column min-vh-100 py-4"
+      style={{ margin: "0 auto" }}
+    >
       <h2 className="text-center mb-4">API Responses</h2>
       <div className="d-flex justify-content-between align-items-center mb-4">
         <div className="d-flex align-items-center">
@@ -101,12 +110,11 @@ function ApiResponse() {
               <option value={100}>100</option>
             </Form.Select>
           </div>
-       
         </div>
         <div className="d-flex align-items-center">
           <ApiResponseSearchPopup setSearchQueries={setSearchQueries} />
           <Button
-             variant="primary"
+            variant="primary"
             className="ms-2"
             onClick={handleResetSearch}
             aria-label="Reset search"
@@ -121,7 +129,6 @@ function ApiResponse() {
           >
             <i className="bi bi-arrow-clockwise"></i> Refresh
           </Button>
-         
         </div>
       </div>
 
@@ -150,7 +157,12 @@ function ApiResponse() {
               </tr>
             ) : data.length > 0 ? (
               data.map((item) => (
-                <BatchTableRow key={item._id} item={item} navigate={navigate} dispatch={dispatch} />
+                <BatchTableRow
+                  key={item._id}
+                  item={item}
+                  navigate={navigate}
+                  dispatch={dispatch}
+                />
               ))
             ) : (
               <tr>
@@ -165,79 +177,94 @@ function ApiResponse() {
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="d-flex justify-content-center mt-4">
-  <Pagination>
-    <Pagination.Prev
-      disabled={page === 1}
-      onClick={() => setPage(page - 1)}
-    />
-    
-    {/* Show pages dynamically based on the total page count */}
-    {totalPages <= 5 ? (
-      // If there are 5 or fewer pages, display all pages
-      [...Array(totalPages).keys()].map((num) => (
-        <Pagination.Item
-          key={num}
-          active={page === num + 1}
-          onClick={() => setPage(num + 1)}
-        >
-          {num + 1}
-        </Pagination.Item>
-      ))
-    ) : (
-      <>
-        {/* Show first page */}
-        <Pagination.Item
-          key={1}
-          active={page === 1}
-          onClick={() => setPage(1)}
-        >
-          1
-        </Pagination.Item>
+  <div className="d-flex justify-content-center mt-4">
+    <Pagination>
+      {/* Previous Button */}
+      <Pagination.Prev
+        disabled={page === 1}
+        onClick={() => setPage(page - 1)}
+      />
 
-        {/* Show ellipsis if there is a gap between the first and the middle pages */}
-        {page > 3 && <Pagination.Ellipsis disabled />}
+      {/* Page Numbers */}
+      {(() => {
+        const pages = [];
+        const maxVisiblePages = 5;
 
-        {/* Show middle pages, but limit the visible pages (3 pages before or after the current page) */}
-        {[...Array(3).keys()].map((i) => {
-          const pageNum = page + i - 1;
-          if (pageNum > 1 && pageNum < totalPages - 1) {
-            return (
+        if (totalPages <= maxVisiblePages) {
+          // Show all pages if totalPages <= maxVisiblePages
+          for (let i = 1; i <= totalPages; i++) {
+            pages.push(
               <Pagination.Item
-                key={pageNum}
-                active={page === pageNum}
-                onClick={() => setPage(pageNum)}
+                key={i}
+                active={page === i}
+                onClick={() => setPage(i)}
               >
-                {pageNum}
+                {i}
               </Pagination.Item>
             );
           }
-          return null;
-        })}
+        } else {
+          // Handle when totalPages > maxVisiblePages
+          const startPage = Math.max(2, page - 1);
+          const endPage = Math.min(totalPages - 1, page + 1);
 
-        {/* Show ellipsis if there is a gap between the middle pages and the last page */}
-        {page < totalPages - 3 && <Pagination.Ellipsis disabled />}
+          // First Page
+          pages.push(
+            <Pagination.Item
+              key={1}
+              active={page === 1}
+              onClick={() => setPage(1)}
+            >
+              1
+            </Pagination.Item>
+          );
 
-        {/* Show last page */}
-        <Pagination.Item
-          key={totalPages}
-          active={page === totalPages}
-          onClick={() => setPage(totalPages)}
-        >
-          {totalPages}
-        </Pagination.Item>
-      </>
-    )}
+          // Ellipsis before middle pages
+          if (startPage > 2) {
+            pages.push(<Pagination.Ellipsis key="start-ellipsis" disabled />);
+          }
 
-    <Pagination.Next
-      disabled={page === totalPages}
-      onClick={() => setPage(page + 1)}
-    />
-  </Pagination>
-</div>
+          // Middle Pages
+          for (let i = startPage; i <= endPage; i++) {
+            pages.push(
+              <Pagination.Item
+                key={i}
+                active={page === i}
+                onClick={() => setPage(i)}
+              >
+                {i}
+              </Pagination.Item>
+            );
+          }
 
+          // Ellipsis after middle pages
+          if (endPage < totalPages - 1) {
+            pages.push(<Pagination.Ellipsis key="end-ellipsis" disabled />);
+          }
+
+          // Last Page
+          pages.push(
+            <Pagination.Item
+              key={totalPages}
+              active={page === totalPages}
+              onClick={() => setPage(totalPages)}
+            >
+              {totalPages}
+            </Pagination.Item>
+          );
+        }
+
+        return pages;
+      })()}
+
+      {/* Next Button */}
+      <Pagination.Next
+        disabled={page === totalPages}
+        onClick={() => setPage(page + 1)}
+      />
+    </Pagination>
+  </div>
 )}
-
 
     </div>
   );

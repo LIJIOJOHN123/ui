@@ -13,13 +13,10 @@ const ProductView = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { id } = useParams();
-  const { dataById } = useSelector((state) => state.productManagement);
-  const { batchList, loading } = useSelector((state) => state.apiResponseManagement);
-
+  const { dataById,loading } = useSelector((state) => state.productManagement);
 
   useEffect(() => {
     dispatch(getByIdAPIAction(id));
-    dispatch(batchListAction(1, 25, `productId=${id}`));
   }, [id, dispatch]);
 
   return (
@@ -37,7 +34,7 @@ const ProductView = () => {
             <ApiGroupInfo dataById={dataById} />
             {dataById?.preValidation?.length >0 && <ValidationAccordion validationType="Pre" validations={dataById?.preValidation} />}
             {dataById?.postValidation?.length >0 && <ValidationAccordion validationType="Post" validations={dataById?.postValidation} />}
-            <BatchList batchList={batchList}/>
+            <BatchList id={id}/>
    
           </Card.Body>
         </Card>

@@ -46,7 +46,7 @@ function BatchView() {
   if (!dataById) {
     return (
       <div className="text-center">
-        <h2>Batch Details</h2>
+        <h2>Postvalidation Status	</h2>
         <p>No data available</p>
       </div>
     );

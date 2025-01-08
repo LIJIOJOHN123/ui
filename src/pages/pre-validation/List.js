@@ -1,5 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { Alert, Button, Col, Form, Pagination, Row, Spinner, Card } from "react-bootstrap";
+import {
+  Alert,
+  Button,
+  Col,
+  Form,
+  Pagination,
+  Row,
+  Spinner,
+  Card,
+} from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import {
@@ -112,7 +121,9 @@ function PreValidationList() {
                         {item.des || "No Description"}
                       </Card.Text>
                       <Card.Text className="text-muted">
-                        <small>Validation Key: {item.validation_key || "No Key"}</small>
+                        <small>
+                          Validation Key: {item.validation_key || "No Key"}
+                        </small>
                       </Card.Text>
                       <div className="d-flex justify-content-between mt-3">
                         <Button
@@ -145,51 +156,76 @@ function PreValidationList() {
 
           {/* Pagination */}
           {totalPages > 1 && (
-            <Pagination className="d-flex justify-content-center mt-4">
-              <Pagination.Prev
-                disabled={page === 1}
-                onClick={() => setPage(page - 1)}
-              />
+            <div className="d-flex justify-content-center mt-4">
+              <Pagination>
+                <Pagination.Prev
+                  disabled={page === 1}
+                  onClick={() => setPage(page - 1)}
+                />
 
-              {[1, 2, 3].map((num) =>
-                num <= totalPages ? (
-                  <Pagination.Item
-                    key={num}
-                    active={page === num}
-                    onClick={() => setPage(num)}
-                  >
-                    {num}
-                  </Pagination.Item>
-                ) : null
-              )}
+                {/* Show pages dynamically based on the total page count */}
+                {totalPages <= 5 ? (
+                  // If there are 5 or fewer pages, display all pages
+                  [...Array(totalPages).keys()].map((num) => (
+                    <Pagination.Item
+                      key={num}
+                      active={page === num + 1}
+                      onClick={() => setPage(num + 1)}
+                    >
+                      {num + 1}
+                    </Pagination.Item>
+                  ))
+                ) : (
+                  <>
+                    {/* Show first page */}
+                    <Pagination.Item
+                      key={1}
+                      active={page === 1}
+                      onClick={() => setPage(1)}
+                    >
+                      1
+                    </Pagination.Item>
 
-              {page > 4 && page < totalPages - 2 && <Pagination.Ellipsis disabled />}
+                    {/* Show ellipsis if there is a gap between the first and the middle pages */}
+                    {page > 3 && <Pagination.Ellipsis disabled />}
 
-              {page > 3 && page < totalPages - 2 && (
-                <Pagination.Item key={page} active onClick={() => setPage(page)}>
-                  {page}
-                </Pagination.Item>
-              )}
+                    {/* Show middle pages, but limit the visible pages (3 pages before or after the current page) */}
+                    {[...Array(3).keys()].map((i) => {
+                      const pageNum = page + i - 1;
+                      if (pageNum > 1 && pageNum < totalPages - 1) {
+                        return (
+                          <Pagination.Item
+                            key={pageNum}
+                            active={page === pageNum}
+                            onClick={() => setPage(pageNum)}
+                          >
+                            {pageNum}
+                          </Pagination.Item>
+                        );
+                      }
+                      return null;
+                    })}
 
-              {page < totalPages - 3 && totalPages > 5 && <Pagination.Ellipsis disabled />}
+                    {/* Show ellipsis if there is a gap between the middle pages and the last page */}
+                    {page < totalPages - 3 && <Pagination.Ellipsis disabled />}
 
-              {[totalPages - 1, totalPages].map((num) =>
-                num > 3 ? (
-                  <Pagination.Item
-                    key={num}
-                    active={page === num}
-                    onClick={() => setPage(num)}
-                  >
-                    {num}
-                  </Pagination.Item>
-                ) : null
-              )}
+                    {/* Show last page */}
+                    <Pagination.Item
+                      key={totalPages}
+                      active={page === totalPages}
+                      onClick={() => setPage(totalPages)}
+                    >
+                      {totalPages}
+                    </Pagination.Item>
+                  </>
+                )}
 
-              <Pagination.Next
-                disabled={page === totalPages}
-                onClick={() => setPage(page + 1)}
-              />
-            </Pagination>
+                <Pagination.Next
+                  disabled={page === totalPages}
+                  onClick={() => setPage(page + 1)}
+                />
+              </Pagination>
+            </div>
           )}
         </div>
       )}

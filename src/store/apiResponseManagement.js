@@ -57,6 +57,7 @@ export const apiResponseManagementSlice = createSlice({
       state.loading = false;
       state.status = action.payload.status;
       state.dataById = action.payload.data;
+      state.count = action.payload.count
     },
     getByIdResponseFail: (state, action) => {
       state.loading = false;
@@ -226,7 +227,7 @@ export const getByIdAPIAction = (id) => async (dispatch) => {
 
 // Fetch API By ID
 export const getByIdClientDataAPIAction =
-  (page = 1, limit = 5, searchQueries, id) =>
+  (page, limit, searchQueries, id) =>
   async (dispatch) => {
     try {
       const token = getLocalStorage("authToken");
@@ -236,10 +237,10 @@ export const getByIdClientDataAPIAction =
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      const { status, data } = res.data;
+      const { status, data,count } = res.data;
 
       if (status === "ok") {
-        dispatch(getByIdResponseSuccess({ status, data }));
+        dispatch(getByIdResponseSuccess({ status, data,count }));
       }
     } catch (error) {
       const payload = {
@@ -262,9 +263,9 @@ export const addAPIBatchingAction = (formData, id) => async (dispatch) => {
       }
     );
 
-    const { status } = res.data;
+    const { status,message } = res.data;
     if (status === "ok") {
-      toast.success("Created Successfully!");
+      toast.success(message);
       dispatch(createAPIBatchingResponseSuccess({ status: "done" }));
     } else {
       dispatch(createAPIBatchingResponseFail({ status: 400 }));
@@ -291,9 +292,9 @@ export const uploadCSVFileAPIBatchingAction =
         }
       );
 
-      const { status } = res.data;
+      const { status,message } = res.data;
       if (status === "ok") {
-        toast.success("Uploaded Successfully!");
+        toast.success(message);
         dispatch(createAPIBatchingResponseSuccess({ status: "uploaded" }));
       } else {
         dispatch(createAPIBatchingResponseFail({ status: 400 }));
