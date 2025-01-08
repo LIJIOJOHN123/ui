@@ -1,50 +1,56 @@
-import { Download } from "lucide-react";
-import { useState, useEffect, useCallback } from "react";
-import { Badge, Button, Table } from "react-bootstrap";
+import React, { useState, useEffect, useCallback } from "react";
+import { Badge, Button, Pagination, Table, Dropdown, Alert } from "react-bootstrap";
 import { CSVLink } from "react-csv";
+import { Download } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { wrmReportExportAction } from "../../../store/wrmReportManagentSlice";
+import { batchListAction } from "../../../store/apiResponseManagement";
 
-const BatchList = ({ batchList }) => {
+const BatchList = ({ id }) => {
   const [headers, setHeaders] = useState([]);
   const [selectedBatchId, setSelectedBatchId] = useState(null);
-  const { data, loading: reportLoading, error: reportError } = useSelector((state) => state.wrmReport);
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(() => {
+    return parseInt(localStorage.getItem("batchListLimit"), 10) || 25;
+  });
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // Helper function to format the date
-  const formatDate = (date) => new Date(date).toLocaleDateString();
+  const { data, loading: reportLoading, error: reportError } = useSelector((state) => state.wrmReport);
+  const { batchList, loading, batchCount } = useSelector((state) => state.apiResponseManagement);
 
-  // Handle batch selection
-  const handleBatchClick = async(batchId) => {
-    setSelectedBatchId(batchId);
-    try {
-        await dispatch(wrmReportExportAction(batchId));
-      } catch (error) {
-        console.error("Export failed:", error);
-      }
-  };
+  const totalPages = Math.ceil(batchCount / limit);
 
-  // Update headers when data changes
+  useEffect(() => {
+    localStorage.setItem("batchListLimit", limit);
+  }, [limit]);
+
+  useEffect(() => {
+    dispatch(batchListAction(page, limit, `productId=${id}`));
+  }, [id, page, limit, dispatch]);
+
   useEffect(() => {
     if (data?.length) {
       setHeaders(Object.keys(data[0]).map((key) => ({ label: key, key })));
     }
   }, [data]);
 
-  // Handle export logic
-  const handleExport = useCallback(async (batchId) => {
-    // if (!batchId) return;
+  const handleBatchClick = async (batchId) => {
+    setSelectedBatchId(batchId);
+    try {
+      await dispatch(wrmReportExportAction(batchId));
+    } catch (error) {
+      console.error("Export failed:", error);
+    }
+  };
 
-    // try {
-    //   await dispatch(wrmReportExportAction(batchId));
-    // } catch (error) {
-    //   console.error("Export failed:", error);
-    // }
-  }, [dispatch]);
+  const handleLimitChange = (newLimit) => {
+    setLimit(newLimit);
+    setPage(1);
+  };
 
-  // Render Export or Download button
   const renderDownloadButton = (item) => {
     const isExporting = reportLoading && item._id === selectedBatchId;
     const isReadyForDownload = selectedBatchId === item._id && data?.length;
@@ -53,8 +59,7 @@ const BatchList = ({ batchList }) => {
       <div className="d-flex justify-content-center">
         {isExporting ? (
           <Button variant="primary" size="sm" disabled>
-            <Download className="me-2" />
-            Exporting...
+            <Download className="me-2" /> Exporting...
           </Button>
         ) : isReadyForDownload ? (
           <CSVLink
@@ -64,8 +69,7 @@ const BatchList = ({ batchList }) => {
             target="_blank"
             className="btn btn-outline-primary btn-sm d-flex align-items-center"
           >
-            <Download className="me-2" onClick={() => handleExport(item._id)} />
-            Download
+            <Download className="me-2" /> Download
           </CSVLink>
         ) : (
           <Button variant="outline-primary" size="sm" onClick={() => handleBatchClick(item._id)}>
@@ -78,9 +82,24 @@ const BatchList = ({ batchList }) => {
 
   return (
     <div>
-      <h5 className="mt-4">Batch List</h5>
+      <div className="d-flex justify-content-between align-items-center mb-3">
+        <h5>Batch List</h5>
+        <Dropdown>
+          <Dropdown.Toggle variant="secondary" size="sm">
+            Limit: {limit}
+          </Dropdown.Toggle>
+          <Dropdown.Menu>
+            {[25, 50, 100].map((option) => (
+              <Dropdown.Item key={option} onClick={() => handleLimitChange(option)}>
+                {option}
+              </Dropdown.Item>
+            ))}
+          </Dropdown.Menu>
+        </Dropdown>
+      </div>
+
       <Table striped bordered hover responsive className="shadow-sm">
-        <thead className="table-light">
+        <thead>
           <tr>
             <th className="text-center">View</th>
             <th className="text-center">Date</th>
@@ -92,7 +111,7 @@ const BatchList = ({ batchList }) => {
         </thead>
         <tbody>
           {batchList?.map((item) => (
-            <tr key={item._id} className="hoverable-row">
+            <tr key={item._id}>
               <td className="text-center">
                 <i
                   className="bi bi-eye-fill text-primary"
@@ -100,27 +119,37 @@ const BatchList = ({ batchList }) => {
                   onClick={() => navigate(`/products/data/${item._id}`)}
                 ></i>
               </td>
-              <td className="text-center">{formatDate(item.createdAt)}</td>
+              <td className="text-center">{new Date(item.createdAt).toLocaleDateString()}</td>
               <td className="text-center">{item._id}</td>
               <td className="text-center">
-                <Badge pill bg="info">
-                  {item.type}
-                </Badge>
+                <Badge bg="info">{item.type}</Badge>
               </td>
               <td className="text-center">{item.records}</td>
-              <td className="text-center">
-                {renderDownloadButton(item)}
-              </td>
+              <td className="text-center">{renderDownloadButton(item)}</td>
             </tr>
           ))}
         </tbody>
       </Table>
 
-      {reportError && (
-        <div className="alert alert-danger mt-4" role="alert">
-          Error occurred while exporting data. Please try again.
+      {totalPages > 1 && (
+        <div className="d-flex justify-content-center mt-3">
+          <Pagination>
+            <Pagination.Prev disabled={page === 1} onClick={() => setPage(page - 1)} />
+            {[...Array(totalPages)].map((_, index) => (
+              <Pagination.Item
+                key={index}
+                active={page === index + 1}
+                onClick={() => setPage(index + 1)}
+              >
+                {index + 1}
+              </Pagination.Item>
+            ))}
+            <Pagination.Next disabled={page === totalPages} onClick={() => setPage(page + 1)} />
+          </Pagination>
         </div>
       )}
+
+      {reportError && <Alert variant="danger">Error occurred while exporting data. Please try again.</Alert>}
     </div>
   );
 };
