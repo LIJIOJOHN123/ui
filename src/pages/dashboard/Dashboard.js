@@ -57,7 +57,7 @@ function Dashboard() {
       receipt: `receipt_${new Date().getTime()}`,
       notes: { note1: "Payment for Test" },
     };
-
+    console.log( data)
     dispatch(addPaymentAction(plandataById._id, data, user));
 
     removeLocalStorage("payment");

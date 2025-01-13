@@ -253,7 +253,7 @@ function PlanForm() {
             />
           </BootstrapForm.Group>
 
-          <Row className="mt-3">
+          {/* <Row className="mt-3">
             <Col sm={6}>
               <BootstrapForm.Group controlId="formNumberOfApi">
                 <BootstrapForm.Label>Number of APIs</BootstrapForm.Label>
@@ -282,7 +282,7 @@ function PlanForm() {
                 />
               </BootstrapForm.Group>
             </Col>
-          </Row>
+          </Row> */}
 
           <Row className="mt-3">
             <Col sm={6}>

@@ -161,6 +161,7 @@ export const getByIdPaymentAction = (id) => async (dispatch) => {
 
 // Add Payment
 export const addPaymentAction = (id, formData, user) => async (dispatch) => {
+  console.log(id, formData, user)
   try {
     const token = getLocalStorage("authToken");
     if (!token) {
