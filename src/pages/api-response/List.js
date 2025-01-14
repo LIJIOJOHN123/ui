@@ -26,9 +26,7 @@ const BatchTableRow = ({ item, navigate, dispatch }) => (
     <td className="text-center align-middle">{item.apiType}</td>
     <td className="text-center align-middle">{item.backend_api_key_name}</td>
     <td className="text-center align-middle">{item.pricing}</td>
-    <td className="text-center align-middle">{item.preValidationStatus}</td>
     <td className="text-center align-middle">{item.apiStatus}</td>
-    <td className="text-center align-middle">{item.postValidationStatus}</td>
     <td className="text-center align-middle">
       <Button
         size="sm"
@@ -142,9 +140,7 @@ function ApiResponse() {
               <th>API Type</th>
               <th>Key Name</th>
               <th>Pricing</th>
-              <th>Pre Validation Status</th>
-              <th>API Status</th>
-              <th>Post Validation Status</th>
+\              <th>API Status</th>
               <th>Action</th>
             </tr>
           </thead>
