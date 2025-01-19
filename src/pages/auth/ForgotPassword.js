@@ -1,7 +1,7 @@
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Button, Col, Container, Form, InputGroup, Row } from "react-bootstrap";
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { Link } from "react-router-dom";
 import logo from "../../assets/auth/icon.png";
 import logo6 from "../../assets/auth/logo6.png";
@@ -14,23 +14,6 @@ function ForgotPassword() {
     });
     const [error, setError] = useState('');
     const dispatch = useDispatch();
-    const { loading } = useSelector((state) => state.auth);
-
-    // useEffect(() => {
-    //     if (isAuthenticated) {
-    //         const tokenExist = localStorage.getItem("authToken")
-    //         const userExist = localStorage.getItem("user")
-    //         if (tokenExist || userExist) {
-    //             localStorage.clear("authToken")
-    //             localStorage.clear("user")
-    //         }
-    //         localStorage.setItem('authToken', token);
-    //         localStorage.setItem('user', JSON.stringify(user));
-
-    //         navigate("/dashboard");
-    //     }
-    // }, [isAuthenticated, navigate]);
-
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -56,11 +39,7 @@ function ForgotPassword() {
         dispatch(forgotPasswordAction(formData));
 
     };
-    useEffect(() => {
-        if (!loading) {
-            setFormData({ email: "" })
-        }
-    }, [loading])
+
     const data1 = [
         {
             img: logo6,
@@ -117,11 +96,10 @@ function ForgotPassword() {
                             style={{ backgroundColor: "#420394" }}
                             className="w-100 py-3 mt-3"
                             type="submit"
-                            disabled={loading}
                         >
-                            {loading ? <div className="spinner-border" /> : <div className='fw-bold'>
+                       <div className='fw-bold'>
                                 Reset Password
-                            </div>}
+                            </div>
                         </Button>
                         <div className="mt-2 text-center">
                             or{" "}

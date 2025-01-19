@@ -140,7 +140,7 @@ function ApiResponse() {
               <th>API Type</th>
               <th>Key Name</th>
               <th>Pricing</th>
-\              <th>API Status</th>
+            <th>API Status</th>
               <th>Action</th>
             </tr>
           </thead>

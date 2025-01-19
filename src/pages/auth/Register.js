@@ -41,12 +41,12 @@ function Register() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const {isAuthenticated} = useSelector(state=>state.auth)
+  const { isAuthenticated } = useSelector((state) => state.auth);
   useEffect(() => {
     if (isAuthenticated) {
       navigate("/dashboard");
     }
-  }, [isAuthenticated,navigate]);
+  }, [isAuthenticated, navigate]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -80,10 +80,9 @@ function Register() {
       password: encryptedPassword,
       name: formData.name,
     };
-
-    dispatch(registerAction(encryptedFormData).then(() => {
-      navigate("/dashboard"); 
-    }));
+    dispatch(registerAction(encryptedFormData)).then(() => {
+      navigate("/dashboard");
+    });
   };
 
   return (
@@ -99,7 +98,7 @@ function Register() {
               Categorization, and much more from a URL or Email.
             </p>
 
-            <Form className="w-100" onSubmit={handleSubmit}>
+            <Form className="w-100" onSubmit={handleSubmit} autoComplete="off">
               <InputGroup className="mb-3">
                 <Form.Control
                   type="text"
@@ -109,6 +108,7 @@ function Register() {
                   value={formData.name}
                   onChange={handleChange}
                   required
+                  autoComplete="off"
                 />
               </InputGroup>
 
@@ -121,6 +121,7 @@ function Register() {
                   value={formData.email}
                   onChange={handleChange}
                   required
+                  autoComplete="off"
                 />
               </InputGroup>
 
@@ -133,6 +134,7 @@ function Register() {
                   value={formData.password}
                   onChange={handleChange}
                   required
+                  autoComplete="new-password" // Use "new-password" for password fields
                 />
               </InputGroup>
 
@@ -154,6 +156,7 @@ function Register() {
                   onChange={handleChange}
                   onBlur={handleConfirmPasswordBlur}
                   required
+                  autoComplete="new-password" // Use "new-password" for password fields
                 />
               </InputGroup>
 
@@ -179,9 +182,9 @@ function Register() {
                 type="submit"
                 style={{ backgroundColor: "#420394" }}
                 className="w-100 py-3"
-                disabled={!passwordIsMatch }
+                disabled={!passwordIsMatch}
               >
-               Register
+                Register
               </Button>
             </Form>
           </div>
