@@ -52,6 +52,7 @@ import BatchView from "../pages/batch/BatchView";
 import ApiResponse from "../pages/api-response/List";
 import AddInput from "../pages/product/AddInput";
 import ClientDataDetails from "../pages/product/ClientDataDetails";
+import NotFoundPage from "../components/NotFoundPage";
 
 function RoutesPage() {
   return (
@@ -157,12 +158,13 @@ function RoutesPage() {
             <Route path="api-response" element={<ApiResponse />} />
             {/* ////// */}
             <Route path="clients" element={<ClientManagement />} />
-            <Route path="transaction" element={<Transaction />} />
+            <Route path="usage" element={<Transaction />} />
             <Route path="batch" element={<Batch />} />
             <Route path="client/:id" element={<ClientDetails />} />
             <Route path="documentation" element={<Documentation />} />
             <Route path="plans" element={<Plans />} />
             <Route path="settings" element={<Settings />} />
+            <Route path="*" element={<NotFoundPage />} />
             <Route
               path="products/batch-deatils/:id"
               element={<BatchDeatils />}
@@ -176,7 +178,10 @@ function RoutesPage() {
               element={<BatchView />}
             />
           </Route>
+       
         </Route>
+       
+
       </Routes>
     </>
   );

@@ -40,6 +40,8 @@ function PlanForm() {
     api: [],
     preValidation: [],
     postValidation: [],
+    plantype:"",
+    currency:""
   });
 
   const [apiList, setApiList] = useState([]);
@@ -328,6 +330,36 @@ function PlanForm() {
               </BootstrapForm.Group>
             </Col>
           </Row>
+          <BootstrapForm.Group controlId="currency">
+            <BootstrapForm.Label>Currency</BootstrapForm.Label>
+            <BootstrapForm.Select
+              name="currency"
+              value={formData.currency}
+              onChange={handleInputChange}
+              required
+            >
+              <option disabled value="">
+                Select currency
+              </option>
+              <option value="USD">USD</option>
+              <option value="INR">INR</option>
+            </BootstrapForm.Select>
+          </BootstrapForm.Group>
+          <BootstrapForm.Group controlId="plantype">
+            <BootstrapForm.Label>Plan Status</BootstrapForm.Label>
+            <BootstrapForm.Select
+              name="plantype"
+              value={formData.plantype}
+              onChange={handleInputChange}
+              required
+            >
+              <option disabled value="">
+                Select Plan type
+              </option>
+              <option value="Monthly">Monthly</option>
+              <option value="Yearly">Yearly</option>
+            </BootstrapForm.Select>
+          </BootstrapForm.Group>
           <BootstrapForm.Group controlId="formPlanStatus">
             <BootstrapForm.Label>Plan Status</BootstrapForm.Label>
             <BootstrapForm.Select

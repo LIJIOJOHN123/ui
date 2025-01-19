@@ -108,58 +108,67 @@ function Login() {
             Log in to ValidX AI to continue to your dashboard.
           </p>
 
-          <Form onSubmit={handleSubmit}>
-            {error && <p style={{ color: "red" }}>{error}</p>}
-            <InputGroup className="mb-3">
-              <Form.Control
-                type="text"
-                placeholder="E-Mail Address"
-                className="py-3 border-1 border-black"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                required
-              />
-            </InputGroup>
-            <InputGroup className="mb-3">
-              <Form.Control
-                type="password"
-                name="password"
-                placeholder="Password"
-                className="py-3 border-1 border-black"
-                value={formData.password}
-                onChange={handleChange}
-                required
-              />
-            </InputGroup>
-            <div className="d-flex justify-content-between align-items-center">
-              <Link
-                to="/auth/forgot-password"
-                className="text-decoration-none fw-semibold"
-                style={{ color: "#420394" }}
-              >
-                Forgot password?
-              </Link>
-            </div>
-            <Button
-              variant="primary"
-              style={{ backgroundColor: "#420394" }}
-              className="w-100 py-3 mt-3"
-              type="submit"
-            >
-              <div>Log In</div>
-            </Button>
-            <div className="mt-2 text-center">
-              Don’t have an account?{" "}
-              <Link
-                to="/auth/register"
-                className="text-decoration-none"
-                style={{ color: "#420394" }}
-              >
-                Sign up
-              </Link>
-            </div>
-          </Form>
+          <Form onSubmit={handleSubmit} autoComplete="off">
+  {error && <p style={{ color: "red" }}>{error}</p>}
+  
+  <InputGroup className="mb-3">
+    <Form.Control
+      type="text"
+      placeholder="E-Mail Address"
+      className="py-3 border-1 border-black"
+      name="email" 
+      value={formData.email}
+      onChange={handleChange}
+      required
+      autoComplete="off"  
+    />
+  </InputGroup>
+  
+  <InputGroup className="mb-3">
+    <Form.Control
+      type="password"
+      name="password"  
+      placeholder="Password"
+      className="py-3 border-1 border-black"
+      value={formData.password}
+      onChange={handleChange}
+      required
+      autoComplete="new-password" 
+    />
+  </InputGroup>
+
+  <div className="d-flex justify-content-between align-items-center">
+    <Link
+      to="/auth/forgot-password"
+      className="text-decoration-none fw-semibold"
+      style={{ color: "#420394" }}
+    >
+      Forgot password?
+    </Link>
+  </div>
+
+  <Button
+    variant="primary"
+    style={{ backgroundColor: "#420394" }}
+    className="w-100 py-3 mt-3"
+    type="submit"
+    formNoValidate  // Disable form validation (which may trigger autofill)
+  >
+    <div>Log In</div>
+  </Button>
+
+  <div className="mt-2 text-center">
+    Don’t have an account?{" "}
+    <Link
+      to="/auth/register"
+      className="text-decoration-none"
+      style={{ color: "#420394" }}
+    >
+      Sign up
+    </Link>
+  </div>
+</Form>
+
 
           <div className="d-flex align-items-center my-2">
             <hr className="flex-grow-1" />

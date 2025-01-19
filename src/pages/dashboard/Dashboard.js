@@ -49,11 +49,10 @@ function Dashboard() {
     removeLocalStorage("payment");
     setShowModal(false);
   };
-
   const handlePay = () => {
     const data = {
       amount: plandataById.pricing,
-      currency: "INR",
+      currency: "USD",
       receipt: `receipt_${new Date().getTime()}`,
       notes: { note1: "Payment for Test" },
     };

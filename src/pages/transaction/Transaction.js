@@ -5,6 +5,7 @@ import {
   transactionListAction
 } from "../../store/transactionSlice";
 import TransactionSearchPopup from "./TransactionSearchPopup";
+import moment from "moment";
 
 const Transaction = () => {
   const dispatch = useDispatch();
@@ -34,7 +35,7 @@ const Transaction = () => {
 
   return (
     <Fragment>
-      <h3 className="mb-4">Client Transactions</h3>
+      <h3 className="mb-4">Client Usage Tracker</h3>
 
       <div className="d-flex justify-content-between align-items-center mb-4">
         <div className="d-flex align-items-center">
@@ -72,20 +73,18 @@ const Transaction = () => {
         <table className="table table-striped table-hover">
           <thead className="table-dark">
             <tr>
-              <th scope="col">ID</th>
+              <th scope="col">Date</th>
               <th scope="col">Type</th>
-              <th scope="col">Mode</th>
-              <th scope="col">Amount</th>
-              <th scope="col">Description</th>
+              <th scope="col">JOB ID</th>
+              <th scope="col">URL</th>
             </tr>
           </thead>
           <tbody>
             {data?.map((item) => (
               <tr key={item._id}>
-                <td>{item._id}</td>
+                <td>{moment(item.createdAt).format('MMMM Do YYYY')}</td>
                 <td>{item.type}</td>
-                <td>{item.mode}</td>
-                <td>{item.amount}</td>
+                <td>{item.job_id}</td>
                 <td>{item.description}</td>
               </tr>
             ))}

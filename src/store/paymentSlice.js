@@ -161,7 +161,6 @@ export const getByIdPaymentAction = (id) => async (dispatch) => {
 
 // Add Payment
 export const addPaymentAction = (id, formData, user) => async (dispatch) => {
-  console.log(id, formData, user)
   try {
     const token = getLocalStorage("authToken");
     if (!token) {
@@ -175,8 +174,8 @@ export const addPaymentAction = (id, formData, user) => async (dispatch) => {
       { headers: { Authorization: `Bearer ${token}` } }
     );
 
-    const { status, data: order } = res.data;
-    if (status === "ok") {
+    const { status, data: order,message } = res.data;
+    if (order&& typeof order === 'object' ) {
       const initializeRazorpay = (order) => {
         const options = {
           key: "rzp_test_Bl53qIogikLddf",
@@ -235,8 +234,11 @@ export const addPaymentAction = (id, formData, user) => async (dispatch) => {
         });
         rzp.open();
       };
-      toast.success("Payment initiated successfully!");
-      initializeRazorpay(order);
+      toast.success(message);
+      order.amount&&initializeRazorpay(order);
+     
+    }else{
+      toast.error(message);
     }
   } catch (error) {
     const payload = {

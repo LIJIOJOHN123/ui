@@ -22,10 +22,12 @@ function NavBar({ children }) {
   };
   const navItems = [
     { label: "Dashboard", path: "/dashboard" },
-    { label: "Products", path: "/products" },
-    { label: "Transaction", path: "/transaction" },
-    { label: "Plan", path: "/plan" },
+    { label: "Batch Enrichment(CSV)", path: "/testing" },
+    { label: "Usage", path: "/usage" },
+    { label: "API Documentation", path: "/api_document" },
+    { label: "Plan", path: "/plans" },
     { label: "Settings", path: "/settings" },
+    { label: "Help", path: "/help" },
     { label: "Logout", path: "/" },
   ];
   const navAdminItems = [
@@ -38,7 +40,7 @@ function NavBar({ children }) {
     { label: "Api Response", path: "/api-response" },
     { label: "Pre-Validation", path: "/pre-validation" },
     { label: "Post-Validation", path: "/post-validation" },
-    { label: "Transaction", path: "/transaction" },
+    { label: "Plan", path: "/plan" },
     { label: "Plan", path: "/plan" },
     { label: "Settings", path: "/settings" },
     { label: "Logout", path: "/" },
