@@ -53,6 +53,7 @@ import ApiResponse from "../pages/api-response/List";
 import AddInput from "../pages/product/AddInput";
 import ClientDataDetails from "../pages/product/ClientDataDetails";
 import NotFoundPage from "../components/NotFoundPage";
+import ClientBatch from "../pages/clientBatch";
 
 function RoutesPage() {
   return (
@@ -177,10 +178,14 @@ function RoutesPage() {
               path="products/batch-details-view/:id"
               element={<BatchView />}
             />
+            <Route
+              path="/client-batch"
+              element={<ClientBatch />}
+            />
           </Route>
-       
+
         </Route>
-       
+
 
       </Routes>
     </>

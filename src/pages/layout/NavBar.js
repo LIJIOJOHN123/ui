@@ -22,7 +22,7 @@ function NavBar({ children }) {
   };
   const navItems = [
     { label: "Dashboard", path: "/dashboard" },
-    { label: "Batch Enrichment(CSV)", path: "/testing" },
+    { label: "Batch Enrichment(CSV)", path: "/client-batch" },
     { label: "Usage", path: "/usage" },
     { label: "API Documentation", path: "/api_document" },
     { label: "Plan", path: "/plans" },

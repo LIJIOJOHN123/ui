@@ -100,29 +100,55 @@ export const apiReponseManagementReducer = apiResponseManagementSlice.reducer;
 
 export const apiBatchingAction =
   (page = 1, limit = 5, searchQueries) =>
-  async (dispatch) => {
-    try {
-      const token = getLocalStorage("authToken");
-      const res = await axios.get(
-        `${backendAPIList.apiResponseManagement}?page=${page}&limit=${limit}&${searchQueries}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+    async (dispatch) => {
+      try {
+        const token = getLocalStorage("authToken");
+        const res = await axios.get(
+          `${backendAPIList.apiResponseManagement}?page=${page}&limit=${limit}&${searchQueries}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
 
-      const { status, data, count } = res.data;
-      if (status === "ok") {
-        dispatch(listResponseSuccess({ data, status, count }));
+        const { status, data, count } = res.data;
+        if (status === "ok") {
+          dispatch(listResponseSuccess({ data, status, count }));
+        }
+      } catch (error) {
+        const payload = {
+          message: error?.response?.data?.message || "An error occurred",
+          status: error?.response?.status || 500,
+        };
+        dispatch(listResponseFail(payload));
+        toast.error(payload.message);
       }
-    } catch (error) {
-      const payload = {
-        message: error?.response?.data?.message || "An error occurred",
-        status: error?.response?.status || 500,
-      };
-      dispatch(listResponseFail(payload));
-      toast.error(payload.message);
-    }
-  };
+    };
+export const apiBatchClientAction =
+  (page = 1, limit = 5, searchQueries) =>
+    async (dispatch) => {
+      try {
+        const token = getLocalStorage("authToken");
+        const res = await axios.get(
+          `${backendAPIList.apiResponseManagement}/client-batch?page=${page}&limit=${limit}&${searchQueries}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+
+        const { status, data, count } = res.data;
+        console.log(res.data, ">>>>>>")
+        if (status === "ok") {
+          dispatch(listResponseSuccess({ data, status, count }));
+        }
+      } catch (error) {
+        const payload = {
+          message: error?.response?.data?.message || "An error occurred",
+          status: error?.response?.status || 500,
+        };
+        dispatch(listResponseFail(payload));
+        toast.error(payload.message);
+      }
+    };
 export const retriggerBatchingAction = (id) => async (dispatch) => {
   try {
     const token = getLocalStorage("authToken");
@@ -156,7 +182,7 @@ export const SkipPrevalidationAction = (id) => async (dispatch) => {
       }
     );
     const { status, message } = res.data;
- 
+
     if (status === "ok") {
       toast.success(message);
     }
@@ -219,29 +245,29 @@ export const getByIdAPIAction = (id) => async (dispatch) => {
 
 export const getByIdClientDataAPIAction =
   (page, limit, searchQueries, id) =>
-  async (dispatch) => {
-    try {
-      const token = getLocalStorage("authToken");
-      const res = await axios.get(
-        `${backendAPIList.apiResponseManagement}/client-datas?page=${page}&limit=${limit}&${searchQueries}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-      const { status, data,count } = res.data;
+    async (dispatch) => {
+      try {
+        const token = getLocalStorage("authToken");
+        const res = await axios.get(
+          `${backendAPIList.apiResponseManagement}/client-datas?page=${page}&limit=${limit}&${searchQueries}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        const { status, data, count } = res.data;
 
-      if (status === "ok") {
-        dispatch(getByIdResponseSuccess({ status, data,count }));
+        if (status === "ok") {
+          dispatch(getByIdResponseSuccess({ status, data, count }));
+        }
+      } catch (error) {
+        const payload = {
+          message: error?.response?.data?.message || "An error occurred",
+          status: error?.response?.status || 500,
+        };
+        dispatch(listResponseFail(payload));
+        toast.error(payload.message);
       }
-    } catch (error) {
-      const payload = {
-        message: error?.response?.data?.message || "An error occurred",
-        status: error?.response?.status || 500,
-      };
-      dispatch(listResponseFail(payload));
-      toast.error(payload.message);
-    }
-  };
+    };
 export const addAPIBatchingAction = (formData, id) => async (dispatch) => {
   try {
     const token = getLocalStorage("authToken");
@@ -253,7 +279,7 @@ export const addAPIBatchingAction = (formData, id) => async (dispatch) => {
       }
     );
 
-    const { status,message } = res.data;
+    const { status, message } = res.data;
     if (status === "ok") {
       toast.success(message);
       dispatch(createAPIBatchingResponseSuccess({ status: "done" }));
@@ -281,7 +307,7 @@ export const uploadCSVFileAPIBatchingAction =
         }
       );
 
-      const { status,message } = res.data;
+      const { status, message } = res.data;
       if (status === "ok") {
         toast.success(message);
         dispatch(createAPIBatchingResponseSuccess({ status: "uploaded" }));
