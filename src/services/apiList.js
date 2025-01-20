@@ -2,7 +2,6 @@ const USER_SERVICE_API = process.env.REACT_APP_USER_SERVICE_API;
 const WEB_SERVICE_API = process.env.REACT_APP_WEB_SERVICE_API;
 
 const backendAPIList = {
-  // api management
   authManagement: `${USER_SERVICE_API}`,
   clientManagement: `${USER_SERVICE_API}/user`,
   apiManagement: `${WEB_SERVICE_API}/api_management`,

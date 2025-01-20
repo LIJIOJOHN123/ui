@@ -1,5 +1,5 @@
 import React from "react";
-import { InlineWidget, PopupButton } from "react-calendly";
+import { InlineWidget } from "react-calendly";
 
 function CalendlyDemo() {
   return (

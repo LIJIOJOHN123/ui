@@ -72,17 +72,6 @@ function CategoryForm() {
     updatedFields[index] = value;
     setFormData((prevData) => ({ ...prevData, fields: updatedFields }));
   };
-
-  const addField = () => {
-    if (formData.fields[formData.fields.length - 1] === "") {
-      setError(true);
-      return;
-    }
-    setFormData((prevData) => ({
-      ...prevData,
-      fields: [...prevData.fields, ""],
-    }));
-  };
  
   const handleSelectChange = (selected, field) => {
     const selectedIds = selected?.map((item) => item.value) || [];
@@ -136,14 +125,7 @@ function CategoryForm() {
     value: item._id,
     label: item.apiname,
   }));
-  const validationOptions = preValidationData.map((item) => ({
-    value: item._id,
-    label: item.name,
-  }));
-  const postValidationOptions = postValidationData.map((item) => ({
-    value: item._id,
-    label: item.name,
-  }));
+
 
   return (
     <div>

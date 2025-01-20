@@ -16,7 +16,6 @@ const authInitialState = {
   token: getLocalStorage("authToken"),
 };
 
-// Auth slice
 export const authSlice = createSlice({
   name: "auth",
   initialState: authInitialState,
@@ -39,6 +38,10 @@ export const authSlice = createSlice({
       state.user = removeLocalStorage("user");
       state.isAuthenticated = false;
     },
+    requestFailed: (state, action) => {
+      state.loading = false;
+      state.status = action.payload.status;
+    },
     logOut: (state) => {
       state.isAuthenticated = false;
       state.user = removeLocalStorage("user");
@@ -49,11 +52,9 @@ export const authSlice = createSlice({
   },
 });
 
-export const { requestSuccess, requestFail, logOut } = authSlice.actions;
+export const { requestSuccess, requestFail, logOut,requestFailed } = authSlice.actions;
 
 export const authReducer = authSlice.reducer;
-
-// Authentication Actions
 export const registerAction = (formData) => async (dispatch) => {
   try {
     const res = await axios.post(
@@ -97,8 +98,6 @@ export const loginAction = (formData) => async (dispatch) => {
     toast.error(message);
   }
 };
-
-// Google OAuth Action
 export const googleOAuthLoginAction = (token) => async (dispatch) => {
   try {
     const res = await axios.post(
@@ -127,7 +126,6 @@ export const googleOAuthLoginAction = (token) => async (dispatch) => {
   }
 };
 
-// Current User Action
 export const currentUserAction = () => async (dispatch) => {
   try {
     const token = getLocalStorage("authToken");
@@ -149,8 +147,6 @@ export const currentUserAction = () => async (dispatch) => {
     toast.error(message);
   }
 };
-
-// Password Actions
 export const forgotPasswordAction = (formData) => async (dispatch) => {
   try {
     const res = await axios.put(
@@ -204,8 +200,6 @@ export const resetPasswordAction = (formData) => async (dispatch) => {
     toast.error(message);
   }
 };
-
-// User Update Action
 export const updateUserAction = (formData) => async (dispatch) => {
   try {
     const token = getLocalStorage("authToken");
@@ -221,13 +215,13 @@ export const updateUserAction = (formData) => async (dispatch) => {
       toast.success("Updated Successfully");
       dispatch(currentUserAction());
     } else {
-      dispatch(requestFail({ message, status: code }));
+      dispatch(requestFailed({ message, status: code }));
       toast.error(message);
     }
   } catch (error) {
     const message = error?.response?.data?.message || "An error occurred";
     const status = error?.response?.status || 500;
-    dispatch(requestFail({ message, status }));
+    dispatch(requestFailed({ message, status }));
     toast.error(message);
   }
 };

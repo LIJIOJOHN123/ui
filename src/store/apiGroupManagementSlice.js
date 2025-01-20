@@ -12,12 +12,10 @@ const apiGroupIntialState = {
   dataById: {},
 };
 
-// Create category slice
 export const apiGroupMangementSlice = createSlice({
   name: "api_group_management",
   initialState: apiGroupIntialState,
   reducers: {
-    // List
     listResponseSuccess: (state, action) => {
       state.loading = false;
       state.data = action.payload.data;
@@ -28,7 +26,6 @@ export const apiGroupMangementSlice = createSlice({
       state.loading = false;
       state.status = action.payload.status;
     },
-    // Add
     createApiGroupResponseSuccess: (state, action) => {
       state.loading = false;
       state.status = action.payload.status;
@@ -49,7 +46,6 @@ export const apiGroupMangementSlice = createSlice({
       state.loading = false;
       state.status = action.payload.status;
     },
-    // Edit
     editApiGroupResponseSuccess: (state, action) => {
       state.loading = false;
       state.status = action.payload.status;
@@ -59,7 +55,6 @@ export const apiGroupMangementSlice = createSlice({
       state.loading = false;
       state.status = action.payload.status;
     },
-    // Delete
     deleteApiGroupResponseSuccess: (state, action) => {
       state.loading = false;
       state.data = state.data.filter((item) => item._id !== action.payload.id);
@@ -89,7 +84,6 @@ export const {
 
 export const apiGroupManagementReducer = apiGroupMangementSlice.reducer;
 
-// Fetch API Group List
 export const ApiGroupAction =
   (page = 1, limit = 5, searchQueries) =>
   async (dispatch) => {
@@ -116,7 +110,6 @@ export const ApiGroupAction =
     }
   };
 
-// Fetch API By ID
 export const getByIdAPIAction = (id) => async (dispatch) => {
   try {
     const token = getLocalStorage("authToken");
@@ -138,7 +131,6 @@ export const getByIdAPIAction = (id) => async (dispatch) => {
     toast.error(payload.message);
   }
 };
-// Add API Group
 export const addApiGroupAction = (formData) => async (dispatch) => {
   try {
     const token = getLocalStorage("authToken");
@@ -167,7 +159,6 @@ export const addApiGroupAction = (formData) => async (dispatch) => {
   }
 };
 
-// Update API Group
 export const updateApiGroupAction = (id, formData) => async (dispatch) => {
   try {
     const token = getLocalStorage("authToken");
@@ -197,7 +188,6 @@ export const updateApiGroupAction = (id, formData) => async (dispatch) => {
   }
 };
 
-// Delete API Group
 export const deleteApiGroupAction = (id) => async (dispatch) => {
   try {
     const token = getLocalStorage("authToken");

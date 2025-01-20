@@ -10,7 +10,7 @@ const Pricing = () => {
   const [selectedCurrency, setSelectedCurrency] = useState('INR');
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { data:plans, loading, count } = useSelector((state) => state.plan);
+  const { data:plans } = useSelector((state) => state.plan);
   const token = getLocalStorage("authToken");
 
   useEffect(() => {
@@ -26,7 +26,7 @@ const Pricing = () => {
     .join("&");
 
     dispatch(planAction(1,4,queryString));
-  }, [monthlyPlan,selectedCurrency]);
+  }, [monthlyPlan,selectedCurrency,dispatch]);
 
 
   
@@ -94,14 +94,6 @@ const Pricing = () => {
 
       <Row className="g-1 justify-content-center">
         {plans.map((plan, index) => {
-          const displayPrice = monthlyPlan
-            ? plan.price
-            : `$${
-                !isNaN(parseFloat(plan?.price?.replace("$", "")))
-                  ? !isNaN(parseFloat(plan?.price?.replace("$", "")))
-                  : plan.price
-              }`;
-
           const creditsText = monthlyPlan
             ? "credits per month"
             : "credits per year";

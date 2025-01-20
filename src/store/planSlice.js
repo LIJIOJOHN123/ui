@@ -13,16 +13,13 @@ const planInitialState = {
   apiListDetails: [],
 };
 
-// Create plan slice
 export const planSlice = createSlice({
   name: "plan",
   initialState: planInitialState,
   reducers: {
-    // Request
     request: (state) => {
       state.loading = true;
     },
-    // List
     listResponseSuccess: (state, action) => {
       state.loading = false;
       state.data = action.payload.data;
@@ -33,7 +30,6 @@ export const planSlice = createSlice({
       state.loading = false;
       state.status = action.payload.status;
     },
-    // Add
     createplanResponseSuccess: (state, action) => {
       state.loading = false;
       state.status = action.payload.status;
@@ -63,7 +59,6 @@ export const planSlice = createSlice({
       state.loading = false;
       state.status = action.payload.status;
     },
-    // Edit
     editplanResponseSuccess: (state, action) => {
       state.loading = false;
       state.status = action.payload.status;
@@ -73,7 +68,6 @@ export const planSlice = createSlice({
       state.loading = false;
       state.status = action.payload.status;
     },
-    // Delete
     deleteplanResponseSuccess: (state, action) => {
       state.loading = false;
       state.data = state.data.filter((item) => item._id !== action.payload.id);
@@ -110,7 +104,6 @@ export const {
 
 export const planReducer = planSlice.reducer;
 
-// Fetch API Group List
 export const planAction =
   (page = 1, limit = 5, searchQueries) =>
   async (dispatch) => {
@@ -138,7 +131,6 @@ export const planAction =
     }
   };
 
-// Fetch Plan By ID
 export const getByIdPlanAction = (id) => async (dispatch) => {
   try {
     dispatch(request());
@@ -188,7 +180,6 @@ export const getplanApiListAPIAction = (id) => async (dispatch) => {
     toast.error(payload.message);
   }
 };
-// Add API Group
 export const addplanAction = (formData) => async (dispatch) => {
   try {
     dispatch(request());
@@ -218,7 +209,6 @@ export const addplanAction = (formData) => async (dispatch) => {
   }
 };
 
-// Update API Group
 export const updateplanAction = (id, formData) => async (dispatch) => {
   try {
     dispatch(request());
@@ -249,7 +239,6 @@ export const updateplanAction = (id, formData) => async (dispatch) => {
   }
 };
 
-// Delete API Group
 export const deleteplanAction = (id) => async (dispatch) => {
   try {
     dispatch(request());

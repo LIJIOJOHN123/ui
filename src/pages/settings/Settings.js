@@ -32,6 +32,20 @@ const AccountDetails = () => {
   });
   const { isAuthenticated, user } = useSelector((state) => state.auth);
   useEffect(() => {
+    if (user) {
+      setFormData({
+        name: user.name || "",
+        email: user.email || "",
+        API: user.API || "",
+        phone: user.phone || "",
+        company: user.company || "",
+        country: user.country || "",
+        website: user.website || "",
+        apikey: user.apikey || "",
+      });
+    }
+  }, [user])
+  useEffect(() => {
     if (isAuthenticated) {
       setFormData((prev) => ({ ...prev, ...user }));
     }
@@ -259,7 +273,7 @@ function Settings() {
     <AccountDetails />
   );
 
-  const SettingsData = ["Account information", "Edit Profile", "Upgrade Plan"];
+  const SettingsData = ["Account information", "Edit Profile",];
 
   const handleClick = (item) => {
     setShowHeading(item);
@@ -269,10 +283,6 @@ function Settings() {
         break;
       case "Edit Profile":
         setSelectedComponent(<ProfilePage />); // Replace with <ChangeEmail /> when available
-        break;
-
-      case "Upgrade Plan":
-        setSelectedComponent(<div>Upgrade Plan Component Placeholder</div>); // Replace with <UpgradePlan /> when available
         break;
       default:
         setSelectedComponent(<AccountDetails />);

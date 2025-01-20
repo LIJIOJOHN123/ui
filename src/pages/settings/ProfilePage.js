@@ -6,7 +6,6 @@ import { updateUserAction } from "../../store/authSlice";
 
 const ProfilePage = () => {
   const [key, setKey] = useState("profile");
-
   const [activeTabContent, setActiveTabContent] = useState(<ProfileTab />);
 
   const handleSelect = (k) => {
@@ -69,6 +68,20 @@ const ProfileTab = () => {
   };
 
   const { isAuthenticated, user } = useSelector((state) => state.auth);
+    useEffect(() => {
+      if (user) {
+        setFormData({
+          name: user.name || "",
+          email: user.email || "",
+          API: user.API || "",
+          phone_number: user.phone || "",
+          company: user.company || "",
+          country: user.country || "",
+          website: user.website || "",
+          apikey: user.apikey || "",
+        });
+      }
+    }, [user])
   useEffect(() => {
     if (isAuthenticated) {
       setFormData((prev) => ({ ...prev, ...user }));
@@ -116,7 +129,7 @@ const ProfileTab = () => {
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
-                autocomplete="off"
+                autoComplete="name"
               />
             </InputGroup>
           </Form.Group>
@@ -125,13 +138,13 @@ const ProfileTab = () => {
             <Form.Label className="m-0">Phone Number</Form.Label>
             <InputGroup>
               <Form.Control
-                type="number"
+                type="tel"
                 placeholder="Phone Number"
                 className="border-1 border-black"
                 name="phone_number"
                 value={formData.phone_number}
                 onChange={handleChange}
-                autocomplete="off"
+                autoComplete="tel"
               />
             </InputGroup>
           </Form.Group>
@@ -146,7 +159,7 @@ const ProfileTab = () => {
                 name="company"
                 value={formData.company}
                 onChange={handleChange}
-                autocomplete="off"
+                autoComplete="organization"
               />
             </InputGroup>
           </Form.Group>
@@ -161,37 +174,22 @@ const ProfileTab = () => {
                 name="country"
                 value={formData.country}
                 onChange={handleChange}
-                autocomplete="off"
+                autoComplete="address-country"
               />
             </InputGroup>
           </Form.Group>
 
           <Form.Group className="mb-2" controlId="formDomains">
-            <Form.Label className="m-0">website</Form.Label>
+            <Form.Label className="m-0">Website</Form.Label>
             <InputGroup>
               <Form.Control
                 type="text"
-                placeholder="website"
+                placeholder="Website"
                 className="border-1 border-black"
                 name="website"
                 value={formData.website}
                 onChange={handleChange}
-                autocomplete="off"
-              />
-            </InputGroup>
-          </Form.Group>
-          <Form.Group className="mb-2 mt-5" controlId="formDomains">
-            <Form.Label className="m-0">Password</Form.Label>
-            <InputGroup>
-              <Form.Control
-                type="password"
-                placeholder="password"
-                className="border-1 border-black"
-                name="oldpassword"
-                value={formData.oldpassword}
-                onChange={handleChange}
-                required
-                autocomplete="off"
+                autoComplete="off"
               />
             </InputGroup>
           </Form.Group>
@@ -220,6 +218,7 @@ const ChangeEmailTab = () => {
       setFormData((prev) => ({ ...prev, ...user }));
     }
   }, [isAuthenticated, user]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -235,6 +234,7 @@ const ChangeEmailTab = () => {
       setError("No changes detected to submit.");
       return;
     }
+
     const encryptedPassword = CryptoJS.AES.encrypt(
       formData.oldpassword,
       process.env.REACT_APP_SECRET_KEY
@@ -264,6 +264,7 @@ const ChangeEmailTab = () => {
                 value={formData.email}
                 onChange={handleChange}
                 disabled
+                autoComplete="email"
               />
             </InputGroup>
           </Form.Group>
@@ -279,22 +280,7 @@ const ChangeEmailTab = () => {
                 value={formData.newEmail}
                 onChange={handleChange}
                 required
-                autocomplete="off"
-              />
-            </InputGroup>
-          </Form.Group>
-          <Form.Group className="mt-5" controlId="formDomains">
-            <Form.Label className="m-0">Password</Form.Label>
-            <InputGroup>
-              <Form.Control
-                type="password"
-                placeholder="password"
-                className="border-1 border-black"
-                name="oldpassword"
-                value={formData.oldpassword}
-                onChange={handleChange}
-                required
-                autocomplete="off"
+                autoComplete="new-email"
               />
             </InputGroup>
           </Form.Group>
@@ -323,6 +309,7 @@ const ChangePasswordTab = () => {
       [name]: value,
     }));
   };
+
   const { loading } = useSelector((state) => state.auth);
 
   const handleSubmit = (e) => {
@@ -358,13 +345,13 @@ const ChangePasswordTab = () => {
             <InputGroup>
               <Form.Control
                 type="password"
-                placeholder="oldPassword"
+                placeholder="Old Password"
                 className="border-1 border-black"
                 name="oldPassword"
                 value={formData.oldPassword}
                 onChange={handleChange}
                 required
-                autocomplete="off"
+                autoComplete="current-password"
               />
             </InputGroup>
           </Form.Group>
@@ -380,7 +367,7 @@ const ChangePasswordTab = () => {
                 value={formData.password}
                 onChange={handleChange}
                 required
-                autocomplete="off"
+                autoComplete="new-password"
               />
             </InputGroup>
           </Form.Group>

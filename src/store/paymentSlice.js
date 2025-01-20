@@ -15,12 +15,10 @@ const paymentInitialState = {
   limit: 5,
 };
 
-// Payment slice
 export const paymentSlice = createSlice({
   name: "payment_management",
   initialState: paymentInitialState,
   reducers: {
-    // List
     listResponseSuccess: (state, action) => {
       state.loading = false;
       state.data = action.payload.data;
@@ -31,7 +29,6 @@ export const paymentSlice = createSlice({
       state.loading = false;
       state.status = action.payload.status;
     },
-    // Add
     createResponseSuccess: (state, action) => {
       state.loading = false;
       state.status = action.payload.status;
@@ -53,7 +50,6 @@ export const paymentSlice = createSlice({
       state.loading = false;
       state.status = action.payload.status;
     },
-    // Edit
     updateResponseSuccess: (state, action) => {
       state.dataById = action.payload.data;
       state.loading = false;
@@ -64,7 +60,6 @@ export const paymentSlice = createSlice({
       state.loading = false;
       state.status = action.payload.status;
     },
-    // Delete
     deleteResponseSuccess: (state, action) => {
       state.loading = false;
       state.data = state.data.filter((item) => item._id !== action.payload.id);
@@ -75,7 +70,6 @@ export const paymentSlice = createSlice({
       state.loading = false;
       state.status = action.payload.status;
     },
-    // verify
     verifyResponseSuccess: (state, action) => {
       const index = state.data.findIndex(
         (item) => item._id === action.payload.data._id
@@ -110,7 +104,6 @@ export const {
 
 export const paymentReducer = paymentSlice.reducer;
 
-// Fetch Payment List
 export const paymentListAction =
   (page = 1, limit = 5, searchQueries) =>
   async (dispatch) => {
@@ -136,7 +129,6 @@ export const paymentListAction =
     }
   };
 
-// Fetch Payment By ID
 export const getByIdPaymentAction = (id) => async (dispatch) => {
   try {
     const token = getLocalStorage("authToken");
@@ -159,7 +151,6 @@ export const getByIdPaymentAction = (id) => async (dispatch) => {
   }
 };
 
-// Add Payment
 export const addPaymentAction = (id, formData, user) => async (dispatch) => {
   try {
     const token = getLocalStorage("authToken");
@@ -250,7 +241,6 @@ export const addPaymentAction = (id, formData, user) => async (dispatch) => {
   }
 };
 
-// Verify Payment
 export const verifyPaymentAction = (formData) => async (dispatch) => {
   try {
     const token = getLocalStorage("authToken");
@@ -276,7 +266,6 @@ export const verifyPaymentAction = (formData) => async (dispatch) => {
   }
 };
 
-// Update Payment
 export const updatePaymentAction = (id, formData) => async (dispatch) => {
   try {
     const token = getLocalStorage("authToken");
@@ -306,7 +295,6 @@ export const updatePaymentAction = (id, formData) => async (dispatch) => {
   }
 };
 
-// Delete Payment
 export const deletePaymentAction = (id) => async (dispatch) => {
   try {
     const token = getLocalStorage("authToken");
