@@ -41,7 +41,7 @@ function NavBar({ children }) {
     { label: "Pre-Validation", path: "/pre-validation" },
     { label: "Post-Validation", path: "/post-validation" },
     { label: "Plan", path: "/plan" },
-    { label: "Plan", path: "/plan" },
+    { label: "Plans", path: "/plans" },
     { label: "Settings", path: "/settings" },
     { label: "Logout", path: "/" },
   ];

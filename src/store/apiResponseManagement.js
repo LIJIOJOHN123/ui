@@ -14,14 +14,11 @@ const apiBatchingInitialState = {
   batchCount: 0,
 };
 
-// Create API Batching slice
 export const apiResponseManagementSlice = createSlice({
   name: "api_Batching",
   initialState: apiBatchingInitialState,
   reducers: {
-    // Request
 
-    // List
     listResponseSuccess: (state, action) => {
       state.loading = false;
       state.data = action.payload.data;
@@ -42,7 +39,6 @@ export const apiResponseManagementSlice = createSlice({
       state.loading = false;
       state.status = action.payload.status;
     },
-    // Add
     createAPIBatchingResponseSuccess: (state, action) => {
       state.loading = false;
       state.status = action.payload.status;
@@ -63,7 +59,6 @@ export const apiResponseManagementSlice = createSlice({
       state.loading = false;
       state.status = action.payload.status;
     },
-    // Edit
     editAPIBatchingResponseSuccess: (state, action) => {
       state.loading = false;
       state.status = action.payload.status;
@@ -72,7 +67,6 @@ export const apiResponseManagementSlice = createSlice({
       state.loading = false;
       state.status = action.payload.status;
     },
-    // Delete
     deleteAPIBatchingResponseSuccess: (state, action) => {
       state.loading = false;
       state.data = state.data.filter((item) => item._id !== action.payload.id);
@@ -104,7 +98,6 @@ export const {
 
 export const apiReponseManagementReducer = apiResponseManagementSlice.reducer;
 
-// Fetch API Batching List
 export const apiBatchingAction =
   (page = 1, limit = 5, searchQueries) =>
   async (dispatch) => {
@@ -201,7 +194,6 @@ export const batchListAction =
       toast.error(payload.message);
     }
   };
-// Fetch API By ID
 export const getByIdAPIAction = (id) => async (dispatch) => {
   try {
     const token = getLocalStorage("authToken");
@@ -225,7 +217,6 @@ export const getByIdAPIAction = (id) => async (dispatch) => {
   }
 };
 
-// Fetch API By ID
 export const getByIdClientDataAPIAction =
   (page, limit, searchQueries, id) =>
   async (dispatch) => {
@@ -251,7 +242,6 @@ export const getByIdClientDataAPIAction =
       toast.error(payload.message);
     }
   };
-// Add API Batching
 export const addAPIBatchingAction = (formData, id) => async (dispatch) => {
   try {
     const token = getLocalStorage("authToken");
@@ -279,7 +269,6 @@ export const addAPIBatchingAction = (formData, id) => async (dispatch) => {
     toast.error(payload.message);
   }
 };
-// Upload CSV Batching
 export const uploadCSVFileAPIBatchingAction =
   (formData) => async (dispatch) => {
     try {
@@ -309,7 +298,6 @@ export const uploadCSVFileAPIBatchingAction =
     }
   };
 
-// Update API Batching
 export const updateAPIBatchingAction = (id, formData) => async (dispatch) => {
   try {
     const token = getLocalStorage("authToken");
@@ -339,7 +327,6 @@ export const updateAPIBatchingAction = (id, formData) => async (dispatch) => {
   }
 };
 
-// Delete API Batching
 export const deleteAPIBatchingAction = (id) => async (dispatch) => {
   try {
     const token = getLocalStorage("authToken");

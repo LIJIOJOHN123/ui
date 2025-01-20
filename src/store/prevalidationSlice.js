@@ -4,7 +4,6 @@ import { toast } from "react-toastify";
 import { getLocalStorage } from "../utils/LocalStorage";
 import backendAPIList from "../services/apiList";
 
-// Updated initial state
 const validationManagementInitialState = {
   loading: true,
   data: [],
@@ -13,12 +12,10 @@ const validationManagementInitialState = {
   dataById: {},
 };
 
-// Validation slice
 export const validationManagementSlice = createSlice({
   name: "validation_management",
   initialState: validationManagementInitialState,
   reducers: {
-    // List Validations
     listValidationsSuccess: (state, action) => {
       state.loading = false;
       state.data = action.payload.data;
@@ -29,28 +26,25 @@ export const validationManagementSlice = createSlice({
       state.loading = false;
       state.status = action.payload.status;
     },
-    // Add Validation
     createValidationSuccess: (state, action) => {
       state.loading = false;
       state.status = action.payload.status;
-      state.data = [action.payload.data, ...state.data]; // Add the new validation to the list
+      state.data = [action.payload.data, ...state.data];
       state.count = state.data.length;
     },
     createValidationFail: (state, action) => {
       state.loading = false;
       state.status = action.payload.status;
     },
-    // Get Validation By ID
     getValidationByIdSuccess: (state, action) => {
       state.loading = false;
       state.status = action.payload.status;
-      state.dataById = action.payload.data; // Populate with the fetched validation data
+      state.dataById = action.payload.data; 
     },
     getValidationByIdFail: (state, action) => {
       state.loading = false;
       state.status = action.payload.status;
     },
-    // Update Validation
     updateValidationSuccess: (state, action) => {
       const index = state.data.findIndex(
         (item) => item._id === action.payload.data._id
@@ -68,12 +62,11 @@ export const validationManagementSlice = createSlice({
       state.loading = false;
       state.status = action.payload.status;
     },
-    // Delete Validation
     deleteValidationSuccess: (state, action) => {
       state.loading = false;
       state.data = state.data.filter((item) => item._id !== action.payload.id);
       state.status = action.payload.status;
-      state.count -= 1; // Update the count after deletion
+      state.count -= 1; 
     },
     deleteValidationFail: (state, action) => {
       state.loading = false;
@@ -82,7 +75,6 @@ export const validationManagementSlice = createSlice({
   },
 });
 
-// Export actions and reducer
 export const {
   listValidationsSuccess,
   listValidationsFail,
@@ -98,9 +90,7 @@ export const {
 
 export const validationReducer = validationManagementSlice.reducer;
 
-// API Actions
 
-// Fetch all validations
 export const fetchValidations =
   (page = 1, limit = 5, searchQueries) =>
   async (dispatch) => {
@@ -127,7 +117,6 @@ export const fetchValidations =
     }
   };
 
-// Fetch validation by ID
 export const fetchValidationById = (id) => async (dispatch) => {
   try {
     const token = getLocalStorage("authToken");
@@ -149,7 +138,6 @@ export const fetchValidationById = (id) => async (dispatch) => {
   }
 };
 
-// Add a new validation
 export const addValidation = (formData) => async (dispatch) => {
   try {
     const token = getLocalStorage("authToken");
@@ -172,7 +160,6 @@ export const addValidation = (formData) => async (dispatch) => {
   }
 };
 
-// Update validation
 export const updateValidation = (id, formData) => async (dispatch) => {
   try {
     const token = getLocalStorage("authToken");
@@ -199,7 +186,6 @@ export const updateValidation = (id, formData) => async (dispatch) => {
   }
 };
 
-// Delete validation
 export const deleteValidation = (id) => async (dispatch) => {
   try {
     const token = getLocalStorage("authToken");

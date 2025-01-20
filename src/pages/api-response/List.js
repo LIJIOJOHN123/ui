@@ -130,7 +130,6 @@ function ApiResponse() {
         </div>
       </div>
 
-      {/* Table */}
       <div className="table-responsive">
         <Table striped bordered hover size="sm">
           <thead className="table-light">
@@ -171,23 +170,19 @@ function ApiResponse() {
         </Table>
       </div>
 
-      {/* Pagination */}
       {totalPages > 1 && (
   <div className="d-flex justify-content-center mt-4">
     <Pagination>
-      {/* Previous Button */}
       <Pagination.Prev
         disabled={page === 1}
         onClick={() => setPage(page - 1)}
       />
 
-      {/* Page Numbers */}
       {(() => {
         const pages = [];
         const maxVisiblePages = 5;
 
         if (totalPages <= maxVisiblePages) {
-          // Show all pages if totalPages <= maxVisiblePages
           for (let i = 1; i <= totalPages; i++) {
             pages.push(
               <Pagination.Item
@@ -200,11 +195,9 @@ function ApiResponse() {
             );
           }
         } else {
-          // Handle when totalPages > maxVisiblePages
           const startPage = Math.max(2, page - 1);
           const endPage = Math.min(totalPages - 1, page + 1);
 
-          // First Page
           pages.push(
             <Pagination.Item
               key={1}
@@ -215,12 +208,10 @@ function ApiResponse() {
             </Pagination.Item>
           );
 
-          // Ellipsis before middle pages
           if (startPage > 2) {
             pages.push(<Pagination.Ellipsis key="start-ellipsis" disabled />);
           }
 
-          // Middle Pages
           for (let i = startPage; i <= endPage; i++) {
             pages.push(
               <Pagination.Item
@@ -233,12 +224,9 @@ function ApiResponse() {
             );
           }
 
-          // Ellipsis after middle pages
           if (endPage < totalPages - 1) {
             pages.push(<Pagination.Ellipsis key="end-ellipsis" disabled />);
           }
-
-          // Last Page
           pages.push(
             <Pagination.Item
               key={totalPages}

@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { Spinner, Card, Row, Col, Button } from "react-bootstrap";
 import { getByIdAPIAction } from "../../../store/productManagementSlice";
-import { batchListAction } from "../../../store/apiResponseManagement";
 import ProductDetails from "./ProductDetails";
 import ApiGroupInfo from "./ApiGroupInfo";
 import BatchList from "./BatchList";

@@ -15,12 +15,10 @@ const apiListInitialState = {
   limit:50
 };
 
-// Get ALL apiList slice
 export const clientManagementSlice = createSlice({
   name: "clientManagement",
   initialState: apiListInitialState,
   reducers: {
-    // List
     clientManagementActionResponseSuccess: (state, action) => {
       state.loading = false;
       state.data = action.payload.data;
@@ -40,7 +38,6 @@ export const clientManagementSlice = createSlice({
       state.loading = false;
       state.status = action.payload.status;
     },
-    // edit
     updateResponseSuccess: (state, action) => {
       const index = state.data.findIndex(
         (item) => item._id === action.payload.data._id
@@ -75,7 +72,6 @@ export const {
 
 export const clientManagementReducer = clientManagementSlice.reducer;
 
-// Fetch API List
 export const clientManagementListAction =
   (page = 1, limit, searchQueries) =>
   async (dispatch) => {
@@ -102,7 +98,6 @@ export const clientManagementListAction =
       toast.error(payload.message);
     }
   };
-// Fetch API By ID
 export const getByIdClientAction = (id) => async (dispatch) => {
   try {
     const token = getLocalStorage("authToken");
@@ -127,7 +122,6 @@ export const getByIdClientAction = (id) => async (dispatch) => {
   }
 };
 
-// update API
 export const updateClientAction = (id, formData) => async (dispatch) => {
   try {
     const token = getLocalStorage("authToken");

@@ -12,12 +12,10 @@ const WrmReportInitialState = {
   dataById: {},
 };
 
-// Transaction slice
 export const wrmReportSlice = createSlice({
   name: "wrmreport",
   initialState: WrmReportInitialState,
   reducers: {
-    // List
     wrmReportExportSuccess: (state, action) => {
       state.loading = false;
       state.data = action.payload.data;
@@ -38,7 +36,6 @@ export const {
 
 export const wrmReportReducer = wrmReportSlice.reducer;
 
-// Fetch Transaction List
 export const wrmReportExportAction =
   (batchId) =>
   async (dispatch) => {

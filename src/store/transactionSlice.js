@@ -12,12 +12,10 @@ const transactionInitialState = {
   dataById: {},
 };
 
-// Transaction slice
 export const transactionSlice = createSlice({
   name: "transaction",
   initialState: transactionInitialState,
   reducers: {
-    // List
     transactionActionResponseSuccess: (state, action) => {
       state.loading = false;
       state.data = action.payload.data;
@@ -37,7 +35,6 @@ export const transactionSlice = createSlice({
       state.loading = false;
       state.status = action.payload.status;
     },
-    // Update
     updateTransactionResponseSuccess: (state, action) => {
       const index = state.data.findIndex(
         (item) => item._id === action.payload.data._id
@@ -68,7 +65,6 @@ export const {
 
 export const transactionReducer = transactionSlice.reducer;
 
-// Fetch Transaction List
 export const transactionListAction =
   (page = 1, limit = 5, searchQueries) =>
   async (dispatch) => {
@@ -95,7 +91,6 @@ export const transactionListAction =
     }
   };
 
-// Fetch Transaction By ID
 export const getByIdTransactionAction = (id) => async (dispatch) => {
   try {
     const token = getLocalStorage("authToken");
@@ -120,7 +115,6 @@ export const getByIdTransactionAction = (id) => async (dispatch) => {
   }
 };
 
-// Update Transaction
 export const updateTransactionAction = (id, formData) => async (dispatch) => {
   try {
     const token = getLocalStorage("authToken");

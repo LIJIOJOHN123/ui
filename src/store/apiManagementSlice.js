@@ -15,12 +15,10 @@ const apiMangementIntiaiState = {
   limit: 2,
 };
 
-// Get ALL apiList slice
 export const apiMangementSlice = createSlice({
   name: "api_management",
   initialState: apiMangementIntiaiState,
   reducers: {
-    // List
     listResponseSuccess: (state, action) => {
       state.loading = false;
       state.data = action.payload.data;
@@ -31,12 +29,11 @@ export const apiMangementSlice = createSlice({
       state.loading = false;
       state.status = action.payload.status;
     },
-    // Add
     createResponseSuccess: (state, action) => {
       state.loading = false;
       state.status = action.payload.status;
-      state.data = [action.payload.data, ...state.data]; // Append new item
-      state.count = state.data.length; // Update count based on the new data length
+      state.data = [action.payload.data, ...state.data]; 
+      state.count = state.data.length; 
     },
 
     createResponseFail: (state, action) => {
@@ -53,7 +50,6 @@ export const apiMangementSlice = createSlice({
       state.loading = false;
       state.status = action.payload.status;
     },
-    // edit
     updateResponseSuccess: (state, action) => {
       const index = state.data.findIndex(
         (item) => item._id === action.payload.data._id
@@ -75,7 +71,6 @@ export const apiMangementSlice = createSlice({
       state.loading = false;
       state.status = action.payload.status;
     },
-    // Delete
     deleteResponseSuccess: (state, action) => {
       state.loading = false;
       state.data = state.data.filter((item) => item._id !== action.payload.id);
@@ -105,7 +100,6 @@ export const {
 
 export const apiListReducer = apiMangementSlice.reducer;
 
-// Fetch API List
 export const apiListAction =
   (page, limit, searchQueries) =>
   async (dispatch) => {
@@ -130,7 +124,6 @@ export const apiListAction =
       toast.error(payload.message);
     }
   };
-// Fetch API By ID
 export const getByIdAPIAction = (id) => async (dispatch) => {
   try {
     const token = getLocalStorage("authToken");
@@ -153,7 +146,6 @@ export const getByIdAPIAction = (id) => async (dispatch) => {
   }
 };
 
-// Add API
 export const addApiGroupAction = (formData) => async (dispatch) => {
   try {
     const token = getLocalStorage("authToken");
@@ -167,7 +159,6 @@ export const addApiGroupAction = (formData) => async (dispatch) => {
       dispatch(createResponseSuccess({ status, data }));
     } else {
       dispatch(createResponseFail({ status: 400 }));
-      // toast.error(message);
     }
   } catch (error) {
     const payload = {
@@ -178,7 +169,6 @@ export const addApiGroupAction = (formData) => async (dispatch) => {
     toast.error(payload.message);
   }
 };
-// update API
 export const updateApiAction = (id, formData) => async (dispatch) => {
   try {
     const token = getLocalStorage("authToken");
@@ -207,8 +197,6 @@ export const updateApiAction = (id, formData) => async (dispatch) => {
     toast.error(payload.message);
   }
 };
-
-// Delete API
 export const deleteApiAction = (id) => async (dispatch) => {
   try {
     const token = getLocalStorage("authToken");

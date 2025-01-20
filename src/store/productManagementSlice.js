@@ -12,12 +12,10 @@ const productInitialState = {
   dataById: {},
 };
 
-// Create API Group slice
 export const productSlice = createSlice({
   name: "product_management",
   initialState: productInitialState,
   reducers: {
-    // List
     listResponseSuccess: (state, action) => {
       state.loading = false;
       state.data = action.payload.data;
@@ -28,7 +26,6 @@ export const productSlice = createSlice({
       state.loading = false;
       state.status = action.payload.status;
     },
-    // Add
     createproductResponseSuccess: (state, action) => {
       state.loading = false;
       state.status = action.payload.status;
@@ -49,7 +46,6 @@ export const productSlice = createSlice({
       state.loading = false;
       state.status = action.payload.status;
     },
-    // Edit
     editproductResponseSuccess: (state, action) => {
       state.loading = false;
       state.status = action.payload.status;
@@ -59,7 +55,6 @@ export const productSlice = createSlice({
       state.loading = false;
       state.status = action.payload.status;
     },
-    // Delete
     deleteAPIGroupResponseSuccess: (state, action) => {
       state.loading = false;
       state.data = state.data.filter((item) => item._id !== action.payload.id);
@@ -91,7 +86,6 @@ export const {
 
 export const productReducer = productSlice.reducer;
 
-// Fetch API Group List
 export const productAction =
   (page, limit, searchQueries) => async (dispatch) => {
     try {
@@ -117,7 +111,6 @@ export const productAction =
     }
   };
 
-// Fetch API By ID
 export const getByIdAPIAction = (id) => async (dispatch) => {
   try {
     const token = getLocalStorage("authToken");
@@ -139,7 +132,6 @@ export const getByIdAPIAction = (id) => async (dispatch) => {
     toast.error(payload.message);
   }
 };
-// Add API Group
 export const addproductAction = (id, formData) => async (dispatch) => {
   try {
     const token = getLocalStorage("authToken");
@@ -168,7 +160,6 @@ export const addproductAction = (id, formData) => async (dispatch) => {
   }
 };
 
-// Update API Group
 export const updateproductAction = (id, formData) => async (dispatch) => {
   try {
     const token = getLocalStorage("authToken");
@@ -199,7 +190,6 @@ export const updateproductAction = (id, formData) => async (dispatch) => {
   }
 };
 
-// Delete API Group
 export const deleteproductAction = (id) => async (dispatch) => {
   try {
     const token = getLocalStorage("authToken");

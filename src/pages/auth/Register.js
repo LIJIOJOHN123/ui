@@ -18,6 +18,7 @@ import logo3 from "../../assets/auth/logo3.png";
 import logo4 from "../../assets/auth/logo4.png";
 import logo6 from "../../assets/auth/logo6.png";
 import { registerAction } from "../../store/authSlice";
+import ReCAPTCHA from "react-google-recaptcha";
 
 const data = [
   { img: logo1, title: "Smart Categorization Technology" },
@@ -34,12 +35,13 @@ function Register() {
     name: "",
     confirmpassword: "",
   });
-
+  const [captchaValue, setCaptchaValue] = useState(null); 
   const [passwordIsMatch, setPasswordIsMatch] = useState(true);
   const [isConfirmPasswordBlurred, setIsConfirmPasswordBlurred] =
     useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const recaptchaRef = React.createRef();
 
   const { isAuthenticated } = useSelector((state) => state.auth);
   useEffect(() => {
@@ -47,6 +49,10 @@ function Register() {
       navigate("/dashboard");
     }
   }, [isAuthenticated, navigate]);
+
+  const onCaptchaChange = (value) => {
+    setCaptchaValue(value);
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -69,7 +75,8 @@ function Register() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!passwordIsMatch) return;
+
+    if (!passwordIsMatch || !captchaValue) return; 
 
     const encryptedPassword = CryptoJS.AES.encrypt(
       formData.password,
@@ -134,7 +141,7 @@ function Register() {
                   value={formData.password}
                   onChange={handleChange}
                   required
-                  autoComplete="new-password" // Use "new-password" for password fields
+                  autoComplete="new-password" 
                 />
               </InputGroup>
 
@@ -156,7 +163,7 @@ function Register() {
                   onChange={handleChange}
                   onBlur={handleConfirmPasswordBlur}
                   required
-                  autoComplete="new-password" // Use "new-password" for password fields
+                  autoComplete="new-password" 
                 />
               </InputGroup>
 
@@ -177,12 +184,19 @@ function Register() {
                 </Link>
               </div>
 
+              <div className="mb-3">
+                <ReCAPTCHA
+                  sitekey={process.env.REACT_APP_GOOGLE_CAPTCHA_KEY} 
+                  ref={recaptchaRef}
+                />
+              </div>
+
               <Button
                 variant="primary"
                 type="submit"
                 style={{ backgroundColor: "#420394" }}
                 className="w-100 py-3"
-                disabled={!passwordIsMatch}
+                disabled={!passwordIsMatch || !captchaValue} 
               >
                 Register
               </Button>

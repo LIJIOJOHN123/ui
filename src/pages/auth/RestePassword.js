@@ -1,56 +1,52 @@
-import CryptoJS from "crypto-js";
 import React, { useEffect, useState } from "react";
-import {
-  Alert,
-  Button,
-  Col,
-  Container,
-  Form,
-  InputGroup,
-  Row,
-} from "react-bootstrap";
+import { Alert, Button, Col, Container, Form, InputGroup, Row } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
+import CryptoJS from "crypto-js";
+import ReCAPTCHA from "react-google-recaptcha";
+
+import { resetPasswordAction } from "../../store/authSlice";
 import logo from "../../assets/auth/icon.png";
 import logo6 from "../../assets/auth/logo6.png";
 import logo7 from "../../assets/auth/logo7.png";
-import { resetPasswordAction } from "../../store/authSlice";
 
-function RestePassword() {
+function ResetPassword() {
   const [formData, setFormData] = useState({
     password: "",
     confirmPassword: "",
   });
-  const [isConfirmPasswordBlurred, setIsConfirmPasswordBlurred] =
-    useState(false);
+  const [isConfirmPasswordBlurred, setIsConfirmPasswordBlurred] = useState(false);
   const [passwordIsMatch, setPasswordIsMatch] = useState(true);
   const [error, setError] = useState("");
+  const [recaptchaToken, setRecaptchaToken] = useState(null);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { loading,status } = useSelector(
-    (state) => state.auth
-  );
+  const { loading, status } = useSelector((state) => state.auth);
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const code = queryParams.get("code");
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!passwordIsMatch) return;
+    if (!passwordIsMatch || !recaptchaToken) return; 
+
     setError("");
+
     const encryptedPassword = CryptoJS.AES.encrypt(
       formData.password,
       process.env.REACT_APP_SECRET_KEY
     ).toString();
-    const encryptedconfirmPassword = CryptoJS.AES.encrypt(
+    const encryptedConfirmPassword = CryptoJS.AES.encrypt(
       formData.confirmPassword,
       process.env.REACT_APP_SECRET_KEY
     ).toString();
 
     const encryptedFormData = {
       password: encryptedPassword,
-      confirmPassword: encryptedconfirmPassword,
+      confirmPassword: encryptedConfirmPassword,
       token: code,
+      recaptchaToken,
     };
 
     dispatch(resetPasswordAction(encryptedFormData));
@@ -62,12 +58,14 @@ function RestePassword() {
     if (status === "ok") {
       navigate("/auth/login");
     }
-  }, [status,navigate]);
+  }, [status, navigate]);
+
   useEffect(() => {
     if (!code) {
       navigate("/");
     }
-  }, [code,navigate]);
+  }, [code, navigate]);
+
   const handleConfirmPasswordBlur = () => {
     setIsConfirmPasswordBlurred(true);
   };
@@ -84,6 +82,10 @@ function RestePassword() {
     } else {
       setPasswordIsMatch(false);
     }
+  };
+
+  const onRecaptchaChange = (token) => {
+    setRecaptchaToken(token); 
   };
 
   const features = [
@@ -138,18 +140,14 @@ function RestePassword() {
             </InputGroup>
 
             <InputGroup
-              className={`mb-3 ${
-                !passwordIsMatch && isConfirmPasswordBlurred ? "shake" : ""
-              }`}
+              className={`mb-3 ${!passwordIsMatch && isConfirmPasswordBlurred ? "shake" : ""}`}
             >
               <Form.Control
                 type="password"
                 name="confirmPassword"
                 placeholder="Confirm Password"
                 className={`py-2 ${
-                  !passwordIsMatch && isConfirmPasswordBlurred
-                    ? "is-invalid"
-                    : ""
+                  !passwordIsMatch && isConfirmPasswordBlurred ? "is-invalid" : ""
                 }`}
                 onBlur={handleConfirmPasswordBlur}
                 value={formData.confirmPassword}
@@ -164,12 +162,20 @@ function RestePassword() {
               </Alert>
             )}
 
+            {/* Google reCAPTCHA */}
+            <div className="mb-3">
+              <ReCAPTCHA
+                sitekey={process.env.REACT_APP_GOOGLE_CAPTCHA_KEY}
+                onChange={onRecaptchaChange}
+              />
+            </div>
+
             <Button
               variant="primary"
               style={{ backgroundColor: "#420394" }}
               className="w-100 py-3 mt-3"
               type="submit"
-              disabled={!passwordIsMatch || loading}
+              disabled={!passwordIsMatch || loading || !recaptchaToken}
             >
               {loading ? <div className="spinner-border" /> : "Submit"}
             </Button>
@@ -178,15 +184,11 @@ function RestePassword() {
 
         <Col md={7} className="ms-auto mt-5">
           <h6 className="mt-5 mb-4">
-            All-in-one domain data source. Get Website Logos, Company Data,
-            Categorization, and much more from a URL or Email.
+            All-in-one domain data source. Get Website Logos, Company Data, Categorization, and much more from a URL or Email.
           </h6>
 
           {features.map((item, index) => (
-            <div
-              key={index}
-              className="d-flex justify-content-start align-items-center mb-3"
-            >
+            <div key={index} className="d-flex justify-content-start align-items-center mb-3">
               <img
                 src={item.img}
                 alt={item.title}
@@ -203,4 +205,4 @@ function RestePassword() {
   );
 }
 
-export default RestePassword;
+export default ResetPassword;

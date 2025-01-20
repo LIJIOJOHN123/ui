@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Button, Col, Container, Form, InputGroup, Row } from "react-bootstrap";
 import { useDispatch } from 'react-redux';
@@ -6,13 +5,16 @@ import { Link } from "react-router-dom";
 import logo from "../../assets/auth/icon.png";
 import logo6 from "../../assets/auth/logo6.png";
 import logo7 from "../../assets/auth/logo7.png";
-import { forgotPasswordAction } from "../../store/authSlice"; // Should be loginAction for login
+import { forgotPasswordAction } from "../../store/authSlice"; 
+import ReCAPTCHA from "react-google-recaptcha";
+
 function ForgotPassword() {
 
     const [formData, setFormData] = useState({
         email: "",
     });
     const [error, setError] = useState('');
+    const [recaptchaValue, setRecaptchaValue] = useState(null);
     const dispatch = useDispatch();
 
     const handleChange = (e) => {
@@ -21,6 +23,10 @@ function ForgotPassword() {
             ...prevData,
             [name]: value,
         }));
+    };
+
+    const handleRecaptchaChange = (value) => {
+        setRecaptchaValue(value);
     };
 
     const handleSubmit = (e) => {
@@ -34,10 +40,13 @@ function ForgotPassword() {
             setError('Please enter a valid email address.');
             return;
         }
+        if (!recaptchaValue) {
+            setError('Please complete the reCAPTCHA.');
+            return;
+        }
         setError('');
-
+        
         dispatch(forgotPasswordAction(formData));
-
     };
 
     const data1 = [
@@ -73,7 +82,7 @@ function ForgotPassword() {
 
                     <h2 className="fw-bold text-center">Forgot Password</h2>
                     <p className="text-center fs">
-                        We'll we email you the link, So you can reset your password
+                        We'll email you the link, so you can reset your password.
                     </p>
 
                     <Form onSubmit={handleSubmit}>
@@ -90,6 +99,11 @@ function ForgotPassword() {
                             />
                         </InputGroup>
 
+                      
+                        <ReCAPTCHA
+                            sitekey={process.env.REACT_APP_GOOGLE_CAPTCHA_KEY}
+                            onChange={handleRecaptchaChange}
+                        />
 
                         <Button
                             variant="primary"
@@ -97,13 +111,13 @@ function ForgotPassword() {
                             className="w-100 py-3 mt-3"
                             type="submit"
                         >
-                       <div className='fw-bold'>
+                            <div className='fw-bold'>
                                 Reset Password
                             </div>
                         </Button>
                         <div className="mt-2 text-center">
                             or{" "}
-                            <Link to="/auth/register" className="" style={{ color: "#420394" }}>
+                            <Link to="/auth/register" style={{ color: "#420394" }}>
                                 Log In
                             </Link>
                         </div>
