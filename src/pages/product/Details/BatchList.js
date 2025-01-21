@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import { Badge, Button, Pagination, Table, Dropdown, Alert } from "react-bootstrap";
 import { CSVLink } from "react-csv";
 import { Download } from "lucide-react";
@@ -19,7 +19,7 @@ const BatchList = ({ id }) => {
   const navigate = useNavigate();
 
   const { data, loading: reportLoading, error: reportError } = useSelector((state) => state.wrmReport);
-  const { batchList, loading, batchCount } = useSelector((state) => state.apiResponseManagement);
+  const { batchList, batchCount } = useSelector((state) => state.apiResponseManagement);
 
   const totalPages = Math.ceil(batchCount / limit);
 

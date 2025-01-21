@@ -43,6 +43,7 @@ export const apiResponseManagementSlice = createSlice({
       state.loading = false;
       state.status = action.payload.status;
       state.count = state.data.length;
+      state.batchList = [...state.batchList, action.payload.data]
     },
     createAPIBatchingResponseFail: (state, action) => {
       state.loading = false;
@@ -279,10 +280,10 @@ export const addAPIBatchingAction = (formData, id) => async (dispatch) => {
       }
     );
 
-    const { status, message } = res.data;
+    const { status, message,data } = res.data;
     if (status === "ok") {
       toast.success(message);
-      dispatch(createAPIBatchingResponseSuccess({ status: "done" }));
+      dispatch(createAPIBatchingResponseSuccess({ status: "done",data }));
     } else {
       dispatch(createAPIBatchingResponseFail({ status: 400 }));
     }
@@ -307,10 +308,10 @@ export const uploadCSVFileAPIBatchingAction =
         }
       );
 
-      const { status, message } = res.data;
+      const { status, message,data } = res.data;
       if (status === "ok") {
         toast.success(message);
-        dispatch(createAPIBatchingResponseSuccess({ status: "uploaded" }));
+        dispatch(createAPIBatchingResponseSuccess({ status: "uploaded", data}));
       } else {
         dispatch(createAPIBatchingResponseFail({ status: 400 }));
       }

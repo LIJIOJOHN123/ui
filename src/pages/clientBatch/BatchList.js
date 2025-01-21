@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect,  } from "react";
 import { Badge, Button, Pagination, Table, Dropdown, Alert } from "react-bootstrap";
 import { CSVLink } from "react-csv";
 import { Download } from "lucide-react";
@@ -29,7 +29,7 @@ const BatchList = ({ id }) => {
 
   useEffect(() => {
     dispatch(batchListAction(page, limit, `productId=${id}`));
-  }, [id, page, limit, dispatch]);
+  }, [id, page, limit, dispatch,]);
 
   useEffect(() => {
     if (data?.length) {
