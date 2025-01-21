@@ -423,9 +423,9 @@ function PlanForm() {
                     <th>Name</th>
                     <th>Pricing</th>
                     <th>Fields</th>
-                    <th>Discounted Pricing</th>
-                    <th>Discounted Price</th>
-                    <th>Action</th>
+                    {/* <th>Discounted Pricing</th>
+                    <th>Discounted Price</th> */}
+                    {/* <th>Action</th> */}
                   </tr>
                 </thead>
                 <tbody>
@@ -434,7 +434,7 @@ function PlanForm() {
                       <td>{item.name}</td>
                       <td>{item.pricing}</td>
                       <td>{item.fields.join(", ")}</td>
-                      <td>
+                      {/* <td>
                         <BootstrapForm.Check
                           type="switch"
                           checked={item.discountedPricing}
@@ -442,8 +442,8 @@ function PlanForm() {
                             handleSwitchChange(index, e.target.checked)
                           }
                         />
-                      </td>
-                      <td>
+                      </td> */}
+                      {/* <td>
                         <BootstrapForm.Control
                           type="number"
                           value={item.discountedPrice}
@@ -466,7 +466,7 @@ function PlanForm() {
                         >
                           Update
                         </Button>
-                      </td>
+                      </td> */}
                     </tr>
                   ))}
                 </tbody>

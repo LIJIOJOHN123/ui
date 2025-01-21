@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import { Spinner, Card, Row, Col, Button } from "react-bootstrap";
+import { Spinner, Card } from "react-bootstrap";
 import { getByIdAPIAction } from "../../../store/productManagementSlice";
 import ProductDetails from "./ProductDetails";
 import ApiGroupInfo from "./ApiGroupInfo";
@@ -17,7 +17,7 @@ const ProductView = () => {
   useEffect(() => {
     dispatch(getByIdAPIAction(id));
   }, [id, dispatch]);
-
+ console.log(dataById?.preValidation)
   return (
     <div className="container-fluid px-4">
       {loading && (
@@ -33,6 +33,7 @@ const ProductView = () => {
             <ApiGroupInfo dataById={dataById} />
             {dataById?.preValidation?.length >0 && <ValidationAccordion validationType="Pre" validations={dataById?.preValidation} />}
             {dataById?.postValidation?.length >0 && <ValidationAccordion validationType="Post" validations={dataById?.postValidation} />}
+            <br/>
             <BatchList id={id}/>
    
           </Card.Body>
