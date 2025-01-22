@@ -8,9 +8,6 @@ import Pricing from "../../components/Pricing";
 
 const ClientBatch = () => {
   const dispatch = useDispatch();
-
-
-
   const {
     data = [],
     loading,

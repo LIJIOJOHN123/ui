@@ -4,7 +4,7 @@ import { InlineWidget } from "react-calendly";
 function CalendlyDemo() {
   return (
     <div>
-      <InlineWidget url="https://calendly.com/kingranjith998" />
+      <InlineWidget url="https://calendly.com/chargebacktesting" />
     </div>
   );
 }
