@@ -2,7 +2,7 @@ import { CSVLink } from "react-csv";
 import { Button, Col, Form, Card, Row, Alert } from "react-bootstrap";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {  useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import {
   addAPIBatchingAction,
   uploadCSVFileAPIBatchingAction,
@@ -24,6 +24,7 @@ function AddInput({ id }) {
   const { data: api, } = useSelector(
     (state) => state.apiResponseManagement
   );
+  console.log(dataById)
   const [formData, setFormData] = useState({});
   const [selectedFile, setSelectedFile] = useState(null);
 
@@ -69,17 +70,15 @@ function AddInput({ id }) {
         "No CSV file selected. Please select a CSV file to upload."
       );
       setSuccessMessage(null);
-      setFormData({});
       return;
     }
 
     const formData = new FormData();
     formData.append("file", selectedFile);
     dispatch(uploadCSVFileAPIBatchingAction({ formData, apiGroupId: id }));
+
     setSuccessMessage("CSV file uploaded successfully!");
-    setErrorMessage(null); 
-    setSelectedFile(null);
-    
+    setErrorMessage(null); // Clear any previous error messages
   };
 
   const downloadCsvFile = (headers, data, filename) => {

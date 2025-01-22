@@ -10,26 +10,26 @@ const Pricing = () => {
   const [selectedCurrency, setSelectedCurrency] = useState('INR');
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { data:plans } = useSelector((state) => state.plan);
+  const { data: plans } = useSelector((state) => state.plan);
   const token = getLocalStorage("authToken");
-
+  console.log(plans)
   useEffect(() => {
     const queryStringValue = {
       indexofplan: true,
       planstatus: "PUBLISHED",
       plantype: monthlyPlan ? "Monthly" : "Yearly",
-      currency:selectedCurrency
+      currency: selectedCurrency
     };
     let queryString = Object.entries(queryStringValue)
-    .filter(([_, value]) => value !== "")
-    .map(([key, value]) => `${key}=${value}`)
-    .join("&");
+      .filter(([_, value]) => value !== "")
+      .map(([key, value]) => `${key}=${value}`)
+      .join("&");
 
-    dispatch(planAction(1,4,queryString));
-  }, [monthlyPlan,selectedCurrency,dispatch]);
+    dispatch(planAction(1, 5, queryString));
+  }, [monthlyPlan, selectedCurrency, dispatch]);
 
 
-  
+
   const togglePlan = () => {
     setMonthlyPlan(!monthlyPlan);
   };
@@ -57,16 +57,16 @@ const Pricing = () => {
             onChange={togglePlan} // Toggle the plan
           />
           <label className="form-check-label" htmlFor="flexSwitchCheckDefault">
-            Annually 
+            Annually
           </label>
         </span>
       </p>
-      <br/>
+      <br />
       <Row className="justify-content-center">
         <Col md={6} xs={12} className="text-center">
           <Form>
             <div className="d-flex justify-content-center">
-         
+
               <Form.Check
                 type="radio"
                 label="USD - United States Dollar"
@@ -94,83 +94,72 @@ const Pricing = () => {
 
       <Row className="g-1 justify-content-center">
         {plans.map((plan, index) => {
-          const creditsText = monthlyPlan
-            ? "credits per month"
-            : "credits per year";
+          const isCustomPlan = index === 4;
+          const creditsText = monthlyPlan ? "credits per month" : "credits per year";
+          const priceLabel = isCustomPlan ? "Custom" : `${plan.currencySymbol}${plan.pricing}`;
+          const durationLabel = isCustomPlan ? "" : monthlyPlan ? "Monthly" : "Yearly";
+          const creditText = isCustomPlan ? "Custom" : plan.credit;
 
           return (
             <Col key={index} md={2}>
               <Card className="border-white">
                 <Card.Body>
-                  <Card.Title
-                    className="text-center"
-                    style={{ color: "#8f53b2" }}
-                  >
+                  <Card.Title className="text-center" style={{ color: "#8f53b2" }}>
                     {plan.name}
                   </Card.Title>
-                  <Card.Subtitle className="text-center ">
+
+                  <Card.Subtitle className="text-center">
                     <h2 className="fw-semibold m-0">
-                      {`${plan.currencySymbol}${plan.pricing}` }
+                      {priceLabel}
                       <span className="fw-normal" style={{ fontSize: "14px" }}>
-                      {monthlyPlan?"Monthly":"Yearly"}
+                        {durationLabel}
                       </span>
                     </h2>
                   </Card.Subtitle>
+
                   <div className="mt-1" style={{ fontSize: "12px" }}>
-                    {index !== 0 && index !== plans.length - 1
-                      ? creditsText
-                      : " "}{" "}
-                    {/* Use a non-breaking space */}
+                    {isCustomPlan ? "Custom" : index !== 0 && index !== plans.length - 1 ? creditsText : "\u00A0"}
                   </div>
 
                   <div
                     className="w-100 bg-white border rounded border-2 border-black mb-3 px-2"
-                    style={{
-                      height: "30px",
-                      lineHeight: "30px",
-                      border: "1px solid",
-                    }}
+                    style={{ height: "30px", lineHeight: "30px" }}
                   >
-                    {plan.credit}
+                    {creditText}
                   </div>
 
                   <Button
                     className="text-center w-100 fw-medium border-0"
                     style={{ backgroundColor: "#bf54bd" }}
                     onClick={() => {
-                      setLocalStorage("payment", plan._id);
-                      if (token) {
-                        navigate("/dashboard");
+                      if (isCustomPlan) {
+                        navigate("/book-a-demo");
                       } else {
-                        navigate("/auth/login");
+                        setLocalStorage("payment", plan._id);
+                        navigate(token ? "/dashboard" : "/auth/login");
                       }
                     }}
                   >
-                    BUY NOW
+                    {isCustomPlan ? "Custom" : "BUY NOW"}
                   </Button>
-                  <ul
-                    className="mt-2 "
-                    style={{ listStyleType: "none", paddingLeft: "0" }}
-                  >
+
+                  <ul className="mt-2" style={{ listStyleType: "none", paddingLeft: 0 }}>
                     {plan.des.split(",").map((feature, idx) => (
                       <li
                         key={idx}
-                        className=" w-100"
+                        className="w-100"
                         style={{
                           position: "relative",
                           fontSize: "12px",
                           paddingLeft: "20px",
                           color: idx === 2 ? "#bf54bd" : "inherit",
-                          fontWeight:
-                            idx === 0 || idx === 1 || idx === 2
-                              ? "bolder"
-                              : "normal", // Adjust font weight for idx 0 and 1
+                          fontWeight: idx <= 2 ? "bolder" : "normal",
                         }}
                       >
                         <span
                           style={{
                             position: "absolute",
-                            left: "0",
+                            left: 0,
                             color: idx === 2 ? "#bf54bd" : "#8f53b2",
                             fontWeight: "bold",
                           }}
@@ -186,6 +175,7 @@ const Pricing = () => {
             </Col>
           );
         })}
+
       </Row>
     </div>
   );
