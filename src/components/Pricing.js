@@ -12,7 +12,7 @@ const Pricing = () => {
   const navigate = useNavigate();
   const { data: plans } = useSelector((state) => state.plan);
   const token = getLocalStorage("authToken");
-  console.log(plans)
+
   useEffect(() => {
     const queryStringValue = {
       indexofplan: true,
