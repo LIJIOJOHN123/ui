@@ -8,15 +8,16 @@ import {
   Tooltip,
 } from "chart.js";
 import React, { useEffect, useRef, useState } from "react";
-import { Alert, Button, Col, Modal, Row } from "react-bootstrap";
+import { Button, Col, Modal, Row } from "react-bootstrap";
 import { Bar } from "react-chartjs-2";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { addPaymentAction } from "../../store/paymentSlice";
-import { getLocalStorage, removeLocalStorage } from "../../utils/LocalStorage";
-import { getByIdPlanAction } from "../../store/planSlice";
-import { apiBatchClientAction, uploadCSVFileAPIBatchingAction } from "../../store/apiResponseManagement";
 import { toast } from "react-toastify";
+import { apiBatchClientAction, uploadCSVFileAPIBatchingAction } from "../../store/apiResponseManagement";
+import { addPaymentAction } from "../../store/paymentSlice";
+import { getByIdPlanAction } from "../../store/planSlice";
+import { darsbordChartListAction } from "../../store/paymentSlice";
+import { getLocalStorage, removeLocalStorage } from "../../utils/LocalStorage";
 
 ChartJS.register(
   Title,
@@ -29,6 +30,7 @@ ChartJS.register(
 
 function Dashboard() {
   const fileInputRef = useRef(null);
+  const [usage, setUsage] = useState(null);
   const dispatch = useDispatch();
   const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
@@ -42,6 +44,12 @@ function Dashboard() {
   const { user } = useSelector((state) => state.auth);
   const { data } = useSelector((state) => state.apiResponseManagement);
 
+
+  const { data: chartdata } = useSelector((state) => state.payment)
+  useEffect(() => {
+    const data = { days: usage };
+    dispatch(darsbordChartListAction(data));
+  }, [usage]);
 
   useEffect(() => {
     const payment = getLocalStorage("payment");
@@ -81,17 +89,11 @@ function Dashboard() {
   };
 
   const datas = {
-    labels: [
-      "2024-08-04",
-      "2024-08-05",
-      "2024-08-06",
-      "2024-08-07",
-      "2024-08-08",
-    ],
+    labels: chartdata?.map((item) => item.date),
     datasets: [
       {
         label: "Account Usage Summary",
-        data: [10, 20, 15, 25, 10],
+        data: chartdata?.map((item) => item.count),
         backgroundColor: [
           "rgba(75, 192, 192, 0.2)",
           "rgba(255, 99, 132, 0.2)",
@@ -122,7 +124,7 @@ function Dashboard() {
       x: {
         title: {
           display: true,
-          text: "Date",
+          text: usage === 7 ? "week" : "Months",
         },
       },
       y: {
@@ -161,6 +163,8 @@ function Dashboard() {
     navigate("/client-batch")
     setSelectedFile(null);
   };
+
+
   return (
     <>
       <Row className="">
@@ -254,10 +258,14 @@ function Dashboard() {
         <select className="me-2">
           <option>ACCOUNT USAGE SUMMARY for Web URLs</option>
         </select>
-        <select style={{ marginRight: "100px", width: "250px" }}>
+        <select
+          onChange={(e) => setUsage(Number(e.target.value))}
+          style={{ marginRight: "100px", width: "250px" }}
+        >
           <option value={7}>THIS WEEK</option>
-          <option value={30}>THIS Month</option>
+          <option value={30}>THIS MONTH</option>
         </select>
+
       </div>
 
       <Row className="w-75">
