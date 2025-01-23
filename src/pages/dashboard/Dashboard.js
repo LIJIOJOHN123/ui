@@ -7,14 +7,17 @@ import {
   Title,
   Tooltip,
 } from "chart.js";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Button, Col, Modal, Row } from "react-bootstrap";
 import { Bar } from "react-chartjs-2";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { apiBatchClientAction, uploadCSVFileAPIBatchingAction } from "../../store/apiResponseManagement";
 import { addPaymentAction } from "../../store/paymentSlice";
-import { getLocalStorage, removeLocalStorage } from "../../utils/LocalStorage";
 import { getByIdPlanAction } from "../../store/planSlice";
+import { darsbordChartListAction } from "../../store/paymentSlice";
+import { getLocalStorage, removeLocalStorage } from "../../utils/LocalStorage";
 
 ChartJS.register(
   Title,
@@ -26,9 +29,12 @@ ChartJS.register(
 );
 
 function Dashboard() {
+  const fileInputRef = useRef(null);
+  const [usage, setUsage] = useState(null);
   const dispatch = useDispatch();
   const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
+  const [selectedFile, setSelectedFile] = useState(null);
   const { dataById: plandataById } = useSelector((state) => state.plan);
   const {
     dataById: order,
@@ -36,6 +42,14 @@ function Dashboard() {
     count,
   } = useSelector((state) => state.payment);
   const { user } = useSelector((state) => state.auth);
+  const { data } = useSelector((state) => state.apiResponseManagement);
+
+
+  const { data: chartdata } = useSelector((state) => state.payment)
+  useEffect(() => {
+    const data = { days: usage };
+    dispatch(darsbordChartListAction(data));
+  }, [usage]);
 
   useEffect(() => {
     const payment = getLocalStorage("payment");
@@ -56,7 +70,7 @@ function Dashboard() {
       receipt: `receipt_${new Date().getTime()}`,
       notes: { note1: "Payment for Test" },
     };
-    console.log( data)
+
     dispatch(addPaymentAction(plandataById._id, data, user));
 
     removeLocalStorage("payment");
@@ -64,23 +78,22 @@ function Dashboard() {
     // navigate("/plans");
   };
 
+
+
+  useEffect(() => {
+    dispatch(apiBatchClientAction());
+  }, [])
   const handleNoPay = () => {
     removeLocalStorage("payment");
     setShowModal(false);
   };
 
   const datas = {
-    labels: [
-      "2024-08-04",
-      "2024-08-05",
-      "2024-08-06",
-      "2024-08-07",
-      "2024-08-08",
-    ],
+    labels: chartdata?.map((item) => item.date),
     datasets: [
       {
         label: "Account Usage Summary",
-        data: [10, 20, 15, 25, 10],
+        data: chartdata?.map((item) => item.count),
         backgroundColor: [
           "rgba(75, 192, 192, 0.2)",
           "rgba(255, 99, 132, 0.2)",
@@ -111,7 +124,7 @@ function Dashboard() {
       x: {
         title: {
           display: true,
-          text: "Date",
+          text: usage === 7 ? "week" : "Months",
         },
       },
       y: {
@@ -123,6 +136,34 @@ function Dashboard() {
       },
     },
   };
+
+  const handleFileUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      setSelectedFile(file);
+    } else {
+      toast.error("Please select a CSV file to upload.");
+    }
+  };
+
+  const handleUpload = () => {
+    const id = data?.productId
+    if (!id) {
+      toast.error("Please purchase a plan to upload CSV files.");
+      navigate("/plans")
+      return;
+    }
+    if (!selectedFile) {
+      toast.error("No CSV file selected. Please select a CSV file.");
+      return;
+    }
+    const formData = new FormData();
+    formData.append("file", selectedFile);
+    dispatch(uploadCSVFileAPIBatchingAction({ formData, apiGroupId: id }));
+    navigate("/client-batch")
+    setSelectedFile(null);
+  };
+
 
   return (
     <>
@@ -170,17 +211,30 @@ function Dashboard() {
           style={{ height: "110px" }}
           className="border me-3 rounded-1 text-center border-black py-2"
         >
-          <h4>Upload URLs in Bulk</h4>
-          <p style={{ fontSize: "12px" }} className="fw-normal mx-2">
-            Do you have data we can enrich? Easily upload website URLs to
-            quickly scan web or app URLs without any integration.
-          </p>
+          <div onClick={() => fileInputRef.current.click()} style={{ cursor: "pointer" }}>
+            {selectedFile ? (<p className="my-4 mb-5">{selectedFile.name}</p>) : (<><h4 >Upload URLs in Bulk</h4>
+              <p style={{ fontSize: "12px" }} className="fw-normal mx-2">
+                Do you have data we can enrich? Easily upload website URLs to
+                quickly scan web or app URLs without any integration.
+              </p></>)}
+
+          </div>
+          <input
+            type="file"
+            ref={fileInputRef}
+            style={{ display: "none" }}
+            onChange={handleFileUpload}
+            accept=".csv"
+          />
           <Button
             variant="danger"
             style={{ width: "150px", fontSize: "14px", marginTop: "-10px" }}
+
+            onClick={handleUpload}
           >
             Upload CSV Files
           </Button>
+
         </Col>
         <Col
           style={{ height: "110px" }}
@@ -204,20 +258,25 @@ function Dashboard() {
         <select className="me-2">
           <option>ACCOUNT USAGE SUMMARY for Web URLs</option>
         </select>
-        <select style={{ marginRight: "100px", width: "250px" }}>
-          <option>THIS WEEK</option>
+        <select
+          onChange={(e) => setUsage(Number(e.target.value))}
+          style={{ marginRight: "100px", width: "250px" }}
+        >
+          <option value={7}>THIS WEEK</option>
+          <option value={30}>THIS MONTH</option>
         </select>
+
       </div>
 
-      <Row className="w-100">
+      <Row className="w-75">
         <Col className="mt-4 mx-4">
           <h5>Lookups & API Calls</h5>
           <p style={{ fontSize: "14px" }}>Based on estimated activity</p>
 
           <Bar data={datas} options={options} />
-          <h6>ACCOUNT SUMMARY: THIS WEEK FOR WEB RISK MONITORING</h6>
+          <h6 className="text-center">ACCOUNT SUMMARY: THIS WEEK FOR WEB RISK MONITORING</h6>
         </Col>
-        <Col
+        {/* <Col
           style={{ height: "110px", marginTop: "100px", marginRight: "100px" }}
           className="border rounded-1 text-center border-black py-2"
         >
@@ -231,7 +290,7 @@ function Dashboard() {
           >
             Upgrade Plan
           </Button>
-        </Col>
+        </Col> */}
       </Row>
       <Modal show={showModal} onHide={handleModalClose}>
         <Modal.Header closeButton>
