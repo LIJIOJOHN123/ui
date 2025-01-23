@@ -1,32 +1,33 @@
 import { CSVLink } from "react-csv";
 import { Button, Col, Form, Card, Row, Alert } from "react-bootstrap";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
-  addAPIBatchingAction,
-  uploadCSVFileAPIBatchingAction,
+  addAPIFormBatchingAction,
+  uploadCSVAPIBatchingAction,
 } from "../../store/apiResponseManagement";
 import { getByIdAPIAction } from "../../store/productManagementSlice";
 import BatchList from "./BatchList";
+
 function AddInput({ id }) {
   const dispatch = useDispatch();
-
   const navigate = useNavigate();
+  
   useEffect(() => {
     dispatch(getByIdAPIAction(id));
   }, [id, dispatch]);
+
   const [error, setError] = useState(false);
   const [successMessage, setSuccessMessage] = useState(null);
   const [errorMessage, setErrorMessage] = useState(null);
 
   const { dataById, loading } = useSelector((state) => state.productManagement);
-  const { data: api, } = useSelector(
-    (state) => state.apiResponseManagement
-  );
-  console.log(dataById)
+  const { data: api } = useSelector((state) => state.apiResponseManagement);
+
   const [formData, setFormData] = useState({});
   const [selectedFile, setSelectedFile] = useState(null);
+  const fileInputRef = useRef(); 
 
   const fields = dataById?.apiGroupId?.field_active
     ? dataById?.apiGroupId?.fields.flat() || []
@@ -44,13 +45,14 @@ function AddInput({ id }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      dispatch(addAPIBatchingAction({ apiValue: formData }, id));
+      dispatch(addAPIFormBatchingAction({ apiValue: formData }, id));
       setFormData({});
       setSuccessMessage("Batch API submitted successfully!");
-      setErrorMessage(null); // Clear previous errors
+      setErrorMessage(null);
+      setSelectedFile(null);
     } catch (err) {
       setErrorMessage("Failed to submit the batch. Please try again.");
-      setSuccessMessage(null); // Clear previous success messages
+      setSuccessMessage(null);
     }
   };
 
@@ -66,53 +68,42 @@ function AddInput({ id }) {
 
   const handleUpload = () => {
     if (!selectedFile) {
-      setErrorMessage(
-        "No CSV file selected. Please select a CSV file to upload."
-      );
+      setErrorMessage("No CSV file selected. Please select a CSV file to upload.");
       setSuccessMessage(null);
       return;
     }
 
     const formData = new FormData();
     formData.append("file", selectedFile);
-    dispatch(uploadCSVFileAPIBatchingAction({ formData, apiGroupId: id }));
+    dispatch(uploadCSVAPIBatchingAction({ formData }));
 
+    setFormData({});
     setSuccessMessage("CSV file uploaded successfully!");
-    setErrorMessage(null); // Clear any previous error messages
+    setErrorMessage(null);
+    setSelectedFile(null);
+    fileInputRef.current.value = "";
   };
 
   const downloadCsvFile = (headers, data, filename) => {
     const convertToCSV = (headers, data) => {
       const headerRow = headers.join(",");
-      const rows = data.map((item) => `"${item}"`).join(","); // Escape each item in quotes for a single row
-      return [headerRow, rows].join("\n"); // Combine header and rows
+      const rows = data.map((item) => `"${item}"`).join(","); 
+      return [headerRow, rows].join("\n"); 
     };
 
     const csvContent = convertToCSV(headers, data);
 
-    const blob = new Blob(["\uFEFF" + csvContent], { type: "text/csv;charset=utf-8;" }); // Add BOM for UTF-8
+    const blob = new Blob(["\uFEFF" + csvContent], { type: "text/csv;charset=utf-8;" }); 
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
-    link.download = `${filename}.csv`; // Set download name with .csv extension
+    link.download = `${filename}.csv`; 
     link.click();
   };
-  const goBack = () => {
-    navigate(-1); // Navigate back to the previous page
-  };
-
   return (
     <div className="container mt-5">
-
       {loading && <p>Loading...</p>}
       <Card className="shadow-lg border-light p-1">
         <Card.Body>
-          {/* Back button in top-right corner */}
-          <div style={{ position: "absolute", top: "10px", right: "10px" }}>
-            <Button variant="secondary" onClick={goBack}>
-              Back
-            </Button>
-          </div>
-
           <div style={{ fontSize: "14px" }}>
             <p className="fw-semibold" style={{ whiteSpace: "pre-line" }}>
               {`Place the URLs you wish to batch check in a CSV file with 1 URL or domain per row - placed in the first column.`}
@@ -129,8 +120,10 @@ function AddInput({ id }) {
                 textDecoration: "none",
               }}
               className="text-decoration-underline"
-              onClick={() => downloadCsvFile(fields, [], `${dataById._id}_template`)}
-              data={[]} // Empty data array as we are generating it manually
+              onClick={() =>
+                downloadCsvFile(fields, [], `${dataById._id}_template`)
+              }
+              data={[]} 
               separator=","
             >
               Download Sample CSV Template
@@ -140,9 +133,6 @@ function AddInput({ id }) {
 
           {dataById && !loading && (
             <>
-              <h4 className="mb-3">{dataById.name}</h4>
-              <p className="text-muted mb-4">{dataById.des}</p>
-
               {dataById.apiList && (
                 <div>
                   <h5>API Fields:</h5>
@@ -196,10 +186,9 @@ function AddInput({ id }) {
               </Form>
 
               <div className="mt-4">
-                <Form.Label className="d-block mb-2">
-                  Upload CSV File
-                </Form.Label>
+                <Form.Label className="d-block mb-2">Upload CSV File</Form.Label>
                 <input
+                  ref={fileInputRef}
                   className="form-control-file mb-3"
                   style={{ width: "100%" }}
                   type="file"
