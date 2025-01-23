@@ -135,13 +135,12 @@ export const apiBatchClientAction =
             headers: { Authorization: `Bearer ${token}` },
           }
         );
-
-        const { status, data, count } = res.data;
-        console.log(res.data, ">>>>>>")
-        if (status === "ok") {
+        const { status, data, count, code } = res.data;
+        if (code === 200) {
           dispatch(listResponseSuccess({ data, status, count }));
         }
       } catch (error) {
+        console.log(error)
         const payload = {
           message: error?.response?.data?.message || "An error occurred",
           status: error?.response?.status || 500,
@@ -307,10 +306,10 @@ export const addAPIBatchingAction = (formData, id) => async (dispatch) => {
       }
     );
 
-    const { status, message,data } = res.data;
+    const { status, message, data } = res.data;
     if (status === "ok") {
       toast.success(message);
-      dispatch(createAPIBatchingResponseSuccess({ status: "done",data }));
+      dispatch(createAPIBatchingResponseSuccess({ status: "done", data }));
     } else {
       dispatch(createAPIBatchingResponseFail({ status: 400 }));
     }
@@ -363,10 +362,10 @@ export const uploadCSVFileAPIBatchingAction =
         }
       );
 
-      const { status, message,data } = res.data;
+      const { status, message, data } = res.data;
       if (status === "ok") {
         toast.success(message);
-        dispatch(createAPIBatchingResponseSuccess({ status: "uploaded", data}));
+        dispatch(createAPIBatchingResponseSuccess({ status: "uploaded", data }));
       } else {
         dispatch(createAPIBatchingResponseFail({ status: 400 }));
       }

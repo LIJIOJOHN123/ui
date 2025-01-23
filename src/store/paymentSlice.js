@@ -106,28 +106,54 @@ export const paymentReducer = paymentSlice.reducer;
 
 export const paymentListAction =
   (page = 1, limit = 5, searchQueries) =>
-  async (dispatch) => {
-    try {
-      const token = getLocalStorage("authToken");
-      const res = await axios.get(
-        `${backendAPIList.paymentManagement}?page=${page}&limit=${limit}&${searchQueries}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
+    async (dispatch) => {
+      try {
+        const token = getLocalStorage("authToken");
+        const res = await axios.get(
+          `${backendAPIList.paymentManagement}?page=${page}&limit=${limit}&${searchQueries}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        const { status, data, count } = res.data;
+        if (status === "ok") {
+          dispatch(listResponseSuccess({ data, status, count }));
         }
-      );
-      const { status, data, count } = res.data;
-      if (status === "ok") {
-        dispatch(listResponseSuccess({ data, status, count }));
+      } catch (error) {
+        const payload = {
+          message: error?.response?.data?.message || "An error occurred",
+          status: error?.response?.status || 500,
+        };
+        dispatch(listResponseFail(payload));
+        toast.error(payload.message);
       }
-    } catch (error) {
-      const payload = {
-        message: error?.response?.data?.message || "An error occurred",
-        status: error?.response?.status || 500,
-      };
-      dispatch(listResponseFail(payload));
-      toast.error(payload.message);
-    }
-  };
+    };
+export const darsbordChartListAction =
+  (formData, page = 1, limit = 5, searchQueries) =>
+    async (dispatch) => {
+      console.log(formData, "formData")
+      try {
+        const token = getLocalStorage("authToken");
+        const res = await axios.post(
+          `${backendAPIList.paymentManagement}/chart?page=${page}&limit=${limit}&${searchQueries}`,
+          formData,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        const { status, data, count } = res.data;
+        if (status === "ok") {
+          dispatch(listResponseSuccess({ data, status, count }));
+        }
+      } catch (error) {
+        const payload = {
+          message: error?.response?.data?.message || "An error occurred",
+          status: error?.response?.status || 500,
+        };
+        dispatch(listResponseFail(payload));
+        toast.error(payload.message);
+      }
+    };
 
 export const getByIdPaymentAction = (id) => async (dispatch) => {
   try {
@@ -165,8 +191,8 @@ export const addPaymentAction = (id, formData, user) => async (dispatch) => {
       { headers: { Authorization: `Bearer ${token}` } }
     );
 
-    const { status, data: order,message } = res.data;
-    if (order&& typeof order === 'object' ) {
+    const { status, data: order, message } = res.data;
+    if (order && typeof order === 'object') {
       const initializeRazorpay = (order) => {
         const options = {
           key: "rzp_test_Bl53qIogikLddf",
@@ -226,9 +252,9 @@ export const addPaymentAction = (id, formData, user) => async (dispatch) => {
         rzp.open();
       };
       toast.success(message);
-      order.amount&&initializeRazorpay(order);
-     
-    }else{
+      order.amount && initializeRazorpay(order);
+
+    } else {
       toast.error(message);
     }
   } catch (error) {

@@ -22,6 +22,8 @@ const Pricing = () => {
     dispatch(apiBatchClientAction());
   }, [])
 
+  console.log(data);
+
   useEffect(() => {
     const queryStringValue = {
       indexofplan: true,
@@ -177,7 +179,7 @@ const Pricing = () => {
                         }
                       }}
                     >
-                      BUY NOW
+                      {data?.planId === plan._id ? "Active Plan" : "Upgrade"}
                     </Button>
                   )}
                   <ul
