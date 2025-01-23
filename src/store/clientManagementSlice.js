@@ -110,7 +110,63 @@ export const clientDetailsListAction =
           }
         );
         const { status, data, count } = res.data;
-       
+
+        if (status === "ok") {
+          dispatch(
+            clientManagementActionResponseSuccess({ data, status, count })
+          );
+        }
+      } catch (error) {
+        const payload = {
+          message: error?.response?.data?.message || "An error occurred",
+          status: error?.response?.status || 500,
+        };
+        dispatch(clientManagementResponseFail(payload));
+        toast.error(payload.message);
+      }
+    };
+export const editClientDetailsAction =
+  (id, formData, page = 1, limit, searchQueries) =>
+    async (dispatch) => {
+      try {
+        const token = getLocalStorage("authToken");
+        const res = await axios.put(
+          `${backendAPIList.paymentManagement}/client-details/${id}?page=${page}&limit=${limit}&${searchQueries}`,
+          formData,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        const { status, data, count } = res.data;
+
+        if (status === "ok") {
+          dispatch(
+            clientManagementActionResponseSuccess({ data, status, count })
+          );
+        }
+      } catch (error) {
+        const payload = {
+          message: error?.response?.data?.message || "An error occurred",
+          status: error?.response?.status || 500,
+        };
+        dispatch(clientManagementResponseFail(payload));
+        toast.error(payload.message);
+      }
+    };
+export const editActivePaymentDetailsAction =
+  (id, formData, page = 1, limit, searchQueries) =>
+    async (dispatch) => {
+      try {
+        const token = getLocalStorage("authToken");
+        const res = await axios.put(
+          `${backendAPIList.paymentManagement}/payment-details/${id}?page=${page}&limit=${limit}&${searchQueries}`,
+          formData,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        const { status, data, count } = res.data;
+
         if (status === "ok") {
           dispatch(
             clientManagementActionResponseSuccess({ data, status, count })

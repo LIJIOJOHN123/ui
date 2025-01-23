@@ -23,7 +23,7 @@ function AddInput() {
   const { data: api, } = useSelector(
     (state) => state.apiResponseManagement
   );
-  console.log(dataById)
+
   const [formData, setFormData] = useState({});
   const [selectedFile, setSelectedFile] = useState(null);
 

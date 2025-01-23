@@ -1,47 +1,86 @@
+import moment from 'moment';
 import React, { Fragment, useEffect, useState } from 'react';
-import { Badge, Button, Card, Table, Spinner, Alert, Form } from 'react-bootstrap';
+import { Badge, Button, Card, Form, Modal, Table } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
-import { clientDetailsListAction } from '../../store/clientManagementSlice';
-import moment from 'moment';
+import { clientDetailsListAction, editActivePaymentDetailsAction, editClientDetailsAction } from '../../store/clientManagementSlice';
 
 const ClientDetails = () => {
     const { id } = useParams();
     const dispatch = useDispatch();
     const { data } = useSelector((state) => state.clientManagement);
-    const [edit, setEdit] = useState(false)
-    const [formData, setFormData] = useState({ backend_apikey: "", typeofuser: "", apikey: "" })
+    const [edit, setEdit] = useState(false);
+    const [formData, setFormData] = useState({
+        backend_apikey: "",
+        typeofuser: "",
+        apikey: "",
+        website: ""
+    });
+    const [showModal, setShowModal] = useState(false);  // State to manage modal visibility
+    const [planData, setPlanData] = useState({
+        planName: "",
+        planExpireDate: "",
+        balance: "",  // Add balance field
+        currentlyActivePlan: false // This is for the switch toggle
+    });
+
     const navigate = useNavigate();
-
-
-
 
     useEffect(() => {
         dispatch(clientDetailsListAction(id));
     }, [id, dispatch]);
+
     const handleChange = (e) => {
-        const { name, value } = e.target; // Destructure name and value from event target
+        const { name, value } = e.target;
         setFormData((prevData) => ({
-            ...prevData, // Spread the previous form data
-            [name]: value // Update the specific field by name
+            ...prevData,
+            [name]: value,
         }));
     };
 
-
-    useState(() => {
+    useEffect(() => {
         setFormData({
             backend_apikey: data?.client?.backend_apikey,
-            typeofuser: data?.client?.typeofuser
-        })
-    }, [data])
+            typeofuser: data?.client?.typeofuser,
+            apikey: data?.client?.apikey,
+            website: data?.client?.website
+        });
 
-    // Handle form submission
+        // Set initial values for plan data
+        setPlanData({
+
+            planExpireDate: moment(data?.ActivePayment?.planExpireDate).format("YYYY-MM-DD"),
+            balance: data?.ActivePayment?.balance || "",
+            currentlyActivePlan: data?.ActivePayment?.currentlyActivePlan || false, // Assuming plan data contains isActive
+        });
+    }, [data]);
+
     const handleSubmit = (e) => {
         e.preventDefault();
+        dispatch(editClientDetailsAction(id, formData));
 
+        setEdit(false);
+        dispatch(clientDetailsListAction(id));
         console.log('Form Data:', formData);
     };
-    console.log(data)
+
+    const handlePlanChange = (e) => {
+        const { name, value, checked, type } = e.target;
+        // If it's a checkbox/switch, handle the checked property
+        setPlanData((prevData) => ({
+            ...prevData,
+            [name]: type === 'checkbox' ? checked : value,
+        }));
+    };
+
+    const handlePlanSubmit = (e) => {
+        e.preventDefault();
+        dispatch(editActivePaymentDetailsAction(data?.ActivePayment?._id, planData));
+        console.log('Updated Plan Data:', planData);
+        dispatch(clientDetailsListAction(id));
+        setShowModal(false);  // Close modal after submit
+    };
+    console.log(data);
     return (
         <Fragment>
             <div className="mb-4 d-flex justify-content-between align-items-center">
@@ -57,9 +96,6 @@ const ClientDetails = () => {
                         <p>
                             <b>Client ID:</b> <Badge bg="secondary">{data?.client?._id}</Badge>
                         </p>
-                        {/* <p>
-                            <b>Status:</b> <Badge bg={data.status === "ACTIVE" ? "success" : "danger"}>{data.status}</Badge>
-                        </p> */}
                         <p>
                             <b>Account Balance:</b> ₹{data?.client?.account_balance}
                         </p>
@@ -67,7 +103,7 @@ const ClientDetails = () => {
                             <b>Backend API Key:</b> {data?.client?.backend_apikey}
                         </p>
                         <p>
-                            <b> API Key:</b> {data?.client?.apikey}
+                            <b>API Key:</b> {data?.client?.apikey}
                         </p>
                         <p>
                             <b>Active Plan:</b> <Badge bg="success">{data?.plan?.name}</Badge>
@@ -76,16 +112,36 @@ const ClientDetails = () => {
                     <Button onClick={() => setEdit((prev) => !prev)} variant="primary" className='w-25'>Edit </Button>
                     {edit && (
                         <div className='mt-4'>
-                            <h3>Edit user</h3>
+                            <h3>Edit User</h3>
                             <Form onSubmit={handleSubmit}>
                                 <Form.Group controlId="formBackendApiKey">
                                     <Form.Label>Backend API Key</Form.Label>
                                     <Form.Control
                                         type="text"
                                         placeholder="Enter Backend API Key"
-                                        name="backend_apikey" // Use the field name to match the state key
-                                        value={formData.backend_apikey} // Bind to state
-                                        onChange={handleChange} // Update state on input change
+                                        name="backend_apikey"
+                                        value={formData.backend_apikey}
+                                        onChange={handleChange}
+                                    />
+                                </Form.Group>
+                                <Form.Group controlId="formApiKey">
+                                    <Form.Label>API Key</Form.Label>
+                                    <Form.Control
+                                        type="text"
+                                        placeholder="Enter API Key"
+                                        name="apikey"
+                                        value={formData.apikey}
+                                        onChange={handleChange}
+                                    />
+                                </Form.Group>
+                                <Form.Group controlId="formWebsite">
+                                    <Form.Label>Domain</Form.Label>
+                                    <Form.Control
+                                        type="text"
+                                        placeholder="Enter Domain URL"
+                                        name="website"
+                                        value={formData.website}
+                                        onChange={handleChange}
                                     />
                                 </Form.Group>
 
@@ -93,13 +149,13 @@ const ClientDetails = () => {
                                     <Form.Label>Type of User</Form.Label>
                                     <Form.Control
                                         as="select"
-                                        name="typeofuser" // Use the field name to match the state key
-                                        value={formData.typeofuser} // Bind to state
-                                        onChange={handleChange} // Update state on selection change
+                                        name="typeofuser"
+                                        value={formData.typeofuser}
+                                        onChange={handleChange}
                                     >
-                                        <option value="">Select User Type</option>
-                                        <option value="admin">Admin</option>
-                                        <option value="user">User</option>
+                                        <option disabled value="">Select User Type</option>
+                                        <option value="INTERNAL">Internal</option>
+                                        <option value="USER">User</option>
                                     </Form.Control>
                                 </Form.Group>
 
@@ -112,14 +168,21 @@ const ClientDetails = () => {
                 </Card.Body>
             </Card>
 
+            {/* Payment Details Section */}
             <Card className="shadow-sm">
                 <Card.Body>
-                    <Card.Title>Payment Details</Card.Title>
-                    <Table striped bordered hover responsive>
+                    <div className='d-flex justify-content-between align-items-center'>
+                        <Card.Title>Payment Details</Card.Title>
+                        {data?.ActivePayment &&
+                            <Button variant="primary" onClick={() => setShowModal(true)}>Edit Plan</Button>
+
+                        }
+                    </div>
+                    <Table className='mt-4' striped bordered hover responsive>
                         <thead>
                             <tr>
                                 <th>Order ID</th>
-                                <th>Amount </th>
+                                <th>Amount</th>
                                 <th>Payment Status</th>
                                 <th>Plan Expires On</th>
                                 <th>Total Request</th>
@@ -144,6 +207,49 @@ const ClientDetails = () => {
                     </Table>
                 </Card.Body>
             </Card>
+
+            {/* Modal for Editing Plan */}
+            <Modal show={showModal} onHide={() => setShowModal(false)}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Edit Plan</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Form onSubmit={handlePlanSubmit}>
+                        <Form.Group controlId="formBalance">
+                            <Form.Label>Balance</Form.Label>
+                            <Form.Control
+                                type="text"
+                                placeholder="Enter Balance"
+                                name="balance"
+                                value={planData.balance}
+                                onChange={handlePlanChange}
+                            />
+                        </Form.Group>
+                        <Form.Group controlId="formCurrentlyActivePlan">
+                            <Form.Label>Currently Active Plan</Form.Label>
+                            <Form.Switch
+                                name="currentlyActivePlan"
+                                checked={planData.currentlyActivePlan}
+                                onChange={handlePlanChange}
+                            />
+                        </Form.Group>
+
+                        <Form.Group controlId="formPlanExpireDate">
+                            <Form.Label>Plan Expiry Date</Form.Label>
+                            <Form.Control
+                                type="date"
+                                name="planExpireDate"
+                                value={planData.planExpireDate}
+                                onChange={handlePlanChange}
+                            />
+                        </Form.Group>
+
+                        <Button variant="primary" type="submit">
+                            Save Plan
+                        </Button>
+                    </Form>
+                </Modal.Body>
+            </Modal>
         </Fragment>
     );
 };

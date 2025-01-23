@@ -22,8 +22,6 @@ const Pricing = () => {
     dispatch(apiBatchClientAction());
   }, [])
 
-  console.log(data);
-
   useEffect(() => {
     const queryStringValue = {
       indexofplan: true,

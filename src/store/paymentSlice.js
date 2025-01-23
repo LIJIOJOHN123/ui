@@ -131,7 +131,6 @@ export const paymentListAction =
 export const darsbordChartListAction =
   (formData, page = 1, limit = 5, searchQueries) =>
     async (dispatch) => {
-      console.log(formData, "formData")
       try {
         const token = getLocalStorage("authToken");
         const res = await axios.post(
