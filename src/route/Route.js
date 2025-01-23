@@ -4,6 +4,12 @@ import CalendlyDemo from "../components/CalendlyDemo";
 import ContactUs from "../components/ContactUs";
 import FAQ from "../components/FAQ";
 import RefundPolicy from "../components/RefundPolicy";
+import Form from "../pages/API_Management/Form";
+import ApiList from "../pages/API_Management/List";
+import ForgotPassword from "../pages/auth/ForgotPassword";
+import Login from "../pages/auth/Login";
+import Register from "../pages/auth/Register";
+import RestePassword from "../pages/auth/RestePassword";
 import BlogPage from "../pages/BlogPage";
 import HomePage from "../pages/HomePage";
 import Report from "../pages/Repoter";
@@ -17,43 +23,37 @@ import MerchantRisk from "../pages/UseCase/MerchantRisk";
 import OnlineReputation from "../pages/UseCase/OnlineReputation";
 import PublishingAdvertising from "../pages/UseCase/PublishingAdvertising";
 import SALESINTELLIGENCE from "../pages/UseCase/SALESINTELLIGENCE";
-import Form from "../pages/API_Management/Form";
-import ApiList from "../pages/API_Management/List";
-import ForgotPassword from "../pages/auth/ForgotPassword";
-import Login from "../pages/auth/Login";
-import Register from "../pages/auth/Register";
-import RestePassword from "../pages/auth/RestePassword";
 // import APIResponseManagement from "../pages/API_Response_Management";
+import APIGroupDetails from "../pages/API_Group_Management/Details";
+import APIGroupForm from "../pages/API_Group_Management/Form";
+import APIGroupList from "../pages/API_Group_Management/List";
+import ApiListView from "../pages/API_Management/Details";
+import Batch from "../pages/batch/Batch";
+import ClientDetails from "../pages/clientmanagement/Details";
+import ClientManagement from "../pages/clientmanagement/List";
 import Dashboard from "../pages/dashboard/Dashboard";
 import Documentation from "../pages/documentation/Documentation";
-import ApiGroup from "../pages/product/List";
-import GroupApiForm from "../pages/product/Form";
 import PrivateRoute from "../pages/layout/ProctedRoutes";
-import Plans from "../pages/plans/Plans";
-import Settings from "../pages/settings/Settings";
-import ProductDetails from "../pages/product/Details";
-import ApiListView from "../pages/API_Management/Details";
-import ClientManagement from "../pages/clientmanagement/List";
-import ClientDetails from "../pages/clientmanagement/Details";
-import Transaction from "../pages/transaction/Transaction";
-import Batch from "../pages/batch/Batch";
-import APIGroupDetails from "../pages/API_Group_Management/Details";
-import APIGroupList from "../pages/API_Group_Management/List";
-import APIGroupForm from "../pages/API_Group_Management/Form";
 import PlanList from "../pages/plan/List";
 import PlanForm from "../pages/plan/PlanForm";
+import Plans from "../pages/plans/Plans";
+import ProductDetails from "../pages/product/Details";
+import GroupApiForm from "../pages/product/Form";
+import ApiGroup from "../pages/product/List";
+import Settings from "../pages/settings/Settings";
+import Transaction from "../pages/transaction/Transaction";
 
-import PostValidationList from "../pages/post-validation/List";
-import PostValidationForm from "../pages/post-validation/Form";
-import PreValidationList from "../pages/pre-validation/List";
-import ValidationForm from "../pages/pre-validation/Form";
+import NotFoundPage from "../components/NotFoundPage";
+import ApiResponse from "../pages/api-response/List";
 import BatchDeatils from "../pages/batch/BatchDeatils";
 import BatchView from "../pages/batch/BatchView";
-import ApiResponse from "../pages/api-response/List";
+import ClientBatch from "../pages/clientBatch";
+import PostValidationForm from "../pages/post-validation/Form";
+import PostValidationList from "../pages/post-validation/List";
+import ValidationForm from "../pages/pre-validation/Form";
+import PreValidationList from "../pages/pre-validation/List";
 import AddInput from "../pages/product/AddInput";
 import ClientDataDetails from "../pages/product/ClientDataDetails";
-import NotFoundPage from "../components/NotFoundPage";
-import ClientBatch from "../pages/clientBatch";
 
 function RoutesPage() {
   return (
@@ -181,6 +181,10 @@ function RoutesPage() {
             <Route
               path="/client-batch"
               element={<ClientBatch />}
+            />
+            <Route
+              path="/client-details/:id"
+              element={<ClientDetails />}
             />
           </Route>
 

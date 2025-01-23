@@ -10,9 +10,9 @@ const apiListInitialState = {
   status: null,
   count: null,
   dataById: {},
-  page:1,
-  search:"",
-  limit:50
+  page: 1,
+  search: "",
+  limit: 50
 };
 
 export const clientManagementSlice = createSlice({
@@ -74,30 +74,57 @@ export const clientManagementReducer = clientManagementSlice.reducer;
 
 export const clientManagementListAction =
   (page = 1, limit, searchQueries) =>
-  async (dispatch) => {
-    try {
-      const token = getLocalStorage("authToken");
-      const res = await axios.get(
-        `${backendAPIList.clientManagement}/clients?page=${page}&limit=${limit}&${searchQueries}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-      const { status, data, count } = res.data;
-      if (status === "ok") {
-        dispatch(
-          clientManagementActionResponseSuccess({ data, status, count })
+    async (dispatch) => {
+      try {
+        const token = getLocalStorage("authToken");
+        const res = await axios.get(
+          `${backendAPIList.clientManagement}/clients?page=${page}&limit=${limit}&${searchQueries}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
         );
+        const { status, data, count } = res.data;
+        if (status === "ok") {
+          dispatch(
+            clientManagementActionResponseSuccess({ data, status, count })
+          );
+        }
+      } catch (error) {
+        const payload = {
+          message: error?.response?.data?.message || "An error occurred",
+          status: error?.response?.status || 500,
+        };
+        dispatch(clientManagementResponseFail(payload));
+        toast.error(payload.message);
       }
-    } catch (error) {
-      const payload = {
-        message: error?.response?.data?.message || "An error occurred",
-        status: error?.response?.status || 500,
-      };
-      dispatch(clientManagementResponseFail(payload));
-      toast.error(payload.message);
-    }
-  };
+    };
+export const clientDetailsListAction =
+  (id, page = 1, limit, searchQueries) =>
+    async (dispatch) => {
+      try {
+        const token = getLocalStorage("authToken");
+        const res = await axios.get(
+          `${backendAPIList.paymentManagement}/client-details/${id}?page=${page}&limit=${limit}&${searchQueries}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        const { status, data, count } = res.data;
+       
+        if (status === "ok") {
+          dispatch(
+            clientManagementActionResponseSuccess({ data, status, count })
+          );
+        }
+      } catch (error) {
+        const payload = {
+          message: error?.response?.data?.message || "An error occurred",
+          status: error?.response?.status || 500,
+        };
+        dispatch(clientManagementResponseFail(payload));
+        toast.error(payload.message);
+      }
+    };
 export const getByIdClientAction = (id) => async (dispatch) => {
   try {
     const token = getLocalStorage("authToken");
