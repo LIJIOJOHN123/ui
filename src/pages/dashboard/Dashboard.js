@@ -13,7 +13,7 @@ import { Bar } from "react-chartjs-2";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { apiBatchClientAction, uploadCSVFileAPIBatchingAction } from "../../store/apiResponseManagement";
+import { apiBatchClientAction, uploadCSVAPIBatchingAction, uploadCSVFileAPIBatchingAction } from "../../store/apiResponseManagement";
 import { addPaymentAction } from "../../store/paymentSlice";
 import { getByIdPlanAction } from "../../store/planSlice";
 import { darsbordChartListAction } from "../../store/paymentSlice";
@@ -42,7 +42,6 @@ function Dashboard() {
     count,
   } = useSelector((state) => state.payment);
   const { user } = useSelector((state) => state.auth);
-  const { data } = useSelector((state) => state.apiResponseManagement);
 
 
   const { data: chartdata } = useSelector((state) => state.payment)
@@ -147,19 +146,12 @@ function Dashboard() {
   };
 
   const handleUpload = () => {
-    const id = data?.productId
-    if (!id) {
-      toast.error("Please purchase a plan to upload CSV files.");
-      navigate("/plans")
-      return;
-    }
     if (!selectedFile) {
-      toast.error("No CSV file selected. Please select a CSV file.");
       return;
     }
     const formData = new FormData();
     formData.append("file", selectedFile);
-    dispatch(uploadCSVFileAPIBatchingAction({ formData, apiGroupId: id }));
+    dispatch(uploadCSVAPIBatchingAction({ formData }));
     navigate("/client-batch")
     setSelectedFile(null);
   };
@@ -226,14 +218,16 @@ function Dashboard() {
             onChange={handleFileUpload}
             accept=".csv"
           />
-          <Button
-            variant="danger"
-            style={{ width: "150px", fontSize: "14px", marginTop: "-10px" }}
-
-            onClick={handleUpload}
-          >
-            Upload CSV Files
-          </Button>
+              <Button
+          variant="danger"
+          style={{ width: "150px", fontSize: "14px", marginTop: "-10px" }}
+          onClick={() => {
+            handleUpload(); 
+            fileInputRef.current.click();
+          }}
+        >
+          Upload CSV Files
+        </Button>
 
         </Col>
         <Col

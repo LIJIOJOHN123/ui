@@ -268,6 +268,33 @@ export const getByIdClientDataAPIAction =
         toast.error(payload.message);
       }
     };
+    export const addAPIFormBatchingAction = (formData, id) => async (dispatch) => {
+      try {
+        const token = getLocalStorage("authToken");
+        const res = await axios.post(
+          `${backendAPIList.apiResponseManagement}/singlerequst`,
+          formData,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+    
+        const { status, message,data } = res.data;
+        if (status === "ok") {
+          toast.success(message);
+          dispatch(createAPIBatchingResponseSuccess({ status: "done",data }));
+        } else {
+          dispatch(createAPIBatchingResponseFail({ status: 400 }));
+        }
+      } catch (error) {
+        const payload = {
+          message: error?.response?.data?.message || "An error occurred",
+          status: error?.response?.status || 500,
+        };
+        dispatch(createAPIBatchingResponseFail(payload));
+        toast.error(payload.message);
+      }
+    };
 export const addAPIBatchingAction = (formData, id) => async (dispatch) => {
   try {
     const token = getLocalStorage("authToken");
@@ -295,6 +322,34 @@ export const addAPIBatchingAction = (formData, id) => async (dispatch) => {
     toast.error(payload.message);
   }
 };
+export const uploadCSVAPIBatchingAction =
+  (formData) => async (dispatch) => {
+    try {
+      const token = getLocalStorage("authToken");
+      const res = await axios.post(
+        `${backendAPIList.apiResponseManagement}/csvfilerequest`,
+        formData.formData,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      const { status, message,data } = res.data;
+      if (status === "ok") {
+        toast.success(message);
+        dispatch(createAPIBatchingResponseSuccess({ status: "uploaded", data}));
+      } else {
+        dispatch(createAPIBatchingResponseFail({ status: 400 }));
+      }
+    } catch (error) {
+      const payload = {
+        message: error?.response?.data?.message || "An error occurred",
+        status: error?.response?.status || 500,
+      };
+      dispatch(createAPIBatchingResponseFail(payload));
+      toast.error(payload.message);
+    }
+  };
 export const uploadCSVFileAPIBatchingAction =
   (formData) => async (dispatch) => {
     try {

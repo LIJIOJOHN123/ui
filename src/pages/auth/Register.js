@@ -188,6 +188,7 @@ function Register() {
                 <ReCAPTCHA
                   sitekey={process.env.REACT_APP_GOOGLE_CAPTCHA_KEY} 
                   ref={recaptchaRef}
+                  onChange={onCaptchaChange}
                 />
               </div>
 

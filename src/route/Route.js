@@ -54,6 +54,9 @@ import ValidationForm from "../pages/pre-validation/Form";
 import PreValidationList from "../pages/pre-validation/List";
 import AddInput from "../pages/product/AddInput";
 import ClientDataDetails from "../pages/product/ClientDataDetails";
+import NotFoundPage from "../components/NotFoundPage";
+import ClientBatch from "../pages/clientBatch";
+import HelpPage from "../pages/help";
 
 function RoutesPage() {
   return (
@@ -165,6 +168,7 @@ function RoutesPage() {
             <Route path="documentation" element={<Documentation />} />
             <Route path="plans" element={<Plans />} />
             <Route path="settings" element={<Settings />} />
+            <Route path="help" element={<HelpPage />} />
             <Route path="*" element={<NotFoundPage />} />
             <Route
               path="products/batch-deatils/:id"
