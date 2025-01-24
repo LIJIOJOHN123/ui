@@ -140,7 +140,7 @@ export const apiBatchClientAction =
           dispatch(listResponseSuccess({ data, status, count }));
         }
       } catch (error) {
-        console.log(error)
+       
         const payload = {
           message: error?.response?.data?.message || "An error occurred",
           status: error?.response?.status || 500,

@@ -100,7 +100,7 @@ function Dashboard() {
           "rgba(75, 192, 192, 0.2)",
           "rgba(153, 102, 255, 0.2)",
         ],
-        borderWidth: 2,
+        borderWidth: 1,
       },
     ],
   };
@@ -123,7 +123,7 @@ function Dashboard() {
       x: {
         title: {
           display: true,
-          text: usage === 7 ? "week" : "Months",
+          text: "Days"
         },
       },
       y: {
@@ -256,13 +256,13 @@ function Dashboard() {
           onChange={(e) => setUsage(Number(e.target.value))}
           style={{ marginRight: "100px", width: "250px" }}
         >
-          <option value={7}>THIS WEEK</option>
-          <option value={30}>THIS MONTH</option>
+          <option value={7}>Last 7 days</option>
+          <option value={30}>Last 30 days</option>
         </select>
 
       </div>
 
-      <Row className="w-75">
+      <Row className="">
         <Col className="mt-4 mx-4">
           <h5>Lookups & API Calls</h5>
           <p style={{ fontSize: "14px" }}>Based on estimated activity</p>

@@ -17,7 +17,7 @@ const ProductView = () => {
   useEffect(() => {
     dispatch(getByIdAPIAction(id));
   }, [id, dispatch]);
- console.log(dataById?.preValidation)
+
   return (
     <div className="container-fluid px-4">
       {loading && (
