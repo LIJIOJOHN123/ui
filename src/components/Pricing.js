@@ -136,7 +136,7 @@ const Pricing = () => {
                         navigate("/book-a-demo");
                       } else {
                         setLocalStorage("payment", plan._id);
-                        navigate(token ? "/dashboard" : "/auth/login");
+                        navigate(token ? "/plans" : "/auth/login");
                       }
                     }}
                   >

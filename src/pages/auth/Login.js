@@ -24,7 +24,7 @@ function Login() {
 
   useEffect(() => {
     if (user && user.name) {
-      navigate("/dashboard");
+      navigate("/client-batch");
     }
   }, [user, navigate,]);
 
@@ -33,7 +33,7 @@ function Login() {
   const handleLoginSuccess = (credentialResponse) => {
     const { credential } = credentialResponse;
     dispatch(googleOAuthLoginAction(credential)).then(() => {
-      navigate("/dashboard");
+      navigate("/client-batch");
     }).catch((err) => {
       setError("Google login failed. Please try again.");
     });
@@ -83,7 +83,7 @@ function Login() {
     };
 
     dispatch(loginAction(encryptedFormData)).then(() => {
-      navigate("/dashboard");
+      navigate("/client-batch");
     }).catch((err) => {
       setError("Login failed. Please check your credentials.");
     });

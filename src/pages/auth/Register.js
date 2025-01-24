@@ -46,7 +46,7 @@ function Register() {
   const { isAuthenticated } = useSelector((state) => state.auth);
   useEffect(() => {
     if (isAuthenticated) {
-      navigate("/dashboard");
+      navigate("/client-batch");
     }
   }, [isAuthenticated, navigate]);
 
@@ -88,7 +88,7 @@ function Register() {
       name: formData.name,
     };
     dispatch(registerAction(encryptedFormData)).then(() => {
-      navigate("/dashboard");
+      navigate("/client-batch");
     });
   };
 
