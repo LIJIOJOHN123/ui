@@ -81,7 +81,9 @@ const BatchList = ({ id }) => {
   };
 
   return (
-    <div>
+    <>
+   {batchList.length > 0 && 
+   <>
       <div className="d-flex justify-content-between align-items-center mb-3">
         <h5>Batch List</h5>
         <Dropdown>
@@ -141,8 +143,8 @@ const BatchList = ({ id }) => {
         </div>
       )}
 
-      {reportError && <Alert variant="danger">Error occurred while exporting data. Please try again.</Alert>}
-    </div>
+      {reportError && <Alert variant="danger">Error occurred while exporting data. Please try again.</Alert>}</>}
+   </>
   );
 };
 

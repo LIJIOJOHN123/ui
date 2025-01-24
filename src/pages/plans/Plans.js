@@ -5,6 +5,7 @@ import { planAction } from "../../store/planSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { getLocalStorage, setLocalStorage } from "../../utils/LocalStorage";
 import { apiBatchClientAction } from "../../store/apiResponseManagement";
+import PaymentModal from "../../components/Payment";
 
 const Pricing = () => {
   const [monthlyPlan, setMonthlyPlan] = useState(true);
@@ -34,7 +35,7 @@ const Pricing = () => {
       .map(([key, value]) => `${key}=${value}`)
       .join("&");
 
-    dispatch(planAction(1, 4, queryString));
+    dispatch(planAction(1, 5, queryString));
   }, [monthlyPlan, selectedCurrency, dispatch]);
 
 
@@ -171,7 +172,7 @@ const Pricing = () => {
                       onClick={() => {
                         setLocalStorage("payment", plan._id);
                         if (token) {
-                          navigate("/dashboard");
+                          window.location.reload();
                         } else {
                           navigate("/auth/login");
                         }
@@ -219,6 +220,7 @@ const Pricing = () => {
           );
         })}
       </Row>
+      <PaymentModal/>
     </div>
   );
 };

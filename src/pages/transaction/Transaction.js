@@ -80,14 +80,14 @@ const Transaction = () => {
             </tr>
           </thead>
           <tbody>
-            {data?.map((item) => (
+            {data?.length>0?data?.map((item) => (
               <tr key={item._id}>
                 <td>{moment(item.createdAt).format('MMMM Do YYYY')}</td>
                 <td>{item.type}</td>
                 <td>{item.job_id}</td>
                 <td>{item.description}</td>
               </tr>
-            ))}
+            )):<p>No records found</p>}
           </tbody>
         </table>
       </div>
@@ -101,9 +101,7 @@ const Transaction = () => {
                      onClick={() => setPage(page - 1)}
                    />
        
-                   {/* Show pages dynamically based on the total page count */}
                    {totalPages <= 5 ? (
-                     // If there are 5 or fewer pages, display all pages
                      [...Array(totalPages).keys()].map((num) => (
                        <Pagination.Item
                          key={num}
@@ -115,7 +113,6 @@ const Transaction = () => {
                      ))
                    ) : (
                      <>
-                       {/* Show first page */}
                        <Pagination.Item
                          key={1}
                          active={page === 1}
@@ -124,10 +121,8 @@ const Transaction = () => {
                          1
                        </Pagination.Item>
        
-                       {/* Show ellipsis if there is a gap between the first and the middle pages */}
                        {page > 3 && <Pagination.Ellipsis disabled />}
        
-                       {/* Show middle pages, but limit the visible pages (3 pages before or after the current page) */}
                        {[...Array(3).keys()].map((i) => {
                          const pageNum = page + i - 1;
                          if (pageNum > 1 && pageNum < totalPages - 1) {
@@ -144,10 +139,8 @@ const Transaction = () => {
                          return null;
                        })}
        
-                       {/* Show ellipsis if there is a gap between the middle pages and the last page */}
                        {page < totalPages - 3 && <Pagination.Ellipsis disabled />}
        
-                       {/* Show last page */}
                        <Pagination.Item
                          key={totalPages}
                          active={page === totalPages}
