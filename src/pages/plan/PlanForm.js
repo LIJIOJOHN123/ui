@@ -46,7 +46,6 @@ function PlanForm() {
 
   const [apiList, setApiList] = useState([]);
   const [formError, setFormError] = useState(false);
-
   
   const { data: preValidationData } = useSelector(
     (state) => state.prevalidation
@@ -55,9 +54,7 @@ function PlanForm() {
     (state) => state.postvalidation
   );
   const apiGroupData = useSelector((state) => state.apiGroupManagement.data);
-  const apiGroupdataById = useSelector(
-    (state) => state.apiGroupManagement.dataById
-  );
+
   const { dataById } = useSelector((state) => state.plan);
 
   useEffect(() => {
@@ -75,46 +72,6 @@ function PlanForm() {
   useEffect(() => {
     if (dataById && id) {
       setFormData(dataById);
-    }
-  }, [dataById, id]);
-
-  useEffect(() => {
-    if (formData.apigroupId) {
-      dispatch(getByIdAPIAction(formData.apigroupId));
-    }
-  }, [dispatch, formData.apigroupId]);
-
-  useEffect(() => {
-    if (
-      apiGroupdataById?.apiId &&
-      !id &&
-      Array.isArray(apiGroupdataById.apiId)
-    ) {
-      setApiList(
-        apiGroupdataById.apiId.map((item) => ({
-          id: item._id,
-          name: item.apiname,
-          pricing: item.pricing || "N/A",
-          fields: item.fields || [],
-          discountedPricing: false,
-          discountedPrice: "",
-        }))
-      );
-    }
-  }, [apiGroupdataById, id]);
-
-  useEffect(() => {
-    if (dataById && id && Array.isArray(dataById.api)) {
-      setApiList(
-        dataById?.api?.map((item, i) => ({
-          id: item._id,
-          name: item.apiId?.apiname || "",
-          pricing: item.apiId?.pricing || "N/A",
-          fields: item.apiId?.fields || [],
-          discountedPricing: item.discoutedPricing || false,
-          discountedPrice: item.discoutedPrice || "",
-        }))
-      );
     }
   }, [dataById, id]);
 
@@ -255,37 +212,6 @@ function PlanForm() {
             />
           </BootstrapForm.Group>
 
-          {/* <Row className="mt-3">
-            <Col sm={6}>
-              <BootstrapForm.Group controlId="formNumberOfApi">
-                <BootstrapForm.Label>Number of APIs</BootstrapForm.Label>
-                <BootstrapForm.Control
-                  type="number"
-                  placeholder="Enter number of APIs"
-                  name="numberofapi"
-                  value={formData.numberofapi}
-                  onChange={handleInputChange}
-                  required
-                />
-              </BootstrapForm.Group>
-            </Col>
-            <Col sm={6}>
-              <BootstrapForm.Group controlId="formSuccessfulApiResponse">
-                <BootstrapForm.Label>
-                  Number of Successful API Responses
-                </BootstrapForm.Label>
-                <BootstrapForm.Control
-                  type="number"
-                  placeholder="Enter number of successful API responses"
-                  name="numberofsuccessfulapiResponse"
-                  value={formData.numberofsuccessfulapiResponse}
-                  onChange={handleInputChange}
-                  required
-                />
-              </BootstrapForm.Group>
-            </Col>
-          </Row> */}
-
           <Row className="mt-3">
             <Col sm={6}>
               <BootstrapForm.Group controlId="formCredit">
@@ -412,66 +338,6 @@ function PlanForm() {
             postValidationOptions,
             formData?.postValidation,
             "postValidation"
-          )}
-
-          {apiList.length > 0 && (
-            <div className="mt-3">
-              <h5>Associated APIs</h5>
-              <Table striped bordered>
-                <thead>
-                  <tr>
-                    <th>Name</th>
-                    <th>Pricing</th>
-                    <th>Fields</th>
-                    {/* <th>Discounted Pricing</th>
-                    <th>Discounted Price</th> */}
-                    {/* <th>Action</th> */}
-                  </tr>
-                </thead>
-                <tbody>
-                  {apiList.map((item, index) => (
-                    <tr key={index}>
-                      <td>{item.name}</td>
-                      <td>{item.pricing}</td>
-                      <td>{item.fields.join(", ")}</td>
-                      {/* <td>
-                        <BootstrapForm.Check
-                          type="switch"
-                          checked={item.discountedPricing}
-                          onChange={(e) =>
-                            handleSwitchChange(index, e.target.checked)
-                          }
-                        />
-                      </td> */}
-                      {/* <td>
-                        <BootstrapForm.Control
-                          type="number"
-                          value={item.discountedPrice}
-                          onChange={(e) =>
-                            setApiList((prevApiList) =>
-                              prevApiList.map((api, i) =>
-                                i === index
-                                  ? { ...api, discountedPrice: e.target.value }
-                                  : api
-                              )
-                            )
-                          }
-                          disabled={!item.discountedPricing}
-                        />
-                      </td>
-                      <td>
-                        <Button
-                          onClick={() => handleRowSubmit(index)}
-                          variant="primary"
-                        >
-                          Update
-                        </Button>
-                      </td> */}
-                    </tr>
-                  ))}
-                </tbody>
-              </Table>
-            </div>
           )}
 
           <Button type="submit" className="mt-4">

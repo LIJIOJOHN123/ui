@@ -14,7 +14,7 @@ function PlanList() {
 
   const [searchQueries, setSearchQueries] = useState({});
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(5);
+  const [limit, setLimit] = useState(25);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [apiToDelete, setApiToDelete] = useState({ id: null, name: "" });
 

@@ -50,7 +50,6 @@ function GroupApiForm() {
     if (id) {
       dispatch(getByIdAPIAction(id));
     }
-
     dispatch(fetchValidations());
     dispatch(fetchPostValidations());
     dispatch(clientManagementListAction());
@@ -77,21 +76,6 @@ function GroupApiForm() {
         preValidation: dataById?.preValidation?.map((item) => item._id) ?? [],
         postValidation: dataById?.postValidation?.map((item) => item._id) ?? [],
       });
-
-      if (dataById?.api?.length) {
-        setApiList(
-          dataById.api.map((item) => ({
-            apiId: item.apiId._id,
-            apiname: item.apiId.apiname,
-            pricing: item.apiId.pricing || "N/A",
-            fields: item.apiId.fields || [],
-            standardPricing: item.standardpricing || false,
-            discoutedPricing: item.discoutedPricing || false,
-            discoutedPrice: item.discoutedPrice || "",
-            id: item._id,
-          }))
-        );
-      }
     }
   }, [id, dataById]);
 
@@ -101,15 +85,7 @@ function GroupApiForm() {
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
-  // Handle switch toggle
-  const handleSwitchChange = (e, index) => {
-    const { checked } = e.target;
-    setApiList((prevApiList) =>
-      prevApiList.map((api, i) =>
-        i === index ? { ...api, discoutedPricing: checked } : api
-      )
-    );
-  };
+
 
   // Handle form submission
   const handleSubmit = (e) => {
@@ -125,46 +101,7 @@ function GroupApiForm() {
     }
   };
 
-  // Handle row form submission (for API specific details)
-  const handleRowSubmit = (e, index, id) => {
-    e.preventDefault();
-    const item = apiList[index];
-
-    setFormData((prevData) => {
-      const updatedApiData = Array.isArray(prevData.api)
-        ? [...prevData.api]
-        : [];
-
-      if (!item.discoutedPricing) {
-        // Remove the API entry if discounted pricing is not enabled
-        const apiIndex = updatedApiData.findIndex(
-          (data) => data.apiId === item.apiId
-        );
-        updatedApiData.push({ id: id, discoutedPrice: "" });
-        if (apiIndex !== -1) updatedApiData.splice(apiIndex, 1);
-        item.discoutedPrice = ""; // Clear the discounted price
-      } else {
-        // Add or update the API entry
-        const existingApiIndex = updatedApiData.findIndex(
-          (data) => data.apiId === item.apiId
-        );
-        if (existingApiIndex !== -1) {
-          updatedApiData[existingApiIndex] = {
-            ...updatedApiData[existingApiIndex],
-            discoutedPrice: item.discoutedPrice,
-          };
-        } else {
-          updatedApiData.push({
-            apiId: item.apiId,
-            id: id,
-            discoutedPrice: item.discoutedPrice,
-          });
-        }
-      }
-
-      return { ...prevData, api: updatedApiData };
-    });
-  };
+ 
 
   const renderSelect = (label, options = [], value, field) => (
     <BootstrapForm.Group className="mt-3">
@@ -188,7 +125,7 @@ function GroupApiForm() {
     value: item._id,
     label: item.name,
   }));
-
+  console.log(clientData)
   return (
     <div>
       <div className="d-flex justify-content-between">
@@ -248,7 +185,7 @@ function GroupApiForm() {
               >
                 <option value="">Select Client</option>
                 {clientData.map((client) => (
-                  <option key={client._id} value={client._id}>
+                  <option key={client?.clientId?._id} value={client?.clientId?._id}>
                     {client.name}
                   </option>
                 ))}
@@ -256,103 +193,9 @@ function GroupApiForm() {
             </BootstrapForm.Group>
           )}
 
-          {!id && apiData.apiId && (
-            <div className="mt-3">
-              <h5 className="text-decoration-underline">
-                List of APIs Associated with this Group
-              </h5>
-              <table className="table">
-                <thead>
-                  <tr>
-                    <th>Name</th>
-                    <th>Standard Pricing</th>
-                    <th>Fields</th>
-                    <th>Backend Api key Name</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {apiData.apiId.map((item, i) => (
-                    <tr key={i} className="">
-                      <td>{item.apiname}</td>
-                      <td>{item.pricing}</td>
-                      <td>{item.fields.join(", ")}</td>
-                      <td>{item.backend_api_key_name}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
+      
 
-          {apiList.length > 0 && (
-            <div className="mt-3">
-              <h5 className="text-decoration-underline">
-                API List Associated with Category
-              </h5>
-              <table className="table">
-                <thead>
-                  <tr>
-                    <th>View</th>
-                    <th>Name</th>
-                    <th>Standard Pricing</th>
-                    <th>Fields</th>
-                    <th>Discounted</th>
-                    <th>Discounted Pricing</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {apiList.map((item, index) => (
-                    <tr key={index}>
-                      <td>
-                        <i
-                          className="bi bi-eye-fill"
-                          onClick={() => navigate(`/client/${item.apiId}`)}
-                        ></i>
-                      </td>
-                      <td>{item.apiname}</td>
-                      <td>{item.pricing}</td>
-                      <td>{item.fields.join(", ")}</td>
-                      <td>
-                        <BootstrapForm.Check
-                          type="switch"
-                          checked={item.discoutedPricing}
-                          onChange={(e) => handleSwitchChange(e, index)}
-                        />
-                      </td>
-                      <td>
-                        <BootstrapForm.Control
-                          disabled={!item.discoutedPricing}
-                          type="number"
-                          value={item.discoutedPrice || ""}
-                          onChange={(e) => {
-                            const { value } = e.target;
-                            setApiList((prevApiList) =>
-                              prevApiList.map((api, i) =>
-                                i === index
-                                  ? { ...api, discoutedPrice: value }
-                                  : api
-                              )
-                            );
-                          }}
-                          className="form-control-sm"
-                        />
-                      </td>
-                      <td>
-                        <Button
-                          onClick={(e) => handleRowSubmit(e, index, item.id)}
-                          variant="primary"
-                        >
-                          Update
-                        </Button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-
+ 
           <div className="d-flex justify-content-between mt-4">
             <Button type="submit" className="fw-bold">
               {id ? "Update" : "Create"}

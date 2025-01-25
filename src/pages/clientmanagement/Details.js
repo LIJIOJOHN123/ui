@@ -181,16 +181,19 @@ const ClientDetails = () => {
                     <Table className='mt-4' striped bordered hover responsive>
                         <thead>
                             <tr>
+                                <th>Date</th>
                                 <th>Order ID</th>
                                 <th>Amount</th>
                                 <th>Payment Status</th>
                                 <th>Plan Expires On</th>
                                 <th>Total Request</th>
+                                <th>Balanace</th>
                             </tr>
                         </thead>
                         <tbody>
                             {data?.payment?.map((order, index) => (
                                 <tr key={index}>
+                                    <td>{moment(order.createdAt).format('MM/DD/YYYY')}</td>
                                     <td>{order.orderId}</td>
                                     <td>₹{order.amount}</td>
 
@@ -201,6 +204,7 @@ const ClientDetails = () => {
                                     </td>
                                     <td>{moment(order.planExpireDate).format('MMMM Do YYYY, h:mm:ss a')}</td>
                                     <td>{order.totalrequest}</td>
+                                    <td>{order.balance}</td>
                                 </tr>
                             ))}
                         </tbody>

@@ -23,10 +23,11 @@ const BatchTableRow = ({ item, navigate, dispatch }) => (
       </Button>
     </td>
     <td className="text-center align-middle">{item.job_id}</td>
-    <td className="text-center align-middle">{item.apiType}</td>
     <td className="text-center align-middle">{item.backend_api_key_name}</td>
-    <td className="text-center align-middle">{item.pricing}</td>
+    <td className="text-center align-middle">{item.preValidationStatus}</td>
     <td className="text-center align-middle">{item.apiStatus}</td>
+    <td className="text-center align-middle">{item.postValidationStatus}</td>
+    <td className="text-center align-middle">{item.wrmMinReportStatus}</td>
     <td className="text-center align-middle">
       <Button
         size="sm"
@@ -130,16 +131,17 @@ function ApiResponse() {
         </div>
       </div>
 
-      <div className="table-responsive">
-        <Table striped bordered hover size="sm">
+      <div className="table-responsive" style={{ overflowX: 'auto' }}>
+        <Table  sstriped bordered hover size="sm" style={{ minWidth: '1000px' }}>
           <thead className="table-light">
             <tr>
               <th>View</th>
               <th>Job ID</th>
-              <th>API Type</th>
               <th>Key Name</th>
-              <th>Pricing</th>
-            <th>API Status</th>
+              <th>Pre</th>
+              <th>API Status</th>
+              <th>Post</th>
+              <th>WRM status</th>
               <th>Action</th>
             </tr>
           </thead>

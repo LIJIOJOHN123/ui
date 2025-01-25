@@ -29,7 +29,7 @@ function AddInput() {
 
   const fields = dataById?.apiGroupId?.field_active
     ? dataById?.apiGroupId?.fields.flat() || []
-    : dataById?.api?.map((item) => item?.apiId.fields).flat() || [];
+    : dataById?.api?.map((item) => item?.fields).flat() || [];
 
   if (error) {
     return <p>Something went wrong. Please try again later.</p>;
