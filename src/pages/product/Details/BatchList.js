@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Badge, Button, Pagination, Table, Dropdown, Alert } from "react-bootstrap";
+import { Badge, Button, Pagination, Table, Dropdown, Alert, ProgressBar } from "react-bootstrap";
 import { CSVLink } from "react-csv";
 import { Download } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
@@ -79,7 +79,15 @@ const BatchList = ({ id }) => {
       </div>
     );
   };
-
+  const getProgressBarVariant = (percentage) => {
+    if (percentage === 0) {
+      return 'secondary'; 
+    } else if (percentage === 100) {
+      return 'success'; 
+    } else {
+      return 'purple'; 
+    }
+  };
   return (
     <div>
       <div className="d-flex justify-content-between align-items-center mb-3">
@@ -106,28 +114,45 @@ const BatchList = ({ id }) => {
             <th className="text-center">Batch ID</th>
             <th className="text-center">Type</th>
             <th className="text-center">Records</th>
+            <th className="text-center">Status</th>
             <th className="text-center">Download</th>
           </tr>
         </thead>
         <tbody>
-          {batchList?.map((item) => (
-            <tr key={item._id}>
-              <td className="text-center">
-                <i
-                  className="bi bi-eye-fill text-primary"
-                  style={{ cursor: "pointer", fontSize: "1.5rem" }}
-                  onClick={() => navigate(`/products/data/${item._id}`)}
-                ></i>
-              </td>
-              <td className="text-center">{new Date(item.createdAt).toLocaleDateString()}</td>
-              <td className="text-center">{item._id}</td>
-              <td className="text-center">
-                <Badge bg="info">{item.type}</Badge>
-              </td>
-              <td className="text-center">{item.records}</td>
-              <td className="text-center">{renderDownloadButton(item)}</td>
-            </tr>
-          ))}
+          {batchList?.map((item) =>{
+            const percentage = item.totalapis && item.completedapis ? (item.completedapis / item.totalapis) * 100 : 0;
+            const progressBarVariant = getProgressBarVariant(percentage);
+            return(
+              (
+                <tr key={item._id}>
+                  <td className="text-center">
+                    <i
+                      className="bi bi-eye-fill text-primary"
+                      style={{ cursor: "pointer", fontSize: "1.5rem" }}
+                      onClick={() => navigate(`/products/data/${item._id}`)}
+                    ></i>
+                  </td>
+                  <td className="text-center">{new Date(item.createdAt).toLocaleDateString()}</td>
+                  <td className="text-center">{item._id}</td>
+                  <td className="text-center">
+                    <Badge bg="info">{item.type}</Badge>
+                  </td>
+                  <td className="text-center">{item.records}</td>
+                  <td className="text-center">  <div className="d-flex align-items-center">
+                  <ProgressBar
+                    now={percentage}
+                    label={`${percentage.toFixed(2)}%`}
+                    style={{ width: '150px', height: '20px' }}
+                    variant={progressBarVariant} // Use the dynamic variant
+                    className="me-2"
+                  />
+                  <span>{percentage.toFixed(2)}%</span>
+                </div></td>
+                  <td className="text-center">{renderDownloadButton(item)}</td>
+                </tr>
+              )
+            )
+          })}
         </tbody>
       </Table>
 

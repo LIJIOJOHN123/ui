@@ -115,6 +115,7 @@ function Product() {
               <th>#</th>
               <th>Name</th>
               <th>Client Name</th>
+              <th>Type</th>
               <th>Number of preValidation</th>
               <th>Number of postValidation</th>
               <th>Actions</th>
@@ -139,6 +140,7 @@ function Product() {
                     {item.name}
                   </td>
                   <td className="line-clamp">{item.clientName}</td>
+                  <td className="line-clamp">{item.origin}</td>
                   <td className="line-clamp">{item.preValidation.length}</td>
                   <td className="line-clamp">{item.postValidation.length}</td>
 

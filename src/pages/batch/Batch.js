@@ -1,5 +1,5 @@
 import React, { Fragment, useCallback, useEffect, useState } from "react";
-import { Button, Form, Spinner } from "react-bootstrap";
+import { Button, Form, Spinner, Card } from "react-bootstrap";
 import { CSVLink } from "react-csv";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -37,7 +37,6 @@ const Batch = () => {
     }
   }, [data]);
 
-
   const handleLimitChange = (e) => {
     const value = parseInt(e.target.value, 10);
     setLimit(value);
@@ -53,12 +52,9 @@ const Batch = () => {
     }
   };
 
-  const { batchList, count,loading } = useSelector(
+  const { batchList, count, loading } = useSelector(
     (state) => state.apiResponseManagement
   );
-
-    const handleExport = useCallback(async (batchId) => {
-    }, [dispatch]);
 
   const renderDownloadButton = (item) => {
     const isExporting = reportLoading && item._id === selectedBatchId;
@@ -79,7 +75,7 @@ const Batch = () => {
             target="_blank"
             className="btn btn-outline-primary btn-sm d-flex align-items-center"
           >
-            <Download className="me-2" onClick={() => handleExport(item._id)} />
+            <Download className="me-2" />
             Download
           </CSVLink>
         ) : (
@@ -97,10 +93,10 @@ const Batch = () => {
 
   return (
     <Fragment>
-      <h3>Batch list</h3>
+      <h3 className="mb-4">Batch List</h3>
       <div className="d-flex align-items-center mb-4">
         <p className="mb-0 me-3">
-          Total: <strong>{count}</strong>
+          <strong>Total: {count}</strong>
         </p>
         <div className="d-flex align-items-center me-3">
           <label htmlFor="limit" className="me-2">
@@ -119,46 +115,56 @@ const Batch = () => {
         </div>
         <BatchSearch setSearchQueries={setSearchQueries} />
       </div>
-      <table className="table">
-        <thead>
-          <tr>
-            <th scope="col">View</th>
-            <th scope="col">ID</th>
-            <th scope="col">Type</th>
-            <th scope="col">Number of Requests</th>
-            <th scope="col">API Group ID</th>
-            <th className="text-center">Download</th>
-          </tr>
-        </thead>
-        <tbody>
-          {loading ? <tr>
-                <td colSpan="8" className="text-center">
-                  <Spinner animation="border" variant="primary" />
-                </td>
-              </tr>:batchList.length>0 ? batchList?.map((item) => (
-            <tr key={item._id}>
-              <td>
-                <BsEyeFill
-                  onClick={() =>
-                    navigate(`/products/data/${item._id}`)
-                  }
-                />
-              </td>
-              <td>{item._id}</td>
-              <td>{item.type}</td>
-              <td>{item.records}</td>
-              <td>{item.apiGroupId}</td>
-              <td className="text-center">{renderDownloadButton(item)}</td>
-            </tr>
-          )):(
-            <tr>
-              <td colSpan="4" className="text-center">
-                No products found.
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+      
+      <Card className="mb-4">
+        <Card.Body>
+          <table className="table table-striped table-hover">
+            <thead className="thead-dark">
+              <tr>
+                <th scope="col">View</th>
+                <th scope="col">ID</th>
+                <th scope="col">Type</th>
+                <th scope="col">Number of Requests</th>
+                <th scope="col">Total APIs</th>
+                <th scope="col">Completed APIs</th>
+                <th className="text-center">Download</th>
+              </tr>
+            </thead>
+            <tbody>
+              {loading ? (
+                <tr>
+                  <td colSpan="7" className="text-center">
+                    <Spinner animation="border" variant="primary" />
+                  </td>
+                </tr>
+              ) : batchList.length > 0 ? (
+                batchList.map((item) => (
+                  <tr key={item._id}>
+                    <td>
+                      <BsEyeFill
+                        onClick={() => navigate(`/products/data/${item._id}`)}
+                        className="cursor-pointer"
+                      />
+                    </td>
+                    <td>{item._id}</td>
+                    <td>{item.type}</td>
+                    <td>{item.records}</td>
+                    <td>{item.totalapis}</td>
+                    <td>{item.completedapis}</td>
+                    <td className="text-center">{renderDownloadButton(item)}</td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="7" className="text-center">
+                    No batches found.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </Card.Body>
+      </Card>
     </Fragment>
   );
 };

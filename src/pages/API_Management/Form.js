@@ -17,7 +17,6 @@ function Form() {
     apiname: "",
     des: "",
     fields: [""],
-    pricing: "",
     backend_api_key_name: "",
     api_type: "",
     category_type: "",
@@ -195,19 +194,7 @@ function Form() {
             />
           </BootstrapForm.Group>
 
-          <BootstrapForm.Group className="mt-3" controlId="formPricing">
-            <BootstrapForm.Label className="m-0">Pricing</BootstrapForm.Label>
-            <BootstrapForm.Control
-              type="number"
-              placeholder="Enter pricing"
-              name="pricing"
-              value={formData.pricing}
-              min={0}
-              onChange={handleInputChange}
-              required
-              autoComplete="off"
-            />
-          </BootstrapForm.Group>
+
 
           <Button variant="primary" type="submit" className="mt-4">
             Submit

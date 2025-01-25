@@ -43,7 +43,7 @@ export const apiResponseManagementSlice = createSlice({
       state.loading = false;
       state.status = action.payload.status;
       state.count = state.data.length;
-      state.batchList = [...state.batchList, action.payload.data]
+      state.batchList = [ action.payload.data,...state.batchList]
     },
     createAPIBatchingResponseFail: (state, action) => {
       state.loading = false;

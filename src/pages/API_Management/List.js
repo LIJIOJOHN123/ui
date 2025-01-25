@@ -98,7 +98,6 @@ function ApiList() {
             <th>Description</th>
             <th>API Type</th>
             <th>Backend API Key</th>
-            <th>Pricing (₹)</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -115,9 +114,8 @@ function ApiList() {
                 <td>{index + 1 + (page - 1) * limit}</td>
                 <td>{item.apiname}</td>
                 <td>{item.des}</td>
-                <td>{item.api_type}</td>
+                <td>{item.category_type}</td>
                 <td>{item.backend_api_key_name}</td>
-                <td>{item.pricing}</td>
                 <td>
                   <div className="d-flex gap-2">
                     <Button

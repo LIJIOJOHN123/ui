@@ -1,5 +1,5 @@
 import React, { useState, useEffect,  } from "react";
-import { Badge, Button, Pagination, Table, Dropdown, Alert } from "react-bootstrap";
+import { Badge, Button, Pagination, Table, Dropdown, Alert, ProgressBar } from "react-bootstrap";
 import { CSVLink } from "react-csv";
 import { Download } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
@@ -50,7 +50,15 @@ const BatchList = ({ id }) => {
     setLimit(newLimit);
     setPage(1);
   };
-
+  const getProgressBarVariant = (percentage) => {
+    if (percentage === 0) {
+      return 'secondary'; 
+    } else if (percentage === 100) {
+      return 'success'; 
+    } else {
+      return 'purple'; 
+    }
+  };
   const renderDownloadButton = (item) => {
     const isExporting = reportLoading && item._id === selectedBatchId;
     const isReadyForDownload = selectedBatchId === item._id && data?.length;
@@ -107,11 +115,15 @@ const BatchList = ({ id }) => {
             <th className="text-center">Batch ID</th>
             <th className="text-center">Type</th>
             <th className="text-center">Records</th>
+            <th className="text-center">Status</th>
             <th className="text-center">Download</th>
           </tr>
         </thead>
         <tbody>
-          {batchList?.map((item) => (
+          {batchList?.map((item) =>{ 
+            const percentage = item.totalapis && item.completedapis ? (item.completedapis / item.totalapis) * 100 : 0;
+            const progressBarVariant = getProgressBarVariant(percentage);
+            return (
             <tr key={item._id}>
               <td className="text-center">{new Date(item.createdAt).toLocaleDateString()}</td>
               <td className="text-center">{item._id}</td>
@@ -119,9 +131,20 @@ const BatchList = ({ id }) => {
                 <Badge bg="info">{item.type}</Badge>
               </td>
               <td className="text-center">{item.records}</td>
+              <td className="text-center">                             
+                <div className="d-flex align-items-center">
+                  <ProgressBar
+                    now={percentage}
+                    label={`${percentage.toFixed(2)}%`}
+                    style={{ width: '150px', height: '20px' }}
+                    variant={progressBarVariant} // Use the dynamic variant
+                    className="me-2"
+                  />
+                  <span>{percentage.toFixed(2)}%</span>
+                </div></td>
               <td className="text-center">{renderDownloadButton(item)}</td>
             </tr>
-          ))}
+          )})}
         </tbody>
       </Table>
 
