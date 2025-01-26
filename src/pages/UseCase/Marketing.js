@@ -190,8 +190,8 @@ const seoData = {
     "Discover ValidX's marketing solutions, including lead generation and market segmentation, to enhance your business strategy.",
   keywords:
     "marketing, lead generation, market segmentation, business strategy, ValidX",
-  author: "ValidX Team", // Add if needed
-  image: headerSec, // Relative image path
+  author: "ValidX Team", 
+  image: headerSec, 
   url: "https://www.validx.chargebackzero.com/use-cases/marketing",
 };
 

@@ -1,75 +1,69 @@
 import { CSVLink } from "react-csv";
 import { Button, Col, Form, Card, Row, Alert } from "react-bootstrap";
-import React, { useEffect, useState, useRef } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useRef, useCallback } from "react";
+import { useDispatch } from "react-redux";
 import {
   addAPIFormBatchingAction,
   uploadCSVAPIBatchingAction,
 } from "../../store/apiResponseManagement";
-import { getByIdAPIAction } from "../../store/productManagementSlice";
-import BatchList from "./BatchList";
 
-function AddInput({ id }) {
+function AddInput({ id, dataById }) {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
-  
-  useEffect(() => {
-    dispatch(getByIdAPIAction(id));
-  }, [id, dispatch]);
-
-  const [error, setError] = useState(false);
-  const [successMessage, setSuccessMessage] = useState(null);
-  const [errorMessage, setErrorMessage] = useState(null);
-
-  const { dataById, loading } = useSelector((state) => state.productManagement);
-  const { data: api } = useSelector((state) => state.apiResponseManagement);
-
   const [formData, setFormData] = useState({});
   const [selectedFile, setSelectedFile] = useState(null);
-  const fileInputRef = useRef(); 
+  const [message, setMessage] = useState({ success: null, error: null });
+
+  const fileInputRef = useRef();
 
   const fields = dataById?.apiGroupId?.field_active
     ? dataById?.apiGroupId?.fields.flat() || []
     : dataById?.api?.map((item) => item?.fields).flat() || [];
 
-  if (error) {
-    return <p>Something went wrong. Please try again later.</p>;
-  }
-
-  const handleInputChange = (e) => {
+  const handleInputChange = useCallback((e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
-  };
+  }, []);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      dispatch(addAPIFormBatchingAction({ apiValue: formData }, id));
-      setFormData({});
-      setSuccessMessage("Batch API submitted successfully!");
-      setErrorMessage(null);
-      setSelectedFile(null);
-    } catch (err) {
-      setErrorMessage("Failed to submit the batch. Please try again.");
-      setSuccessMessage(null);
-    }
-  };
+  const handleSubmit = useCallback(
+    async (e) => {
+      e.preventDefault();
+      try {
+        dispatch(addAPIFormBatchingAction({ apiValue: formData }, id));
+        setFormData({});
+        setMessage({
+          success: "Batch API submitted successfully!",
+          error: null,
+        });
+        setSelectedFile(null);
+      } catch (err) {
+        setMessage({
+          success: null,
+          error: "Failed to submit the batch. Please try again.",
+        });
+      }
+    },
+    [formData, id, dispatch]
+  );
 
-  const handleFileUpload = (event) => {
+  const handleFileUpload = useCallback((event) => {
     const file = event.target.files[0];
     if (file) {
       setSelectedFile(file);
+      setMessage({ success: null, error: null });
     } else {
-      setErrorMessage("Please select a CSV file to upload.");
-      setSuccessMessage(null);
+      setMessage({
+        success: null,
+        error: "Please select a CSV file to upload.",
+      });
     }
-  };
+  }, []);
 
-  const handleUpload = () => {
+  const handleUpload = useCallback(() => {
     if (!selectedFile) {
-      setErrorMessage("No CSV file selected. Please select a CSV file to upload.");
-      setSuccessMessage(null);
+      setMessage({
+        success: null,
+        error: "No CSV file selected. Please select a CSV file to upload.",
+      });
       return;
     }
 
@@ -78,30 +72,30 @@ function AddInput({ id }) {
     dispatch(uploadCSVAPIBatchingAction({ formData }));
 
     setFormData({});
-    setSuccessMessage("CSV file uploaded successfully!");
-    setErrorMessage(null);
+    setMessage({ success: "CSV file uploaded successfully!", error: null });
     setSelectedFile(null);
     fileInputRef.current.value = "";
-  };
+  }, [selectedFile, dispatch]);
 
-  const downloadCsvFile = (headers, data, filename) => {
+  const downloadCsvFile = useCallback((headers, data, filename) => {
     const convertToCSV = (headers, data) => {
       const headerRow = headers.join(",");
-      const rows = data.map((item) => `"${item}"`).join(","); 
-      return [headerRow, rows].join("\n"); 
+      const rows = data.map((item) => `"${item}"`).join(",");
+      return [headerRow, rows].join("\n");
     };
 
     const csvContent = convertToCSV(headers, data);
-
-    const blob = new Blob(["\uFEFF" + csvContent], { type: "text/csv;charset=utf-8;" }); 
+    const blob = new Blob(["\uFEFF" + csvContent], {
+      type: "text/csv;charset=utf-8;",
+    });
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
-    link.download = `${filename}.csv`; 
+    link.download = `${filename}.csv`;
     link.click();
-  };
+  }, []);
+
   return (
     <div className="container mt-5">
-      {loading && <p>Loading...</p>}
       <Card className="shadow-lg border-light p-1">
         <Card.Body>
           <div style={{ fontSize: "14px" }}>
@@ -123,7 +117,7 @@ function AddInput({ id }) {
               onClick={() =>
                 downloadCsvFile(fields, [], `${dataById._id}_template`)
               }
-              data={[]} 
+              data={[]}
               separator=","
             >
               Download Sample CSV Template
@@ -131,13 +125,13 @@ function AddInput({ id }) {
             <hr className="border-2" />
           </div>
 
-          {dataById && !loading && (
+          {dataById && (
             <>
               {dataById.apiList && (
                 <div>
                   <h5>API Fields:</h5>
                   <ul>
-                    {fields?.map((field, index) => (
+                    {fields.map((field, index) => (
                       <li key={index}>{field}</li>
                     ))}
                   </ul>
@@ -148,21 +142,20 @@ function AddInput({ id }) {
                 URL Risk Analysis - Batch Check CSV Files
               </h3>
 
-              {successMessage && (
+              {message.success && (
                 <Alert variant="success" className="mb-3">
-                  {successMessage}
+                  {message.success}
                 </Alert>
               )}
-
-              {errorMessage && (
+              {message.error && (
                 <Alert variant="danger" className="mb-3">
-                  {errorMessage}
+                  {message.error}
                 </Alert>
               )}
 
               <Form onSubmit={handleSubmit}>
                 <Row>
-                  {fields?.map((field, index) => (
+                  {fields.map((field, index) => (
                     <Col md={6} key={index} className="mb-3">
                       <Form.Group controlId={`field-${index}`}>
                         <Form.Label className="m-0">{field}</Form.Label>
@@ -186,7 +179,9 @@ function AddInput({ id }) {
               </Form>
 
               <div className="mt-4">
-                <Form.Label className="d-block mb-2">Upload CSV File</Form.Label>
+                <Form.Label className="d-block mb-2">
+                  Upload CSV File
+                </Form.Label>
                 <input
                   ref={fileInputRef}
                   className="form-control-file mb-3"
@@ -209,7 +204,6 @@ function AddInput({ id }) {
             </>
           )}
         </Card.Body>
-        <BatchList id={id} />
       </Card>
     </div>
   );

@@ -17,7 +17,7 @@ function FundForm({ id }) {
 
   const handleClose = () => {
     setShow(false);
-    setError(""); // Clear errors on close
+    setError(""); 
   };
   const data = useSelector((state) => state.clientManagement);
   const handleShow = () => setShow(true);
@@ -28,7 +28,7 @@ function FundForm({ id }) {
       ...prevData,
       [name]: value,
     }));
-    setError(""); // Clear errors when the user changes input
+    setError("");
   };
 
   const handleSave = () => {

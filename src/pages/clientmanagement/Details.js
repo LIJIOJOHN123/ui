@@ -16,12 +16,12 @@ const ClientDetails = () => {
         apikey: "",
         website: ""
     });
-    const [showModal, setShowModal] = useState(false);  // State to manage modal visibility
+    const [showModal, setShowModal] = useState(false);  
     const [planData, setPlanData] = useState({
         planName: "",
         planExpireDate: "",
-        balance: "",  // Add balance field
-        currentlyActivePlan: false // This is for the switch toggle
+        balance: "", 
+        currentlyActivePlan: false 
     });
 
     const navigate = useNavigate();
@@ -46,12 +46,11 @@ const ClientDetails = () => {
             website: data?.client?.website
         });
 
-        // Set initial values for plan data
         setPlanData({
 
             planExpireDate: moment(data?.ActivePayment?.planExpireDate).format("YYYY-MM-DD"),
             balance: data?.ActivePayment?.balance || "",
-            currentlyActivePlan: data?.ActivePayment?.currentlyActivePlan || false, // Assuming plan data contains isActive
+            currentlyActivePlan: data?.ActivePayment?.currentlyActivePlan || false, 
         });
     }, [data]);
 
@@ -61,12 +60,10 @@ const ClientDetails = () => {
 
         setEdit(false);
         dispatch(clientDetailsListAction(id));
-        console.log('Form Data:', formData);
     };
 
     const handlePlanChange = (e) => {
         const { name, value, checked, type } = e.target;
-        // If it's a checkbox/switch, handle the checked property
         setPlanData((prevData) => ({
             ...prevData,
             [name]: type === 'checkbox' ? checked : value,
@@ -76,11 +73,9 @@ const ClientDetails = () => {
     const handlePlanSubmit = (e) => {
         e.preventDefault();
         dispatch(editActivePaymentDetailsAction(data?.ActivePayment?._id, planData));
-        console.log('Updated Plan Data:', planData);
         dispatch(clientDetailsListAction(id));
         setShowModal(false);  // Close modal after submit
     };
-    console.log(data);
     return (
         <Fragment>
             <div className="mb-4 d-flex justify-content-between align-items-center">

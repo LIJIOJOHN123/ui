@@ -100,7 +100,7 @@ function Header() {
                   <path
                     d="M 0 5 H 50 Q 75 5, 100 8"
                     stroke="url(#gradient)"
-                    strokeWidth="2" // Thickness of the line
+                    strokeWidth="2" 
                     fill="transparent"
                     strokeLinecap="round"
                   />
@@ -282,8 +282,8 @@ const seoData = {
     "Explore ValidX's solutions for law enforcement, enhancing cybersecurity efforts with data enrichment and analysis.",
   keywords:
     "law enforcement, cybersecurity, data enrichment, analysis, cybercrime, ValidX",
-  author: "ValidX Team", // Add if needed
-  image: headerSec, // Relative image path
+  author: "ValidX Team", 
+  image: headerSec,
   url: "https://www.validx.chargebackzero.com/use-cases/data-enrichment-analysis",
 };
 function LawEnforcement() {

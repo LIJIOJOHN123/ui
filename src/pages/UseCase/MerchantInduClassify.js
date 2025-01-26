@@ -97,7 +97,7 @@ function Header() {
                   <path
                     d="M 0 5 H 50 Q 75 5, 100 8"
                     stroke="url(#gradient)"
-                    strokeWidth="2" // Thickness of the line
+                    strokeWidth="2" 
                     fill="transparent"
                     strokeLinecap="round"
                   />
@@ -109,7 +109,7 @@ function Header() {
                 style={{
                   width: "539px",
                   fontSize: "22px",
-                  scrollbarWidth: "none", // Firefox
+                  scrollbarWidth: "none", 
                   msOverflowStyle: "none",
                 }}
               >
@@ -264,8 +264,8 @@ const seoData = {
     "Accurate merchant industry classification for risk management, helping teams identify prohibited and high-risk merchants using Merchant Category Codes (MCCs).",
   keywords:
     "merchant classification, risk management, Merchant Category Codes, fraud prevention, ValidX",
-  author: "ValidX Team", // Add if needed
-  image: useCase2, // Relative image path
+  author: "ValidX Team",
+  image: useCase2,
   url: "https://www.validx.chargebackzero.com/use-cases/merchant-industry-classification",
 };
 function MerchantIndustryClassification() {
@@ -276,7 +276,7 @@ function MerchantIndustryClassification() {
         description={seoData.description}
         keywords={seoData.keywords}
         author={seoData.author}
-        image={seoData.image} // Pass the imported image path
+        image={seoData.image} 
         url={seoData.url}
       />
       <Header />

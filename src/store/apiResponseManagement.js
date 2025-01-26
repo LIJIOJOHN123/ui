@@ -12,6 +12,7 @@ const apiBatchingInitialState = {
   dataById: {},
   batchList: [],
   batchCount: 0,
+  clientActivePlanProduct:{}
 };
 
 export const apiResponseManagementSlice = createSlice({
@@ -78,6 +79,17 @@ export const apiResponseManagementSlice = createSlice({
       state.loading = false;
       state.status = action.payload.status;
     },
+    clientPlanProductResponseSuccess:(state,action)=>{
+      state.loading =false
+      state.clientActivePlanProduct = action.payload.data;
+      state.batchList = action.payload?.data?.batchList?.result;
+      state.status = action.payload.status;
+      state.batchCount = action.payload.data?.batchList?.count;
+    },
+    clientPlanProductResponseFail:(state,action)=>{
+      state.loading =false
+      state.status = action.payload.status;
+    }
   },
 });
 
@@ -95,6 +107,8 @@ export const {
   getByIdResponseSuccess,
   batchlistResponseSuccess,
   batchlistResponseFail,
+  clientPlanProductResponseSuccess,
+  clientPlanProductResponseFail
 } = apiResponseManagementSlice.actions;
 
 export const apiReponseManagementReducer = apiResponseManagementSlice.reducer;
@@ -124,7 +138,7 @@ export const apiBatchingAction =
         toast.error(payload.message);
       }
     };
-export const apiBatchClientAction =
+export const clientActivePlanProductAction =
   (page = 1, limit = 5, searchQueries) =>
     async (dispatch) => {
       try {
@@ -137,7 +151,7 @@ export const apiBatchClientAction =
         );
         const { status, data, count, code } = res.data;
         if (code === 200) {
-          dispatch(listResponseSuccess({ data, status, count }));
+          dispatch(clientPlanProductResponseSuccess({ data, status, count }));
         }
       } catch (error) {
        
@@ -145,7 +159,7 @@ export const apiBatchClientAction =
           message: error?.response?.data?.message || "An error occurred",
           status: error?.response?.status || 500,
         };
-        dispatch(listResponseFail(payload));
+        dispatch(clientPlanProductResponseFail(payload));
         // toast.error(payload.message);
       }
     };

@@ -192,8 +192,8 @@ const seoData = {
     "Transforming raw data into actionable insights for smarter business decisions with ValidX's powerful data enrichment and analysis solutions.",
   keywords:
     "data enrichment, data analysis, actionable insights, business decisions, ValidX, customer data, domain analysis",
-  author: "ValidX Team", // Add if needed
-  image: headerSec, // Relative image path
+  author: "ValidX Team", 
+  image: headerSec, 
   url: "https://www.validx.chargebackzero.com/use-cases/data-enrichment-analysis",
 };
 function DataEnrichment() {
@@ -204,7 +204,7 @@ function DataEnrichment() {
         description={seoData.description}
         keywords={seoData.keywords}
         author={seoData.author}
-        image={seoData.image} // Just pass the relative image path
+        image={seoData.image} 
         url={seoData.url}
       />
 
