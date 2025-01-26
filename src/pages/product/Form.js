@@ -125,7 +125,6 @@ function GroupApiForm() {
     value: item._id,
     label: item.name,
   }));
-  console.log(clientData)
   return (
     <div>
       <div className="d-flex justify-content-between">

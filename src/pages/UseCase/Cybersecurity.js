@@ -217,7 +217,7 @@ const metaData = {
   keywords:
     "cybersecurity, domain categorization, risk management, threat detection, content filtering",
   author: "ValidX Team",
-  image: headerSec, // Absolute URL for image
+  image: headerSec, 
   url: "https://www.validx.chargebackzero.com/use-cases/cybersecurity",
 };
 function Cybersecurity() {

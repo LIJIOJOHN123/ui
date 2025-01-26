@@ -214,8 +214,8 @@ const seoData = {
     "Unlock customer insights, enhance marketing, and ensure compliance with domain categorization through ValidX's internet and telecommunication solutions.",
   keywords:
     "internet, telecommunication, domain categorization, customer insights, marketing campaigns, compliance, ValidX",
-  author: "ValidX Team", // Add if needed
-  image: headerSec, // Relative image path
+  author: "ValidX Team", 
+  image: headerSec, 
   url: "https://www.validx.chargebackzero.com/use-cases/internet-telecommunication",
 };
 
@@ -227,7 +227,7 @@ function InternetTelecommunication() {
         description={seoData.description}
         keywords={seoData.keywords}
         author={seoData.author}
-        image={seoData.image} // Pass the imported image path
+        image={seoData.image} 
         url={seoData.url}
       />
 

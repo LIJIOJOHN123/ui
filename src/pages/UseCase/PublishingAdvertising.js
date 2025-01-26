@@ -213,8 +213,8 @@ const seoData = {
     "Ensuring brand safety with smart content moderation and targeted advertising solutions.",
   keywords:
     "publishing, advertising, brand safety, content moderation, targeted advertising, ValidX",
-  author: "ValidX Team", // Optional
-  image: headerSec, // Relative image path
+  author: "ValidX Team", 
+  image: headerSec, 
   url: "https://www.validx.chargebackzero.com/use-cases/publishing-advertising",
 };
 function PublishingAdvertising() {
@@ -225,7 +225,7 @@ function PublishingAdvertising() {
         description={seoData.description}
         keywords={seoData.keywords}
         author={seoData.author}
-        image={seoData.image} // Pass the imported image path
+        image={seoData.image}
         url={seoData.url}
       />
       <Header />

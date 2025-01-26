@@ -34,6 +34,7 @@ function PlanList() {
     setLimit(value);
     setPage(1);
   };
+
   const handleDelete = () => {
     if (apiToDelete.id) {
       dispatch(deleteplanAction(apiToDelete.id));
@@ -57,7 +58,6 @@ function PlanList() {
         </div>
       ) : (
         <div>
-          {/* Header Section */}
           <div className="d-flex justify-content-between align-items-center">
             <h3>Plans</h3>
             <Button
@@ -91,8 +91,6 @@ function PlanList() {
             <PlanSearchPopup setSearchQueries={setSearchQueries} />
           </div>
 
-          {/* Plan List */}
-
           <div className="d-flex flex-column min-vh-100">
             <div className="flex-grow-2">
               <Row className="mt-4">
@@ -102,14 +100,16 @@ function PlanList() {
                   data.map((item, i) => (
                     <Col key={i} xs={12} sm={6} md={4} lg={3} className="mb-4">
                       <div className="bg-info p-2 rounded-3 h-100">
-                        {/* Plan Details */}
-                        <div
+                        {/* <div
                           style={{ cursor: "pointer" }}
                           onClick={() => navigate(`/api-list/${item._id}`)}
-                        >
-                          <h6>{item.name}</h6>
-                          <p className="line-clamp">{item.des}</p>
-                          <b>${item.pricing}</b>
+                        > */}
+                          <h6><b>{item.name}</b></h6>
+                          <p>currency : {item.currency}</p>
+                          <p>Plantype : {item.plantype}</p>
+                          <p>Credit : {item.credit}</p>
+                          <p>Amount: {item.pricing}</p>
+                          <p>Plan status: {item.planstatus}</p>
                           <div>
                             {item.apiId &&
                               item.apiId.map((field, index) => (
@@ -118,9 +118,8 @@ function PlanList() {
                                 </p>
                               ))}
                           </div>
-                        </div>
+                        {/* </div> */}
 
-                        {/* Action Buttons */}
                         <div className="mt-3">
                           <Button
                             variant="danger"
@@ -144,78 +143,65 @@ function PlanList() {
             </div>
 
             <div className="mt-auto">
-               {totalPages > 1 && (
-                             <div className="d-flex justify-content-center mt-4">
-                               <Pagination>
-                                 <Pagination.Prev
-                                   disabled={page === 1}
-                                   onClick={() => setPage(page - 1)}
-                                 />
-                     
-                                 {/* Show pages dynamically based on the total page count */}
-                                 {totalPages <= 5 ? (
-                                   // If there are 5 or fewer pages, display all pages
-                                   [...Array(totalPages).keys()].map((num) => (
-                                     <Pagination.Item
-                                       key={num}
-                                       active={page === num + 1}
-                                       onClick={() => setPage(num + 1)}
-                                     >
-                                       {num + 1}
-                                     </Pagination.Item>
-                                   ))
-                                 ) : (
-                                   <>
-                                     {/* Show first page */}
-                                     <Pagination.Item
-                                       key={1}
-                                       active={page === 1}
-                                       onClick={() => setPage(1)}
-                                     >
-                                       1
-                                     </Pagination.Item>
-                     
-                                     {/* Show ellipsis if there is a gap between the first and the middle pages */}
-                                     {page > 3 && <Pagination.Ellipsis disabled />}
-                     
-                                     {/* Show middle pages, but limit the visible pages (3 pages before or after the current page) */}
-                                     {[...Array(3).keys()].map((i) => {
-                                       const pageNum = page + i - 1;
-                                       if (pageNum > 1 && pageNum < totalPages - 1) {
-                                         return (
-                                           <Pagination.Item
-                                             key={pageNum}
-                                             active={page === pageNum}
-                                             onClick={() => setPage(pageNum)}
-                                           >
-                                             {pageNum}
-                                           </Pagination.Item>
-                                         );
-                                       }
-                                       return null;
-                                     })}
-                     
-                                     {/* Show ellipsis if there is a gap between the middle pages and the last page */}
-                                     {page < totalPages - 3 && <Pagination.Ellipsis disabled />}
-                     
-                                     {/* Show last page */}
-                                     <Pagination.Item
-                                       key={totalPages}
-                                       active={page === totalPages}
-                                       onClick={() => setPage(totalPages)}
-                                     >
-                                       {totalPages}
-                                     </Pagination.Item>
-                                   </>
-                                 )}
-                     
-                                 <Pagination.Next
-                                   disabled={page === totalPages}
-                                   onClick={() => setPage(page + 1)}
-                                 />
-                               </Pagination>
-                             </div>
-                           )}
+              {totalPages > 1 && (
+                <div className="d-flex justify-content-center mt-4">
+                  <Pagination>
+                    <Pagination.Prev
+                      disabled={page === 1}
+                      onClick={() => setPage(page - 1)}
+                    />
+                    {totalPages <= 5 ? (
+                      [...Array(totalPages).keys()].map((num) => (
+                        <Pagination.Item
+                          key={num}
+                          active={page === num + 1}
+                          onClick={() => setPage(num + 1)}
+                        >
+                          {num + 1}
+                        </Pagination.Item>
+                      ))
+                    ) : (
+                      <>
+                        <Pagination.Item
+                          key={1}
+                          active={page === 1}
+                          onClick={() => setPage(1)}
+                        >
+                          1
+                        </Pagination.Item>
+                        {page > 3 && <Pagination.Ellipsis disabled />}
+                        {[...Array(3).keys()].map((i) => {
+                          const pageNum = page + i - 1;
+                          if (pageNum > 1 && pageNum < totalPages - 1) {
+                            return (
+                              <Pagination.Item
+                                key={pageNum}
+                                active={page === pageNum}
+                                onClick={() => setPage(pageNum)}
+                              >
+                                {pageNum}
+                              </Pagination.Item>
+                            );
+                          }
+                          return null;
+                        })}
+                        {page < totalPages - 3 && <Pagination.Ellipsis disabled />}
+                        <Pagination.Item
+                          key={totalPages}
+                          active={page === totalPages}
+                          onClick={() => setPage(totalPages)}
+                        >
+                          {totalPages}
+                        </Pagination.Item>
+                      </>
+                    )}
+                    <Pagination.Next
+                      disabled={page === totalPages}
+                      onClick={() => setPage(page + 1)}
+                    />
+                  </Pagination>
+                </div>
+              )}
             </div>
           </div>
         </div>

@@ -13,11 +13,8 @@ import { Bar } from "react-chartjs-2";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { apiBatchClientAction, uploadCSVAPIBatchingAction, uploadCSVFileAPIBatchingAction } from "../../store/apiResponseManagement";
-import { addPaymentAction } from "../../store/paymentSlice";
-import { getByIdPlanAction } from "../../store/planSlice";
+import { clientActivePlanProductAction, uploadCSVAPIBatchingAction, uploadCSVFileAPIBatchingAction } from "../../store/apiResponseManagement";
 import { darsbordChartListAction } from "../../store/paymentSlice";
-import { getLocalStorage, removeLocalStorage } from "../../utils/LocalStorage";
 
 ChartJS.register(
   Title,
@@ -41,7 +38,7 @@ function Dashboard() {
   }, [usage]);
 
   useEffect(() => {
-    dispatch(apiBatchClientAction());
+    dispatch(clientActivePlanProductAction());
   }, [])
   const datas = {
     labels: chartdata?.map((item) => item.date),

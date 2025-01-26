@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { planAction } from "../../store/planSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { getLocalStorage, setLocalStorage } from "../../utils/LocalStorage";
-import { apiBatchClientAction } from "../../store/apiResponseManagement";
+import { clientActivePlanProductAction } from "../../store/apiResponseManagement";
 import PaymentModal from "../../components/Payment";
 
 const Pricing = () => {
@@ -20,7 +20,7 @@ const Pricing = () => {
 
   const { data } = useSelector((state) => state.apiResponseManagement);
   useEffect(() => {
-    dispatch(apiBatchClientAction());
+    dispatch(clientActivePlanProductAction());
   }, [])
 
   useEffect(() => {
@@ -121,15 +121,15 @@ const Pricing = () => {
                   </Card.Title>
                   <Card.Subtitle className="text-center ">
                     <h2 className="fw-semibold m-0">
-                      {index === 3 ? "Custom" : `${plan.currencySymbol}${plan.pricing}`}
+                      {index === 4 ? "Custom" : `${plan.currencySymbol}${plan.pricing}`}
 
                       <span className="fw-normal" style={{ fontSize: "14px" }}>
-                        {index === 3 ? "" : monthlyPlan ? "Monthly" : "Yearly"}
+                        {index === 4 ? "" : monthlyPlan ? "Monthly" : "Yearly"}
                       </span>
                     </h2>
                   </Card.Subtitle>
                   <div className="mt-1" style={{ fontSize: "12px" }}>
-                    {index === 3
+                    {index === 4
                       ? "Custom"
                       : index !== 0 && index !== plans.length - 1
                         ? creditsText
@@ -155,7 +155,7 @@ const Pricing = () => {
 
 
 
-                  {index === 3 ? (
+                  {index === 4 ? (
                     <Button
                       className="text-center w-100 fw-medium border-0"
                       style={{ backgroundColor: "#bf54bd" }}

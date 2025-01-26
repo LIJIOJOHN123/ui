@@ -97,7 +97,7 @@ function Header() {
                   <path
                     d="M 0 5 H 50 Q 75 5, 100 8"
                     stroke="url(#gradient)"
-                    strokeWidth="2" // Thickness of the line
+                    strokeWidth="2" 
                     fill="transparent"
                     strokeLinecap="round"
                   />
@@ -250,8 +250,8 @@ const seoData = {
     "Enhance your online presence and protect your business with ValidX's online reputation management strategies and tools.",
   keywords:
     "online reputation, business protection, risk management, ValidX, background checks, sales intelligence",
-  author: "ValidX Team", // Optional
-  image: heroSec, // Relative image path
+  author: "ValidX Team", 
+  image: heroSec, 
   url: "https://www.validx.chargebackzero.com/use-cases/online-reputation",
 };
 function OnlineReputation() {
@@ -262,7 +262,7 @@ function OnlineReputation() {
         description={seoData.description}
         keywords={seoData.keywords}
         author={seoData.author}
-        image={seoData.image} // Pass the imported image path
+        image={seoData.image} 
         url={seoData.url}
       />
       <Header />

@@ -100,7 +100,7 @@ function Header() {
                   <path
                     d="M 0 5 H 50 Q 75 5, 100 8"
                     stroke="url(#gradient)"
-                    strokeWidth="2" // Thickness of the line
+                    strokeWidth="2" 
                     fill="transparent"
                     strokeLinecap="round"
                   />
@@ -281,8 +281,8 @@ const seoData = {
     "Stop wasting time doing lead enrichment. Discover how ValidX's sales intelligence solutions can help you identify potential clients and analyze the market.",
   keywords:
     "sales intelligence, lead enrichment, market analysis, ValidX, customer research, business relationships",
-  author: "ValidX Team", // Optional
-  image: heroSec, // Relative image path
+  author: "ValidX Team", 
+  image: heroSec,
   url: "https://www.validx.chargebackzero.com/use-cases/sales-intelligence",
 };
 function SALESINTELLIGENCE() {
@@ -293,7 +293,7 @@ function SALESINTELLIGENCE() {
         description={seoData.description}
         keywords={seoData.keywords}
         author={seoData.author}
-        image={seoData.image} // Pass the imported image path
+        image={seoData.image} 
         url={seoData.url}
       />
       <Header />

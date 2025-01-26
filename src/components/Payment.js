@@ -4,6 +4,7 @@ import { getLocalStorage, removeLocalStorage } from "../utils/LocalStorage";
 import { getByIdPlanAction } from "../store/planSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { addPaymentAction } from "../store/paymentSlice";
+import { useNavigate } from "react-router-dom";
 
 const PaymentModal = () => {
   const [showModal, setShowModal] = useState(false);
@@ -27,19 +28,21 @@ const PaymentModal = () => {
     removeLocalStorage("payment");
     setShowModal(false);
   };
+    const navigate = useNavigate();
+  
   const handlePay = () => {
+
     const data = {
       amount: plandataById.pricing,
       currency: "USD",
       receipt: `receipt_${new Date().getTime()}`,
       notes: { note1: "Payment for Test" },
     };
-
     dispatch(addPaymentAction(plandataById._id, data, user));
-
     removeLocalStorage("payment");
     setShowModal(false);
-    // navigate("/plans");
+    navigate('/client-batch',{ replace: true });
+    window.location.reload();
   };
   return (
     <Modal show={showModal} onHide={handleModalClose}>
