@@ -14,7 +14,11 @@ const Pricing = () => {
   const navigate = useNavigate();
   const { data: plans } = useSelector((state) => state.plan);
   const token = getLocalStorage("authToken");
+  const [showModal, setShowModal] = useState(false);
 
+  const openPaymentModal = () => {
+    setShowModal(true);
+  };
 
 
 
@@ -171,10 +175,10 @@ const Pricing = () => {
                       style={{ backgroundColor: data?.planId === plan._id ? "green" : "#bf54bd" }}
                       onClick={() => {
                         setLocalStorage("payment", plan._id);
-                        if (token) {
-                          window.location.reload();
-                        } else {
+                        if (!token) {
                           navigate("/auth/login");
+                        }else{
+                          openPaymentModal()
                         }
                       }}
                     >
@@ -220,7 +224,9 @@ const Pricing = () => {
           );
         })}
       </Row>
-      <PaymentModal/>
+      <div>
+      </div>
+      <PaymentModal showModal={showModal} setShowModal={setShowModal} />
     </div>
   );
 };
