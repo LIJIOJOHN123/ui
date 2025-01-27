@@ -3,7 +3,6 @@ import { Spinner, Badge, Button, Pagination, Table, Dropdown, Alert, ProgressBar
 import { CSVLink } from "react-csv";
 import { Download } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import { clientActivePlanProductAction } from "../../store/apiResponseManagement";
 import { wrmReportExportAction } from "../../store/wrmReportManagentSlice";
 import AddInput from "./AddInput";
@@ -108,7 +107,6 @@ const BatchTable = ({ batchList, reportLoading, reportData, selectedBatchId, han
 
 const ClientActivePlanProduct = ({ id }) => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const [selectedBatchId, setSelectedBatchId] = useState(null);
   const [page, setPage] = useState(1);

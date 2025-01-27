@@ -11,39 +11,46 @@ const PaymentModal = () => {
   const { dataById: plandataById } = useSelector((state) => state.plan);
   const { user } = useSelector((state) => state.auth);
 
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   useEffect(() => {
     const payment = getLocalStorage("payment");
     if (payment) {
       dispatch(getByIdPlanAction(payment));
       setShowModal(true);
     }
-  }, []);
-  const dispatch = useDispatch();
+  }, [dispatch]);
 
   const handleModalClose = () => {
     removeLocalStorage("payment");
     setShowModal(false);
   };
+
   const handleNoPay = () => {
     removeLocalStorage("payment");
     setShowModal(false);
   };
-    const navigate = useNavigate();
-  
-  const handlePay = () => {
 
+  const handlePay = async () => {
     const data = {
       amount: plandataById.pricing,
       currency: "USD",
       receipt: `receipt_${new Date().getTime()}`,
       notes: { note1: "Payment for Test" },
     };
-    dispatch(addPaymentAction(plandataById._id, data, user));
-    removeLocalStorage("payment");
-    setShowModal(false);
-    navigate('/client-batch',{ replace: true });
-    window.location.reload();
+
+    try {
+      await dispatch(addPaymentAction(plandataById._id, data, user));
+      removeLocalStorage("payment");
+      setShowModal(false);
+      navigate('/client-batch', { replace: true });
+
+    } catch (error) {
+      console.error("Payment action failed:", error);
+    }
   };
+
   return (
     <Modal show={showModal} onHide={handleModalClose}>
       <Modal.Header closeButton>
