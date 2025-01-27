@@ -39,11 +39,9 @@ const PaymentModal = ({ showModal, setShowModal }) => {
     };
   
     try {
-      const paymentPromise = dispatch(addPaymentAction(plandataById?._id, data, user));
+      dispatch(addPaymentAction(plandataById?._id, data, user));
       removeLocalStorage("payment"); 
       setShowModal(false); 
-      await paymentPromise; 
-      navigate("/client-batch", { replace: true });
     } catch (error) {
       console.error("Payment action failed:", error);
     }
