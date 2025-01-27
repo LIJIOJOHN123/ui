@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Button, Modal } from "react-bootstrap";
 import { getLocalStorage, removeLocalStorage } from "../utils/LocalStorage";
 import { getByIdPlanAction } from "../store/planSlice";
@@ -6,21 +6,20 @@ import { useDispatch, useSelector } from "react-redux";
 import { addPaymentAction } from "../store/paymentSlice";
 import { useNavigate } from "react-router-dom";
 
-const PaymentModal = () => {
-  const [showModal, setShowModal] = useState(false);
+const PaymentModal = ({ showModal, setShowModal }) => {
   const { dataById: plandataById } = useSelector((state) => state.plan);
   const { user } = useSelector((state) => state.auth);
-
+  const payment = getLocalStorage("payment");
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   useEffect(() => {
-    const payment = getLocalStorage("payment");
+ 
     if (payment) {
       dispatch(getByIdPlanAction(payment));
       setShowModal(true);
     }
-  }, [dispatch]);
+  }, [dispatch, setShowModal,payment]);
 
   const handleModalClose = () => {
     removeLocalStorage("payment");
@@ -34,17 +33,17 @@ const PaymentModal = () => {
 
   const handlePay = async () => {
     const data = {
-      amount: plandataById.pricing,
+      amount: plandataById?.pricing,
       currency: "USD",
       receipt: `receipt_${new Date().getTime()}`,
       notes: { note1: "Payment for Test" },
     };
 
     try {
-      await dispatch(addPaymentAction(plandataById._id, data, user));
+      await dispatch(addPaymentAction(plandataById?._id, data, user));
       removeLocalStorage("payment");
       setShowModal(false);
-
+      navigate("/client-batch", { replace: true });
     } catch (error) {
       console.error("Payment action failed:", error);
     }
