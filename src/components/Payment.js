@@ -44,7 +44,6 @@ const PaymentModal = () => {
       await dispatch(addPaymentAction(plandataById._id, data, user));
       removeLocalStorage("payment");
       setShowModal(false);
-      navigate('/client-batch', { replace: true });
 
     } catch (error) {
       console.error("Payment action failed:", error);
