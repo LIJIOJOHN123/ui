@@ -30,19 +30,19 @@ const PaymentModal = ({ showModal, setShowModal }) => {
     removeLocalStorage("payment");
     setShowModal(false);
   };
-
   const handlePay = async () => {
     const data = {
       amount: plandataById?.pricing,
       currency: "USD",
-      receipt: `receipt_${new Date().getTime()}`,
+      receipt: `receipt_${Date.now()}`, 
       notes: { note1: "Payment for Test" },
     };
-
+  
     try {
-      await dispatch(addPaymentAction(plandataById?._id, data, user));
-      removeLocalStorage("payment");
-      setShowModal(false);
+      const paymentPromise = dispatch(addPaymentAction(plandataById?._id, data, user));
+      removeLocalStorage("payment"); 
+      setShowModal(false); 
+      await paymentPromise; 
       navigate("/client-batch", { replace: true });
     } catch (error) {
       console.error("Payment action failed:", error);
