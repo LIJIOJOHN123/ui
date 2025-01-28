@@ -110,7 +110,7 @@ export const paymentListAction =
       try {
         const token = getLocalStorage("authToken");
         const res = await axios.get(
-          `${backendAPIList.paymentManagement}?page=${page}&limit=${limit}&${searchQueries}`,
+          `${backendAPIList.paymentManagement}/transition?page=${page}&limit=${limit}&${searchQueries}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }

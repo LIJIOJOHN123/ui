@@ -35,6 +35,7 @@ function NavBar({ children }) {
     { label: "Clients", path: "/clients" },
     { label: "Api List", path: "/api-list" },
     { label: "Api Group", path: "/api-groups" },
+    { label: "Payment List", path: "/payment-list" },
     { label: "Products", path: "/products" },
     { label: "Batch", path: "/batch" },
     { label: "Api Response", path: "/api-response" },

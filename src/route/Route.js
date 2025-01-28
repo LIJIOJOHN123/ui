@@ -56,6 +56,7 @@ import PreValidationList from "../pages/pre-validation/List";
 import AddInput from "../pages/product/AddInput";
 import ClientDataDetails from "../pages/product/ClientDataDetails";
 import APIDocumentaion from "../pages/API_documentation";
+import PaymentList from "../pages/payment/PaymentList";
 
 function RoutesPage() {
   return (
@@ -134,6 +135,10 @@ function RoutesPage() {
             <Route
               path="post-validation/create"
               element={<PostValidationForm />}
+            />
+            <Route
+              path="payment-list"
+              element={<PaymentList />}
             />
             <Route
               path="post-validation/edit/:id"
