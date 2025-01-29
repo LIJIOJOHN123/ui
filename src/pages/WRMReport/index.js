@@ -113,10 +113,10 @@ const Report = () => {
             </div>
           </div>
           <div className="sidebar">
-            <Button variant="primary" onClick={() => navigate("/api-list/create")}>Add API</Button>
-            <div className="mt-3">
+            {/* <Button variant="primary" onClick={() => navigate("/api-list/create")}>Add API</Button> */}
+            {/* <div className="mt-3">
               <Button variant="danger" disabled={selectedRows.size === 0}>Delete Selected</Button>
-            </div>
+            </div> */}
           </div>
           <Table striped bordered hover responsive>
             <thead>

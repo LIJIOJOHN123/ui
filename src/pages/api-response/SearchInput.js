@@ -14,7 +14,8 @@ function ApiResponseSearchPopup({ setSearchQueries }) {
     apiStatus: "",
     batchId: "",
     postValidationStatus:"",
-    preValidationStatus:""
+    preValidationStatus:"",
+    wrmMinReportStatus:""
   });
 
   const handleClose = () => {
@@ -26,7 +27,8 @@ function ApiResponseSearchPopup({ setSearchQueries }) {
       apiStatus: "",
       batchId: "",
       postValidationStatus:"",
-      preValidationStatus:""
+      preValidationStatus:"",
+      wrmMinReportStatus:""
     });
   };
 
@@ -135,6 +137,7 @@ function ApiResponseSearchPopup({ setSearchQueries }) {
                 <option value="SUCCEEDED">SUCCEEDED</option>
                 <option value="FAILED">FAILED</option>
                 <option value="SKIPPED">SKIPPED</option>
+                <option value="RE TRIGGERED">RE TRIGGERED</option>
               </Form.Select>
             </InputGroup>
             <InputGroup className="mb-3">
@@ -148,6 +151,19 @@ function ApiResponseSearchPopup({ setSearchQueries }) {
                 <option value="IN PROGRESS">IN PROGRESS</option>
                 <option value="SUCCEEDED">SUCCEEDED</option>
                 <option value="FAILED">FAILED</option>
+                <option value="SKIPPED">SKIPPED</option>
+              </Form.Select>
+            </InputGroup>
+            <InputGroup className="mb-3">
+              <InputGroup.Text>WRM Report status </InputGroup.Text>
+              <Form.Select
+                value={tempSearchQueries.wrmMinReportStatus}
+                onChange={(e) => handleInputChange("wrmMinReportStatus", e.target.value)}
+              >
+                <option value="">Select report status</option>
+                <option value="PENDING">PENDING</option>
+                <option value="IN PROGRESS">IN PROGRESS</option>
+                <option value="COMPLETED">COMPLETED</option>
                 <option value="SKIPPED">SKIPPED</option>
               </Form.Select>
             </InputGroup>
