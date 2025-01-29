@@ -210,8 +210,9 @@ export const dashBoardUsageAction =
 export const retriggerBatchingAction = (id) => async (dispatch) => {
   try {
     const token = getLocalStorage("authToken");
-    const res = await axios.get(
+    const res = await axios.post(
       `${backendAPIList.apiResponseManagement}/retrigger/${id}`,
+      formData,
       {
         headers: { Authorization: `Bearer ${token}` },
       }

@@ -4,14 +4,12 @@ import { getLocalStorage, removeLocalStorage } from "../utils/LocalStorage";
 import { getByIdPlanAction } from "../store/planSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { addPaymentAction } from "../store/paymentSlice";
-import { useNavigate } from "react-router-dom";
 
 const PaymentModal = ({ showModal, setShowModal }) => {
   const { dataById: plandataById } = useSelector((state) => state.plan);
   const { user } = useSelector((state) => state.auth);
   const payment = getLocalStorage("payment");
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   useEffect(() => {
  

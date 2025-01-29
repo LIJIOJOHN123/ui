@@ -157,9 +157,7 @@ function ApiList() {
                             onClick={() => setPage(page - 1)}
                           />
               
-                          {/* Show pages dynamically based on the total page count */}
                           {totalPages <= 5 ? (
-                            // If there are 5 or fewer pages, display all pages
                             [...Array(totalPages).keys()].map((num) => (
                               <Pagination.Item
                                 key={num}
