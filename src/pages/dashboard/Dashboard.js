@@ -8,12 +8,12 @@ import {
   Tooltip,
 } from "chart.js";
 import React, { useEffect, useRef, useState } from "react";
-import { Button, Col, Modal, Row } from "react-bootstrap";
+import { Button, Col, Row } from "react-bootstrap";
 import { Bar } from "react-chartjs-2";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { clientActivePlanProductAction, uploadCSVAPIBatchingAction, uploadCSVFileAPIBatchingAction } from "../../store/apiResponseManagement";
+import { dashBoardUsageAction, uploadCSVAPIBatchingAction } from "../../store/apiResponseManagement";
 import { darsbordChartListAction } from "../../store/paymentSlice";
 
 ChartJS.register(
@@ -38,8 +38,11 @@ function Dashboard() {
   }, [usage]);
 
   useEffect(() => {
-    dispatch(clientActivePlanProductAction());
+    dispatch(dashBoardUsageAction());
   }, [])
+  const { dashBoardUsage } = useSelector((state) => state.apiResponseManagement);
+  console.log(dashBoardUsage, "dashBoardUsage")
+
   const datas = {
     labels: chartdata?.map((item) => item.date),
     datasets: [
@@ -54,6 +57,7 @@ function Dashboard() {
           "rgba(153, 102, 255, 0.2)",
         ],
         borderWidth: 1,
+        barThickness: 60,
       },
     ],
   };
@@ -89,43 +93,42 @@ function Dashboard() {
     },
   };
 
+  console.log(dashBoardUsage, "activePlan")
+
+
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
     if (file) {
       setSelectedFile(file);
+
+      // Automatically trigger upload after file selection
+      const formData = new FormData();
+      formData.append("file", file);
+      dispatch(uploadCSVAPIBatchingAction({ formData }));
+      navigate("/client-batch");
     } else {
       toast.error("Please select a CSV file to upload.");
     }
   };
 
-  const handleUpload = () => {
-    if (!selectedFile) {
-      return;
-    }
-    const formData = new FormData();
-    formData.append("file", selectedFile);
-    dispatch(uploadCSVAPIBatchingAction({ formData }));
-    navigate("/client-batch")
-    setSelectedFile(null);
-  };
-
-
   return (
     <>
       <Row className="">
         <Col
-          md={2}
+
           className="bg-danger   border rounded-1 border-1  d-flex flex-column justify-content-center align-items-center"
           style={{ height: "60px" }}
         >
           <div className="text-center">
-            <h6 className="text-white mb-1">15,100 / 499,988</h6>
+            <h6 className="text-white mb-1">
+              {dashBoardUsage?.payment?.balance} / {dashBoardUsage?.payment?.totalrequest}
+            </h6>
             <p className="text-white mb-0" style={{ fontSize: "14px" }}>
               Recent API usage
             </p>
           </div>
         </Col>
-        <Col
+        {/* <Col
           md={5}
           className="bg-body-secondary border rounded-1 border-1 d-flex flex-column justify-content-center align-items-center"
           style={{ height: "60px" }}
@@ -136,14 +139,14 @@ function Dashboard() {
               WEB RISK URLS
             </p>
           </div>
-        </Col>
+        </Col> */}
         <Col
-          md={5}
+
           className="bg-body-secondary border rounded-1 border-1 d-flex flex-column justify-content-center align-items-center"
           style={{ height: "60px" }}
         >
           <div className="text-center">
-            <h6 className="fw-bold mb-1">16,000</h6>
+            <h6 className="fw-bold mb-1">{dashBoardUsage?.usage?.length}</h6>
             <p className="mb-0" style={{ fontSize: "14px" }}>
               API URLS
             </p>
@@ -171,28 +174,26 @@ function Dashboard() {
             onChange={handleFileUpload}
             accept=".csv"
           />
-              <Button
-          variant="danger"
-          style={{ width: "150px", fontSize: "14px", marginTop: "-10px" }}
-          onClick={() => {
-            handleUpload(); 
-            fileInputRef.current.click();
-          }}
-        >
-          Upload CSV Files
-        </Button>
+          <Button
+            variant="danger"
+            style={{ width: "150px", fontSize: "14px", marginTop: "-10px" }}
+            onClick={() => fileInputRef.current.click()} // Remove handleUpload from here
+          >
+            Upload CSV Files
+          </Button>
 
         </Col>
         <Col
           style={{ height: "110px" }}
           className="border me-3 rounded-1 text-center border-black py-2"
         >
-          <h4>API Integration</h4>
+          <h4 >API Integration</h4>
           <p style={{ fontSize: "12px" }} className="fw-normal mx-2">
             Perform advanced risk analysis and reputation checks with a robust
             API that can access merchant’s website presence.
           </p>
           <Button
+            onClick={() => navigate("/api_document")}
             variant="danger"
             style={{ width: "150px", fontSize: "14px", marginTop: "-10px" }}
           >

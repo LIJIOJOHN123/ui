@@ -45,6 +45,8 @@ const PaymentModal = ({ showModal, setShowModal }) => {
     }
   };
 
+  
+
   return (
     <Modal show={showModal} onHide={handleModalClose}>
       <Modal.Header closeButton>

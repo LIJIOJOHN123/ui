@@ -18,8 +18,11 @@ import React, { useEffect, useState } from "react";
 import { Col, Form, Row } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import ProfilePage from "./ProfilePage";
+import { clientActivePlanProductAction } from "../../store/apiResponseManagement";
+import { useDispatch } from "react-redux";
 
 const AccountDetails = () => {
+  const dispatch = useDispatch()
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -31,6 +34,10 @@ const AccountDetails = () => {
     apikey: "",
   });
   const { isAuthenticated, user } = useSelector((state) => state.auth);
+  const { activePlan } = useSelector((state) => state.apiResponseManagement);
+  useEffect(() => {
+    dispatch(clientActivePlanProductAction());
+  }, [])
   useEffect(() => {
     if (user) {
       setFormData({
@@ -45,6 +52,8 @@ const AccountDetails = () => {
       });
     }
   }, [user])
+
+  console.log(activePlan, "activePlan")
   useEffect(() => {
     if (isAuthenticated) {
       setFormData((prev) => ({ ...prev, ...user }));
@@ -102,12 +111,12 @@ const AccountDetails = () => {
             />
           </Form.Group>
           <div className="mt-2">
-            <p className="fw-semibold my-0">Plan Details – Enterprise Plan</p>
+            <p className="fw-semibold my-0">Plan Details – {activePlan?.name}</p>
             <p className="fw-semibold">491821</p>
           </div>
           <div className="mt-2">
-            <p className="fw-semibold my-0">Plan type : Monthly</p>
-            <p className="fw-semibold">Plan Price : $299.99</p>
+            <p className="fw-semibold my-0">Plan type : {activePlan?.plantype}</p>
+            <p className="fw-semibold">Plan Price : {activePlan?.currencySymbol} {activePlan?.pricing}</p>
           </div>
           <div className="mt-2">
             <p className="fw-semibold text-decoration-underline my-0">
