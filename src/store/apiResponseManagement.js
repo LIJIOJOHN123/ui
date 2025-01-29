@@ -180,6 +180,33 @@ export const clientActivePlanProductAction =
         // toast.error(payload.message);
       }
     };
+export const dashBoardUsageAction =
+  (page = 1, limit = 5, searchQueries) =>
+    async (dispatch) => {
+      try {
+        const token = getLocalStorage("authToken");
+        const res = await axios.get(
+          `${backendAPIList.apiResponseManagement}/dashboard-usage?page=${page}&limit=${limit}&${searchQueries}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        const { status, data, count, code } = res.data;
+
+
+        if (code === 200) {
+          dispatch(dashboardUsageResponseSuccess({ data, status, count }));
+        }
+      } catch (error) {
+
+        const payload = {
+          message: error?.response?.data?.message || "An error occurred",
+          status: error?.response?.status || 500,
+        };
+        dispatch(dashboardUsageResponseFail(payload));
+        // toast.error(payload.message);
+      }
+    };
 export const retriggerBatchingAction = (id,formData) => async (dispatch) => {
   try {
     const token = getLocalStorage("authToken");
