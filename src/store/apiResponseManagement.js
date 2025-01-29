@@ -12,7 +12,9 @@ const apiBatchingInitialState = {
   dataById: {},
   batchList: [],
   batchCount: 0,
-  clientActivePlanProduct:{}
+  dashBoardUsage: null,
+  clientActivePlanProduct: {},
+  activePlan: null
 };
 
 export const apiResponseManagementSlice = createSlice({
@@ -44,7 +46,7 @@ export const apiResponseManagementSlice = createSlice({
       state.loading = false;
       state.status = action.payload.status;
       state.count = state.data.length;
-      state.batchList = [ action.payload.data,...state.batchList]
+      state.batchList = [action.payload.data, ...state.batchList]
     },
     createAPIBatchingResponseFail: (state, action) => {
       state.loading = false;
@@ -79,15 +81,27 @@ export const apiResponseManagementSlice = createSlice({
       state.loading = false;
       state.status = action.payload.status;
     },
-    clientPlanProductResponseSuccess:(state,action)=>{
-      state.loading =false
+    clientPlanProductResponseSuccess: (state, action) => {
+      state.loading = false
       state.clientActivePlanProduct = action.payload.data;
       state.batchList = action.payload?.data?.batchList?.result;
       state.status = action.payload.status;
       state.batchCount = action.payload.data?.batchList?.count;
+      state.activePlan = action.payload.data?.activePlan;
     },
-    clientPlanProductResponseFail:(state,action)=>{
-      state.loading =false
+    dashboardUsageResponseSuccess: (state, action) => {
+      state.loading = false
+
+      state.status = action.payload.status;
+      state.dashBoardUsage = action.payload.data;
+      state.payment = action.payload.data?.payment;
+    },
+    dashboardUsageResponseFail: (state, action) => {
+      state.loading = false
+      state.status = action.payload.status;
+    },
+    clientPlanProductResponseFail: (state, action) => {
+      state.loading = false
       state.status = action.payload.status;
     }
   },
@@ -108,7 +122,8 @@ export const {
   batchlistResponseSuccess,
   batchlistResponseFail,
   clientPlanProductResponseSuccess,
-  clientPlanProductResponseFail
+  clientPlanProductResponseFail,
+  dashboardUsageResponseFail, dashboardUsageResponseSuccess
 } = apiResponseManagementSlice.actions;
 
 export const apiReponseManagementReducer = apiResponseManagementSlice.reducer;
@@ -150,16 +165,45 @@ export const clientActivePlanProductAction =
           }
         );
         const { status, data, count, code } = res.data;
+
+
         if (code === 200) {
           dispatch(clientPlanProductResponseSuccess({ data, status, count }));
         }
       } catch (error) {
-       
+
         const payload = {
           message: error?.response?.data?.message || "An error occurred",
           status: error?.response?.status || 500,
         };
         dispatch(clientPlanProductResponseFail(payload));
+        // toast.error(payload.message);
+      }
+    };
+export const dashBoardUsageAction =
+  (page = 1, limit = 5, searchQueries) =>
+    async (dispatch) => {
+      try {
+        const token = getLocalStorage("authToken");
+        const res = await axios.get(
+          `${backendAPIList.apiResponseManagement}/dashboard-usage?page=${page}&limit=${limit}&${searchQueries}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        const { status, data, count, code } = res.data;
+
+
+        if (code === 200) {
+          dispatch(dashboardUsageResponseSuccess({ data, status, count }));
+        }
+      } catch (error) {
+
+        const payload = {
+          message: error?.response?.data?.message || "An error occurred",
+          status: error?.response?.status || 500,
+        };
+        dispatch(dashboardUsageResponseFail(payload));
         // toast.error(payload.message);
       }
     };
@@ -282,33 +326,33 @@ export const getByIdClientDataAPIAction =
         toast.error(payload.message);
       }
     };
-    export const addAPIFormBatchingAction = (formData, id) => async (dispatch) => {
-      try {
-        const token = getLocalStorage("authToken");
-        const res = await axios.post(
-          `${backendAPIList.apiResponseManagement}/singlerequst`,
-          formData,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
-    
-        const { status, message,data } = res.data;
-        if (status === "ok") {
-          toast.success(message);
-          dispatch(createAPIBatchingResponseSuccess({ status: "done",data }));
-        } else {
-          dispatch(createAPIBatchingResponseFail({ status: 400 }));
-        }
-      } catch (error) {
-        const payload = {
-          message: error?.response?.data?.message || "An error occurred",
-          status: error?.response?.status || 500,
-        };
-        dispatch(createAPIBatchingResponseFail(payload));
-        toast.error(payload.message);
+export const addAPIFormBatchingAction = (formData, id) => async (dispatch) => {
+  try {
+    const token = getLocalStorage("authToken");
+    const res = await axios.post(
+      `${backendAPIList.apiResponseManagement}/singlerequst`,
+      formData,
+      {
+        headers: { Authorization: `Bearer ${token}` },
       }
+    );
+
+    const { status, message, data } = res.data;
+    if (status === "ok") {
+      toast.success(message);
+      dispatch(createAPIBatchingResponseSuccess({ status: "done", data }));
+    } else {
+      dispatch(createAPIBatchingResponseFail({ status: 400 }));
+    }
+  } catch (error) {
+    const payload = {
+      message: error?.response?.data?.message || "An error occurred",
+      status: error?.response?.status || 500,
     };
+    dispatch(createAPIBatchingResponseFail(payload));
+    toast.error(payload.message);
+  }
+};
 export const addAPIBatchingAction = (formData, id) => async (dispatch) => {
   try {
     const token = getLocalStorage("authToken");
@@ -348,10 +392,10 @@ export const uploadCSVAPIBatchingAction =
         }
       );
 
-      const { status, message,data } = res.data;
+      const { status, message, data } = res.data;
       if (status === "ok") {
         toast.success(message);
-        dispatch(createAPIBatchingResponseSuccess({ status: "uploaded", data}));
+        dispatch(createAPIBatchingResponseSuccess({ status: "uploaded", data }));
       } else {
         dispatch(createAPIBatchingResponseFail({ status: 400 }));
       }

@@ -20,13 +20,13 @@ const Pricing = () => {
     setShowModal(true);
   };
 
+  const { loading } = useSelector((state) => state.payment)
 
-
-  const { data } = useSelector((state) => state.apiResponseManagement);
+  const { activePlan: data, } = useSelector((state) => state.apiResponseManagement);
   useEffect(() => {
     dispatch(clientActivePlanProductAction());
-  }, [])
-
+  }, [loading])
+console.log(data)
   useEffect(() => {
     const queryStringValue = {
       indexofplan: true,
@@ -172,17 +172,17 @@ const Pricing = () => {
                   ) : (
                     <Button
                       className="text-center w-100 fw-medium border-0"
-                      style={{ backgroundColor: data?.planId === plan._id ? "green" : "#bf54bd" }}
+                      style={{ backgroundColor: data?._id === plan._id ? "green" : "#bf54bd" }}
                       onClick={() => {
                         setLocalStorage("payment", plan._id);
                         if (!token) {
                           navigate("/auth/login");
-                        }else{
+                        } else {
                           openPaymentModal()
                         }
                       }}
                     >
-                      {data?.planId === plan._id ? "Active Plan" : "Upgrade"}
+                      {data?._id === plan._id ? "Active Plan" : "Upgrade"}
                     </Button>
                   )}
                   <ul

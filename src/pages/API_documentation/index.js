@@ -7,7 +7,7 @@ const ApiIntroduction = () => {
   return (
     <Container className="mt-4">
       <Row className="justify-content-center">
-        <Col md={8}>
+        <Col >
           <Card className="shadow-lg border-0">
             <Card.Body>
               <h1 className="text-center mb-4">API Introduction</h1>
@@ -34,9 +34,11 @@ const ApiIntroduction = () => {
                 <li>Test the API using tools like Postman or curl.</li>
               </ol>
               <h3>Single Request Processing API</h3>
+              <div style={{maxWidth: "870px", margin:"auto" }}>
 
               <SingleRequest/>
               <BatchRequest/>
+              </div>
               <h3 className="mt-5">API Response</h3>
               <p>
                 When making an API request, you can choose one of the following methods for receiving the response:
