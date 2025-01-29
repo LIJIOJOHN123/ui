@@ -56,6 +56,7 @@ import PreValidationList from "../pages/pre-validation/List";
 import AddInput from "../pages/product/AddInput";
 import ClientDataDetails from "../pages/product/ClientDataDetails";
 import APIDocumentaion from "../pages/API_documentation";
+import WRMReport from "../pages/WRMReport";
 
 function RoutesPage() {
   return (
@@ -166,6 +167,7 @@ function RoutesPage() {
             <Route path="client/:id" element={<ClientDetails />} />
             <Route path="documentation" element={<Documentation />} />
             <Route path="plans" element={<Plans />} />
+            <Route path="wrmreport" element={<WRMReport />} />
             <Route path="settings" element={<Settings />} />
             <Route path="help" element={<HelpPage />} />
             <Route path="api_document" element={<APIDocumentaion />} />

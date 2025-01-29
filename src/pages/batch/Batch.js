@@ -91,6 +91,27 @@ const Batch = () => {
     );
   };
 
+  const renderPercentage = (item) => {
+    const percentage = ((item.completedapis / item.totalapis) * 100).toFixed(2);
+    let colorClass = "text-muted";
+
+    if (percentage >= 90) {
+      colorClass = "text-success"; 
+    } else if (percentage >= 70) {
+      colorClass = "text-warning"; 
+    } else {
+      colorClass = "text-danger";
+    }
+
+    return (
+      <div className="d-flex align-items-center">
+        <span className={`${colorClass} fw-bold`}>
+          {percentage}%
+        </span>
+      </div>
+    );
+  };
+
   return (
     <Fragment>
       <h3 className="mb-4">Batch List</h3>
@@ -118,7 +139,7 @@ const Batch = () => {
       
       <Card className="mb-4">
         <Card.Body>
-          <table className="table table-striped table-hover">
+          <table className="table table-bordered table-striped table-hover">
             <thead className="thead-dark">
               <tr>
                 <th scope="col">View</th>
@@ -127,13 +148,14 @@ const Batch = () => {
                 <th scope="col">Number of Requests</th>
                 <th scope="col">Total APIs</th>
                 <th scope="col">Completed APIs</th>
+                <th scope="col">Completed API Percentage</th> {/* New Column */}
                 <th className="text-center">Download</th>
               </tr>
             </thead>
             <tbody>
               {loading ? (
                 <tr>
-                  <td colSpan="7" className="text-center">
+                  <td colSpan="8" className="text-center">
                     <Spinner animation="border" variant="primary" />
                   </td>
                 </tr>
@@ -151,12 +173,13 @@ const Batch = () => {
                     <td>{item.records}</td>
                     <td>{item.totalapis}</td>
                     <td>{item.completedapis}</td>
+                    <td>{renderPercentage(item)}</td> {/* Render Percentage */}
                     <td className="text-center">{renderDownloadButton(item)}</td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan="7" className="text-center">
+                  <td colSpan="8" className="text-center">
                     No batches found.
                   </td>
                 </tr>

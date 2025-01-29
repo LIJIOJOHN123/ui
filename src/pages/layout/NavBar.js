@@ -38,10 +38,11 @@ function NavBar({ children }) {
     { label: "Products", path: "/products" },
     { label: "Batch", path: "/batch" },
     { label: "Api Response", path: "/api-response" },
+    { label: "Report", path: "/wrmreport" },
+    { label: "Plan Setting", path: "/plan" },
+    { label: "Plans", path: "/plans" },
     { label: "Pre-Validation", path: "/pre-validation" },
     { label: "Post-Validation", path: "/post-validation" },
-    { label: "Plan", path: "/plan" },
-    { label: "Plans", path: "/plans" },
     { label: "Settings", path: "/settings" },
     { label: "Logout", path: "/" },
   ];

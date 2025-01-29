@@ -163,11 +163,12 @@ export const clientActivePlanProductAction =
         // toast.error(payload.message);
       }
     };
-export const retriggerBatchingAction = (id) => async (dispatch) => {
+export const retriggerBatchingAction = (id,formData) => async (dispatch) => {
   try {
     const token = getLocalStorage("authToken");
-    const res = await axios.get(
+    const res = await axios.post(
       `${backendAPIList.apiResponseManagement}/retrigger/${id}`,
+      formData,
       {
         headers: { Authorization: `Bearer ${token}` },
       }

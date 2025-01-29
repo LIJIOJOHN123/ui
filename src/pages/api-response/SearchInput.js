@@ -50,7 +50,7 @@ function ApiResponseSearchPopup({ setSearchQueries }) {
 
   return (
     <>
-      <Button variant="primary" onClick={handleShow}>
+      <Button variant="primary"  className="ms-3" onClick={handleShow}>
         <i className="bi bi-search me-2"></i> Search
       </Button>
 
