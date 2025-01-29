@@ -58,7 +58,7 @@ function SearchPopup({ setSearchQueries }) {
                 type="text"
                 placeholder="Batch id"
                 value={tempSearchQueries.batchId}
-                onChange={(e) => handleInputChange("apiname", e.target.value)}
+                onChange={(e) => handleInputChange("batchId", e.target.value)}
               />
             </InputGroup>
             <InputGroup className="mb-3">
@@ -67,7 +67,7 @@ function SearchPopup({ setSearchQueries }) {
                 type="text"
                 placeholder="Job id"
                 value={tempSearchQueries.job_id}
-                onChange={(e) => handleInputChange("apiname", e.target.value)}
+                onChange={(e) => handleInputChange("job_id", e.target.value)}
               />
             </InputGroup>
 
@@ -76,7 +76,7 @@ function SearchPopup({ setSearchQueries }) {
               <Form.Control
                 as="select"
                 value={tempSearchQueries.clientReportSendToUrlStatus}
-                onChange={(e) => handleInputChange("api_type", e.target.value)}
+                onChange={(e) => handleInputChange("clientReportSendToUrlStatus", e.target.value)}
               >
                 <option value="">Select API Type</option>
                 <option value="PENDING">PENDING</option>
@@ -90,7 +90,7 @@ function SearchPopup({ setSearchQueries }) {
               <Form.Control
                 as="select"
                 value={tempSearchQueries.clientReportSendToEmailStatus}
-                onChange={(e) => handleInputChange("api_type", e.target.value)}
+                onChange={(e) => handleInputChange("clientReportSendToEmailStatus", e.target.value)}
               >
                 <option value="">Select API Type</option>
                 <option value="PENDING">PENDING</option>
