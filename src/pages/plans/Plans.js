@@ -15,6 +15,7 @@ const Pricing = () => {
   const { data: plans } = useSelector((state) => state.plan);
   const token = getLocalStorage("authToken");
   const [showModal, setShowModal] = useState(false);
+  const [selectedPlan, setSelectedPlan] = useState(null);
 
   const openPaymentModal = () => {
     setShowModal(true);
@@ -26,7 +27,6 @@ const Pricing = () => {
   useEffect(() => {
     dispatch(clientActivePlanProductAction());
   }, [loading])
-console.log(data)
   useEffect(() => {
     const queryStringValue = {
       indexofplan: true,
@@ -52,7 +52,7 @@ console.log(data)
     setMonthlyPlan(!monthlyPlan);
     setSelectedCurrency(event.target.value);
   };
-
+  console.log(selectedPlan, plans[0])
   return (
     <div className="mt-5 overflow-x-hidden" id="pricing">
       <h2 className="text-center ">Our Pricing Plans</h2>
@@ -175,6 +175,7 @@ console.log(data)
                       style={{ backgroundColor: data?._id === plan._id ? "green" : "#bf54bd" }}
                       onClick={() => {
                         setLocalStorage("payment", plan._id);
+                        setSelectedPlan(plan);
                         if (!token) {
                           navigate("/auth/login");
                         } else {
@@ -182,7 +183,7 @@ console.log(data)
                         }
                       }}
                     >
-                      {data?._id === plan._id ? "Active Plan" : "Upgrade"}
+                      {data?._id === plan._id ? "Active Plan" : "Activate now"}
                     </Button>
                   )}
                   <ul
@@ -226,7 +227,7 @@ console.log(data)
       </Row>
       <div>
       </div>
-      <PaymentModal showModal={showModal} setShowModal={setShowModal} />
+      <PaymentModal showModal={showModal} setShowModal={setShowModal}  isFirstPlan={selectedPlan && selectedPlan._id === plans[0]._id}/>
     </div>
   );
 };

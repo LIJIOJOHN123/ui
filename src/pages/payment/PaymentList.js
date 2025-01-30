@@ -60,7 +60,6 @@ function PaymentList() {
   };
 
 
-  console.log(paymentData, "paymentData")
   // const openDeleteModal = (id, name) => {
   //   setApiToDelete({ id, name });
   //   setShowDeleteModal(true);

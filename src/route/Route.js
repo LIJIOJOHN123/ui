@@ -58,6 +58,7 @@ import ClientDataDetails from "../pages/product/ClientDataDetails";
 import APIDocumentaion from "../pages/API_documentation";
 import WRMReport from "../pages/WRMReport";
 import PaymentList from "../pages/payment/PaymentList";
+import ClientBatchDetails from "../pages/clientBatchDetails";
 
 function RoutesPage() {
   return (
@@ -192,6 +193,10 @@ function RoutesPage() {
             <Route
               path="/client-batch"
               element={<ClientBatch />}
+            />
+             <Route
+              path="/client-batch/:id"
+              element={<ClientBatchDetails />}
             />
             <Route
               path="/client-details/:id"
