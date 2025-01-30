@@ -41,7 +41,6 @@ function Dashboard() {
     dispatch(dashBoardUsageAction());
   }, [])
   const { dashBoardUsage } = useSelector((state) => state.apiResponseManagement);
-  console.log(dashBoardUsage, "dashBoardUsage")
 
   const datas = {
     labels: chartdata?.map((item) => item.date),
@@ -93,7 +92,6 @@ function Dashboard() {
     },
   };
 
-  console.log(dashBoardUsage, "activePlan")
 
 
   const handleFileUpload = (event) => {
@@ -121,7 +119,7 @@ function Dashboard() {
         >
           <div className="text-center">
             <h6 className="text-white mb-1">
-              {dashBoardUsage?.payment?.balance} / {dashBoardUsage?.payment?.totalrequest}
+              {(dashBoardUsage?.payment?.totalrequest-dashBoardUsage?.payment?.balance)} / {dashBoardUsage?.payment?.totalrequest}
             </h6>
             <p className="text-white mb-0" style={{ fontSize: "14px" }}>
               Recent API usage

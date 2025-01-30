@@ -7,6 +7,7 @@ import { clientActivePlanProductAction } from "../../store/apiResponseManagement
 import { wrmReportExportAction } from "../../store/wrmReportManagentSlice";
 import AddInput from "./AddInput";
 import Pricing from "../../components/Pricing";
+import { Link } from "react-router-dom";
 
 const PaginationComponent = ({ totalPages, page, setPage }) => {
   return totalPages > 1 && (
@@ -78,8 +79,13 @@ const BatchTable = ({ batchList, reportLoading, reportData, selectedBatchId, han
           const progressBarVariant = getProgressBarVariant(percentage);
           return (
             <tr key={item._id}>
-              <td className="text-center">{new Date(item.createdAt).toLocaleDateString()}</td>
-              <td className="text-center">{item._id}</td>
+            <td className="text-center">
+              {new Date(item.createdAt).toLocaleString('en-US', {
+                weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', 
+                hour: 'numeric', minute: 'numeric', second: 'numeric'
+              })}
+            </td>
+              <td className="text-center"><Link to={`/client-batch/${item._id}`}>{item._id}</Link></td>
               <td className="text-center">
                 <Badge bg="info">{item.type}</Badge>
               </td>

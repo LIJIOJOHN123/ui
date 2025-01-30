@@ -53,7 +53,6 @@ const AccountDetails = () => {
     }
   }, [user])
 
-  console.log(activePlan, "activePlan")
   useEffect(() => {
     if (isAuthenticated) {
       setFormData((prev) => ({ ...prev, ...user }));

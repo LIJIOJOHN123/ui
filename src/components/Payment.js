@@ -5,7 +5,7 @@ import { getByIdPlanAction } from "../store/planSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { addPaymentAction } from "../store/paymentSlice";
 
-const PaymentModal = ({ showModal, setShowModal }) => {
+const PaymentModal = ({ showModal, setShowModal,isFirstPlan }) => {
   const { dataById: plandataById } = useSelector((state) => state.plan);
   const { user } = useSelector((state) => state.auth);
   const payment = getLocalStorage("payment");
@@ -50,17 +50,17 @@ const PaymentModal = ({ showModal, setShowModal }) => {
   return (
     <Modal show={showModal} onHide={handleModalClose}>
       <Modal.Header closeButton>
-        <Modal.Title>Upgrade Plan</Modal.Title>
+        <Modal.Title>{isFirstPlan?"Activate free plan":"Upgrade Plan"}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        Do you want to Buy a plan? Shall we proceed to payment?
+        {isFirstPlan ?"Do you want to activate free plan?":"Do you want to Buy a plan? Shall we proceed to payment?"}
       </Modal.Body>
       <Modal.Footer>
         <Button variant="danger" onClick={handleNoPay}>
           No
         </Button>
         <Button variant="success" onClick={handlePay}>
-          Yes, Pay Now
+          {isFirstPlan?"Yes, Activate Now":"Yes, Pay Now"}
         </Button>
       </Modal.Footer>
     </Modal>
