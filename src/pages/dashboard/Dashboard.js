@@ -108,7 +108,12 @@ function Dashboard() {
       toast.error("Please select a CSV file to upload.");
     }
   };
-
+  const handleFileClick = () => {
+    navigate('/client-batch'); 
+  };
+  const totalRequest = dashBoardUsage?.payment?.totalrequest || 0;
+  const balance = dashBoardUsage?.payment?.balance || 0;
+  const used = totalRequest - balance;
   return (
     <>
       <Row className="">
@@ -119,7 +124,7 @@ function Dashboard() {
         >
           <div className="text-center">
             <h6 className="text-white mb-1">
-              {(dashBoardUsage?.payment?.totalrequest-dashBoardUsage?.payment?.balance)} / {dashBoardUsage?.payment?.totalrequest}
+            {`${used} / ${totalRequest}`}
             </h6>
             <p className="text-white mb-0" style={{ fontSize: "14px" }}>
               Recent API usage
@@ -157,21 +162,30 @@ function Dashboard() {
           style={{ height: "110px" }}
           className="border me-3 rounded-1 text-center border-black py-2"
         >
-          <div onClick={() => fileInputRef.current.click()} style={{ cursor: "pointer" }}>
+          <div onClick={handleFileClick} style={{ cursor: "pointer" }}>
+          <>
+          <h4>Upload URLs in Bulk</h4>
+          <p style={{ fontSize: "12px" }} className="fw-normal mx-2">
+            Do you have data we can enrich? Easily upload website URLs to
+            quickly scan web or app URLs without any integration.
+          </p>
+        </>
+          </div>
+          {/* <div onClick={() => fileInputRef.current.click()} style={{ cursor: "pointer" }}>
             {selectedFile ? (<p className="my-4 mb-5">{selectedFile.name}</p>) : (<><h4 >Upload URLs in Bulk</h4>
               <p style={{ fontSize: "12px" }} className="fw-normal mx-2">
                 Do you have data we can enrich? Easily upload website URLs to
                 quickly scan web or app URLs without any integration.
               </p></>)}
 
-          </div>
-          <input
+          </div> */}
+          {/* <input
             type="file"
             ref={fileInputRef}
             style={{ display: "none" }}
             onChange={handleFileUpload}
             accept=".csv"
-          />
+          /> */}
           <Button
             variant="danger"
             style={{ width: "150px", fontSize: "14px", marginTop: "-10px" }}
