@@ -64,7 +64,7 @@ function NavBar({ children }) {
           </Link>
         </Col>
         <Col xs="auto" className="d-flex align-items-stretch gap-1 my-2">
-          <div className="d-flex  align-items-center ">
+          {/* <div className="d-flex  align-items-center ">
             <Bell className="text-warning" />
             <span
               className=" translate-middle bg-success  rounded-circle text-center"
@@ -80,7 +80,7 @@ function NavBar({ children }) {
 
           <div className="d-flex justify-content-center align-items-center mx-3">
             <Mail className="text-white" />
-          </div>
+          </div> */}
           <Link to="/plans" className="text-decoration-none">
             <Button
               style={{

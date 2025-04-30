@@ -1,9 +1,10 @@
+import React, { useCallback, useRef, useState } from "react";
+import { Alert, Button, Card, Col, Form, Row } from "react-bootstrap";
 import { CSVLink } from "react-csv";
-import { Button, Col, Form, Card, Row, Alert } from "react-bootstrap";
-import React, { useState, useRef, useCallback } from "react";
 import { useDispatch } from "react-redux";
 import {
   addAPIFormBatchingAction,
+  clientActivePlanProductAction,
   uploadCSVAPIBatchingAction,
 } from "../../store/apiResponseManagement";
 
@@ -45,6 +46,8 @@ function AddInput({ id, dataById }) {
     [formData, id, dispatch]
   );
 
+
+
   const handleFileUpload = useCallback((event) => {
     const file = event.target.files[0];
     if (file) {
@@ -75,6 +78,7 @@ function AddInput({ id, dataById }) {
     setMessage({ success: "CSV file uploaded successfully!", error: null });
     setSelectedFile(null);
     fileInputRef.current.value = "";
+    dispatch(clientActivePlanProductAction())
   }, [selectedFile, dispatch]);
 
   const downloadCsvFile = useCallback((headers, data, filename) => {

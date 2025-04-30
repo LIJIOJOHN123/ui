@@ -141,6 +141,7 @@ export const apiBatchingAction =
         );
 
         const { status, data, count } = res.data;
+        console.log(data, "data>>>>>")
         if (status === "ok") {
           dispatch(listResponseSuccess({ data, status, count }));
         }
@@ -166,7 +167,7 @@ export const clientActivePlanProductAction =
         );
         const { status, data, count, code } = res.data;
 
-
+        console.log(data, "data")
         if (code === 200) {
           dispatch(clientPlanProductResponseSuccess({ data, status, count }));
         }
@@ -207,7 +208,7 @@ export const dashBoardUsageAction =
         // toast.error(payload.message);
       }
     };
-export const retriggerBatchingAction = (id,formData) => async (dispatch) => {
+export const retriggerBatchingAction = (id, formData) => async (dispatch) => {
   try {
     const token = getLocalStorage("authToken");
     const res = await axios.post(
@@ -289,6 +290,7 @@ export const getByIdAPIAction = (id) => async (dispatch) => {
       }
     );
     const { status, data } = res.data;
+
     if (status === "ok") {
       dispatch(getByIdResponseSuccess({ status, data }));
     }

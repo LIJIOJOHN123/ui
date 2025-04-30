@@ -52,7 +52,7 @@ const Pricing = () => {
     setMonthlyPlan(!monthlyPlan);
     setSelectedCurrency(event.target.value);
   };
-  console.log(selectedPlan, plans[0])
+  
   return (
     <div className="mt-5 overflow-x-hidden" id="pricing">
       <h2 className="text-center ">Our Pricing Plans</h2>
