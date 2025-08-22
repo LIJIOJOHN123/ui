@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Log in to Docker Hub
@@ -20,17 +20,15 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Extract short SHA
-        id: vars
+      - name: Extract short commit SHA
         run: echo "SHORT_SHA=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
 
       - name: Build Docker image
         run: |
-          docker build -t lijojohnrbs//react-testing-one:${SHORT_SHA} \
+          docker build -t lijojohnrbs/react-testing-one:${SHORT_SHA} \
                        -t lijojohnrbs/react-testing-one:latest .
 
       - name: Push Docker images to Docker Hub
         run: |
-          docker push lijojohnrbs//react-testing-one:${SHORT_SHA}
-          docker push lijojohnrbs//react-testing-one:latest
-
+          docker push lijojohnrbs/react-testing-one:${SHORT_SHA}
+          docker push lijojohnrbs/react-testing-one:latest
